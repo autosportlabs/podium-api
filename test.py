@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import keyring
 from kivy.app import App
 from podium_api import register_podium_application
 from podium_api.login import make_login_request
