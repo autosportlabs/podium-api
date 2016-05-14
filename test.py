@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import keyring
 from kivy.app import App
 from podium_api import register_podium_application
 from podium_api.login import make_login_request
+from plyer import keystore
 
 APP_ID = "00833f5ab53d1f696735793f5fac320de0211ccf231b35c447562066e97caaaf"
 APP_SECRET = "eda2bdee04abfa484688c77a0e438cad2dfa6eef07879a24cb102d85c9da2674"
@@ -20,8 +22,12 @@ class PodiumApp(App):
 
 
     def login_success(self, token):
-        #do what you want with the token
-        print(token, token.token, token.created)
+        #use plyer to save the token in crossplatform way
+        username = "" #username
+        keystore.set_password("autosportslabs.podium_api.test",
+                              username, token.token) 
+        print(keystore.get_password("autosportslabs.podium_api.test",
+                                    username))
 
     def login_failure(self, error_type, results, data):
         #handle errors
