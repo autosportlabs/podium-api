@@ -6,7 +6,7 @@ from podium_api.login import make_login_request
 from unittest.mock import patch, Mock
 import urllib
 
-class TestRegisterApplication(unittest.TestCase):
+class TestLoginApplication(unittest.TestCase):
 
     def setUp(self):
         podium_api.register_podium_application('test_id', 'test_secret')
