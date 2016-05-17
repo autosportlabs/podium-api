@@ -35,3 +35,7 @@ def register_podium_application(app_id, app_secret):
     else:
         global PODIUM_APP
         PODIUM_APP = PodiumApplication(app_id, app_secret)
+
+def unregister_podium_application():
+    global PODIUM_APP
+    PODIUM_APP = None

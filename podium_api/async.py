@@ -75,15 +75,20 @@ def make_request(endpoint, method="GET", on_success=None, on_failure=None,
 
     '''
     if body is not None:
-        body = urllib.urlencode(body)
-    return UrlRequest(endpoint, method=method, req_body=body,
-                      req_headers=header,
-                      on_success=lambda req, res: on_success(req, res, data),
-                      on_failure=lambda req, res: on_failure(req, res, data),
-                      on_redirect=lambda req, res: on_redirect(req, res, data),
-                      on_progress=lambda req, cur, tot: on_progress(req, cur,
-                                                                    tot, data),
-                      on_error=lambda req, res: on_error(req, res, data))
+        body = urllib.parse.urlencode(body)
+    return UrlRequest(
+        endpoint, method=method, req_body=body, req_headers=header,
+        on_success=(lambda req, res: on_success(
+                    req, res, data)) if on_success is not None else None,
+        on_failure=(lambda req, res: on_failure(
+                    req, res, data)) if on_failure is not None else None,
+        on_redirect=(lambda req, res: on_redirect(
+                     req, res, data)) if on_redirect is not None else None,
+        on_progress=(lambda req, cur, tot: on_progress(
+                     req, cur, tot, data)) if on_progress is not None else None,
+        on_error=(lambda req, res: on_error(
+                  req, res, data)) if on_error is not None else None
+        )
 
 def make_request_default(endpoint, method="GET", success_callback=None,
                          failure_callback=None, progress_callback=None,
