@@ -2,7 +2,10 @@
 # -*- coding: utf-8 -*-
 from kivy.network.urlrequest import UrlRequest
 import podium_api
-import urllib
+try:
+    from urllib.parse import urlencode
+except:
+    from urllib import urlencode
 from podium_api.exceptions import PodiumApplicationNotRegistered
 
 def get_json_header():
@@ -75,7 +78,7 @@ def make_request(endpoint, method="GET", on_success=None, on_failure=None,
 
     '''
     if body is not None:
-        body = urllib.parse.urlencode(body)
+        body = urlencode(body)
     return UrlRequest(
         endpoint, method=method, req_body=body, req_headers=header,
         on_success=(lambda req, res: on_success(
