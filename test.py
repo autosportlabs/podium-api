@@ -12,8 +12,8 @@ class PodiumApp(App):
 
     def on_start(self):
         register_podium_application(APP_ID, APP_SECRET)
-        email = "" #put a username here
-        secret = "" #put a password here
+        email = "kovac1066@gmail.com" #put a username here
+        secret = "zaeron19" #put a password here
         req = make_login_request(email, secret,
                                  success_callback=self.login_success,
                                  failure_callback=self.login_failure,
@@ -22,11 +22,10 @@ class PodiumApp(App):
 
     def login_success(self, token):
         #use plyer to save the token in crossplatform way
-        username = "" #username
-        keystore.set_password("autosportslabs.podium_api.test",
-                              username, token.token) 
-        print(keystore.get_password("autosportslabs.podium_api.test",
-                                    username))
+        keystore.set_key("autosportslabs.podium_api.test",
+                         "token", token.token) 
+        print(keystore.get_key("autosportslabs.podium_api.test",
+                               "token"))
 
     def login_failure(self, error_type, results, data):
         #handle errors

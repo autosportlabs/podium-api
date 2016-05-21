@@ -4,8 +4,11 @@ import unittest
 import podium_api
 from podium_api.login import make_login_request
 from unittest.mock import patch, Mock
-import urllib
-
+try:
+    from urllib.parse import urlencode
+except:
+    from urllib import urlencode
+    
 class TestLoginRequest(unittest.TestCase):
 
     def setUp(self):
@@ -21,9 +24,9 @@ class TestLoginRequest(unittest.TestCase):
         self.assertEqual(req._method, "POST")
         self.assertEqual(req.url, 'https://podium.live/oauth/token')
         self.assertEqual(req.req_body,
-                         urllib.parse.urlencode({"grant_type": "password",
-                                                 "username": "test",
-                                                 "password": "test1"}))
+                         urlencode({"grant_type": "password",
+                                    "username": "test",
+                                    "password": "test1"}))
         self.assertEqual(req.req_headers['Content-Type'],
                          "application/x-www-form-urlencoded")
         self.assertEqual(req.req_headers['Authorization'],

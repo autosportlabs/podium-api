@@ -5,7 +5,10 @@ from podium_api.async import (get_json_header, make_request,
                               make_request_custom_success)
 from podium_api.exceptions import PodiumApplicationNotRegistered
 from unittest.mock import patch, Mock
-import urllib
+try:
+    from urllib.parse import urlencode
+except:
+    from urllib import urlencode
 
 
 class TestMakeRequestDefault(unittest.TestCase):
@@ -27,7 +30,7 @@ class TestMakeRequestDefault(unittest.TestCase):
     def test_body(self, mock_request):
         req = make_request_default('test/test', body={"test1": "test2"})
         self.assertEqual(req.req_body,
-                         urllib.parse.urlencode({"test1": "test2"}))
+                         urlencode({"test1": "test2"}))
 
     @patch('podium_api.async.UrlRequest.run')
     def test_header(self, mock_request):
@@ -135,7 +138,7 @@ class TestMakeRequestCustomSuccess(unittest.TestCase):
         req = make_request_custom_success('test/test', success_handler,
                                           body={"test1": "test2"})
         self.assertEqual(req.req_body,
-                         urllib.parse.urlencode({"test1": "test2"}))
+                         urlencode({"test1": "test2"}))
 
     @patch('podium_api.async.UrlRequest.run')
     def test_header(self, mock_request):
@@ -258,7 +261,7 @@ class TestMakeRequest(unittest.TestCase):
     def test_make_request_body(self, mock_request):
         req = make_request('test/test', body={"test": "test2"})
         self.assertEqual(req.req_body,
-                         urllib.parse.urlencode({"test": "test2"}))
+                         urlencode({"test": "test2"}))
 
 
     @patch('podium_api.async.UrlRequest.run')
