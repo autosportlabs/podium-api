@@ -2,56 +2,68 @@
 # -*- coding: utf-8 -*-
 import unittest
 import podium_api
-from podium_api.login import make_login_request, get_token_from_json
+from podium_api.users import make_users_request, get_user_from_json
+from podium_api.types.token import PodiumToken
 from unittest.mock import patch, Mock
 try:
     from urllib.parse import urlencode
 except:
     from urllib import urlencode
     
-class TestLoginRequest(unittest.TestCase):
+class TestAccountRequest(unittest.TestCase):
 
     def setUp(self):
         podium_api.register_podium_application('test_id', 'test_secret')
+        self.token = PodiumToken("test_token", "test_type", 1)
+        self.result_json = {'id': 'test',
+                            'URI': 'test/users/test',
+                            'username': 'test_user',
+                            'description': None,
+                            'avatar_url': 'test/avatar/img.png',
+                            'links': None,
+                            'friendships_uri': 'test/friendships',
+                            'followers_uri': 'test/followers'}
+        self.field_names = {'id': 'user_id', 'URI': 'uri'}
 
-    def success_cb(self, token):
-        self.token = token
+    def check_results(self):
+        for key in self.result_json:
+            if key in self.field_names:
+                rkey = self.field_names[key]
+            else:
+                rkey = key
+            self.assertEqual(getattr(self.result, rkey), self.result_json[key])
+
+    def test_get_account_from_json(self):
+        self.result = get_user_from_json(self.result_json)
+        self.check_results()
+
+    def success_cb(self, result):
+        self.result = result
 
     @patch('podium_api.async.UrlRequest.run')
-    def test_login(self, mock_request):
-        req = make_login_request("test", "test1",
+    def test_account(self, mock_request):
+        req = make_users_request(self.token,
+                                 'https://podium.live/api/v1/users/test',
                                  success_callback=self.success_cb)
-        self.assertEqual(req._method, "POST")
-        self.assertEqual(req.url, 'https://podium.live/oauth/token')
+        self.assertEqual(req._method, "GET")
+        self.assertEqual(req.url, 'https://podium.live/api/v1/users/test',)
         self.assertEqual(req.req_body,
-                         urlencode({"grant_type": "password",
-                                    "username": "test",
-                                    "password": "test1"}))
+                         urlencode({"expand": False}))
         self.assertEqual(req.req_headers['Content-Type'],
                          "application/x-www-form-urlencoded")
         self.assertEqual(req.req_headers['Authorization'],
-                         'Basic test_id:test_secret')
+                         'Bearer {}'.format(self.token.token))
         self.assertEqual(req.req_headers['Accept'], "application/json")
-        #simlate access token return
-        req.on_success()(req, {"access_token": "blah5", "token_type": "blah4",
-                               "created_at": 1})
-        #check Token object returned in success_cb
-        self.assertEqual(self.token.token, "blah5")
-        self.assertEqual(self.token.token_type, "blah4")
-        self.assertEqual(self.token.created, 1)
+        #simulate successful request
+        req.on_success()(req, {'user': self.result_json})
+        self.check_results()
 
-    def test_get_token_from_json(self):
-        json = {'access_token': 'test_token', 'token_type': 'test_type',
-                'created_at': 1}
-        token = get_token_from_json(json)
-        self.assertEqual(token.token, "test_token")
-        self.assertEqual(token.token_type, "test_type")
-        self.assertEqual(token.created, 1)
 
     @patch('podium_api.async.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
-        req = make_login_request("test", "test1",
+        req = make_users_request(self.token,
+                                 'https://podium.live/api/v1/users/test',
                                  failure_callback=error_cb)
         #simulate calling the requests on_error
         req.on_error()(req, {})
@@ -64,7 +76,8 @@ class TestLoginRequest(unittest.TestCase):
     @patch('podium_api.async.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
-        req = make_login_request("test", "test1",
+        req = make_users_request(self.token,
+                                 'https://podium.live/api/v1/users/test',
                                  failure_callback=error_cb)
         #simulate calling the requests on_failure
         req.on_failure()(req, {})
@@ -77,7 +90,8 @@ class TestLoginRequest(unittest.TestCase):
     @patch('podium_api.async.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
         error_cb = Mock()
-        req = make_login_request("test", "test1",
+        req = make_users_request(self.token,
+                                 'https://podium.live/api/v1/users/test',
                                  failure_callback=error_cb)
         #simulate calling the requests on_redirect
         req.on_redirect()(req, {})
@@ -90,7 +104,8 @@ class TestLoginRequest(unittest.TestCase):
     @patch('podium_api.async.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
-        req = make_login_request("test", "test1",
+        req = make_users_request(self.token,
+                                 'https://podium.live/api/v1/users/test',
                                  progress_callback=progress_cb)
         #simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)

@@ -1,20 +1,25 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from podium_api.types.token import PodiumToken
-from podium_api.async import make_request_custom_success, get_json_header
+from podium_api.async import make_request_custom_success, get_json_header_token
+from podium_api.types.user import PodiumUser
 
-def make_login_request(username, password, success_callback=None,
+def make_users_request(token, endpoint,
+                       expand=False, quiet=None, success_callback=None,
                        failure_callback=None, progress_callback=None):
     '''
     Request that hits the /oauth/token endpoint to log a user in. Will 
     internally use **make_request_custom_success**.
 
     Args:
-        username (string): The username to login
+        token (PodiumToken): The authentication token for this session.
 
-        password (string): The password for user.
+        endpoint (str): The URI to make the request too. Typically should be
+        provided by some api object.
 
     Kwargs:
+        expand (bool): Expand all objects in response output. Defaults to False
+
+        quiet (object): If not None HTML layout will not render endpoint
+        description. Defaults to None.
+
         success_callback (function): Callback for a successful request,
         will have the signature:
             on_success(token (string))
@@ -35,33 +40,35 @@ def make_login_request(username, password, success_callback=None,
         UrlRequest: The request being made.
 
     '''
-    endpoint = "https://podium.live/oauth/token"
-    body = {"grant_type": "password", "username": username,
-            "password": password}
-    header = get_json_header()
-    return make_request_custom_success(endpoint, login_success_handler,
-                                       method="POST",
+    body = {"expand": expand}
+    if quiet is not None:
+        body['quiet'] = quiet
+    header = get_json_header_token(token)
+    return make_request_custom_success(endpoint, users_success_handler,
+                                       method="GET",
                                        success_callback=success_callback,
                                        failure_callback=failure_callback,
                                        progress_callback=progress_callback,
                                        body=body, header=header)
 
 
-def get_token_from_json(json):
+def get_user_from_json(json):
     '''
-    Returns a PodiumToken object from the json dict received from podium api.
+    Returns a PodiumUser object from the json dict received from podium api.
 
     Args:
         json (dict): Dict of data from REST api
 
     Return:
-        PodiumToken: The PodiumToken object for the data.
+        PodiumUser: The PodiumUser object for the data.
     '''
-    return PodiumToken(json['access_token'], json['token_type'],
-                       json['created_at'])
+    return PodiumUser(json['id'], json['URI'],
+                      json['username'], json['description'],
+                      json['avatar_url'], json['links'],
+                      json['friendships_uri'], json['followers_uri'])
 
 
-def login_success_handler(req, results, data):
+def users_success_handler(req, results, data):
     '''
     Creates and returns a  PodiumToken to the success_callback found in data.
 
@@ -81,4 +88,4 @@ def login_success_handler(req, results, data):
 
     '''
     if data['success_callback'] is not None:
-        data['success_callback'](get_token_from_json(results))
+        data['success_callback'](get_user_from_json(results['user']))

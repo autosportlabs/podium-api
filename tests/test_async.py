@@ -3,7 +3,7 @@ import podium_api
 from podium_api.async import (get_json_header, make_request,
                               make_request_default,
                               make_request_custom_success)
-from podium_api.exceptions import PodiumApplicationNotRegistered
+from podium_api.types.exceptions import PodiumApplicationNotRegistered
 from unittest.mock import patch, Mock
 try:
     from urllib.parse import urlencode

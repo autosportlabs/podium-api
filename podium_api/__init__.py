@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from podium_api.application import PodiumApplication
-from podium_api.exceptions import PodiumApplicationAlreadyRegistered
+from podium_api.types.application import PodiumApplication
+from podium_api.types.exceptions import PodiumApplicationAlreadyRegistered
 '''
 The podium_api module allows you to asynchronously interact with the Podium
 API. It is built on top of Kivy's UrlRequest. 

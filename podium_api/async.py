@@ -6,7 +6,24 @@ try:
     from urllib.parse import urlencode
 except:
     from urllib import urlencode
-from podium_api.exceptions import PodiumApplicationNotRegistered
+from podium_api.types.exceptions import PodiumApplicationNotRegistered
+
+def get_json_header_token(token):
+    '''
+    Returns a header prepared with the app_id and app_secret set to tell
+    the server to return json. Content-Type will be
+    'application/x-www-form-urlencoded'
+
+    Return:
+        dict: Dict containing the header data for a request.
+
+    '''
+    if podium_api.PODIUM_APP is None:
+        raise PodiumApplicationNotRegistered()
+    return {"Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "Bearer {}".format(token.token),
+            "Accept": "application/json"}
+
 
 def get_json_header():
     '''

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-class PodiumToken():
+class PodiumToken(object):
     '''
     A PodiumToken holds the OAuth2 Token for a logged in user.
 

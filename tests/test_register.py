@@ -1,6 +1,6 @@
 import unittest
 import podium_api
-from podium_api.exceptions import PodiumApplicationAlreadyRegistered
+from podium_api.types.exceptions import PodiumApplicationAlreadyRegistered
 
 class TestRegisterApplication(unittest.TestCase):
 
