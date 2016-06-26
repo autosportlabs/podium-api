@@ -13,7 +13,7 @@ def make_users_get(token, endpoint,
     Args:
         token (PodiumToken): The authentication token for this session.
 
-        endpoint (str): The URI to make the request too. Typically should be
+        endpoint (str): The URI to make the request to. Typically should be
         provided by some api object.
 
     Kwargs:
