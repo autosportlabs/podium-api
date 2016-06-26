@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from podium_api.types.token import PodiumToken
+from podium_api.types.token import get_token_from_json
 from podium_api.async import make_request_custom_success, get_json_header
 
-def make_login_request(username, password, success_callback=None,
-                       failure_callback=None, progress_callback=None):
+def make_login_post(username, password, success_callback=None,
+                    failure_callback=None, progress_callback=None):
     '''
     Request that hits the /oauth/token endpoint to log a user in. Will 
     internally use **make_request_custom_success**.
@@ -45,20 +45,6 @@ def make_login_request(username, password, success_callback=None,
                                        failure_callback=failure_callback,
                                        progress_callback=progress_callback,
                                        body=body, header=header)
-
-
-def get_token_from_json(json):
-    '''
-    Returns a PodiumToken object from the json dict received from podium api.
-
-    Args:
-        json (dict): Dict of data from REST api
-
-    Return:
-        PodiumToken: The PodiumToken object for the data.
-    '''
-    return PodiumToken(json['access_token'], json['token_type'],
-                       json['created_at'])
 
 
 def login_success_handler(req, results, data):

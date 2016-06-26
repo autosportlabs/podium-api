@@ -45,7 +45,7 @@ def get_json_header():
 
 def make_request(endpoint, method="GET", on_success=None, on_failure=None,
                  on_error=None, on_redirect=None, on_progress=None,
-                 body=None, header=None, data=None):
+                 body=None, header=None, data=None, params=None):
     '''
     Creates and starts a UrlRequest.
 
@@ -96,6 +96,9 @@ def make_request(endpoint, method="GET", on_success=None, on_failure=None,
     '''
     if body is not None:
         body = urlencode(body)
+    if params is not None:
+        params = urlencode(params)
+        endpoint = "{}?{}".format(endpoint, params)
     return UrlRequest(
         endpoint, method=method, req_body=body, req_headers=header,
         on_success=(lambda req, res: on_success(
@@ -112,7 +115,7 @@ def make_request(endpoint, method="GET", on_success=None, on_failure=None,
 
 def make_request_default(endpoint, method="GET", success_callback=None,
                          failure_callback=None, progress_callback=None,
-                         data={}, body=None, header=None):
+                         data=None, body=None, header=None, params=None):
     '''
     Creates a URL Request with simplified, default callbacks. Error,
     failure, and redirect will be condensed into one callback. 
@@ -152,6 +155,8 @@ def make_request_default(endpoint, method="GET", success_callback=None,
         UrlRequest: The request being made.
 
     '''
+    if data is None:
+        data = {}
     data['success_callback'] = success_callback
     data['failure_callback'] = failure_callback
     data['progress_callback'] = progress_callback
@@ -159,12 +164,13 @@ def make_request_default(endpoint, method="GET", success_callback=None,
                         on_failure=default_failure, on_error=default_error,
                         on_redirect=default_redirect,
                         on_progress=default_progress,
-                        body=body, header=header, data=data)
+                        body=body, header=header, data=data,
+                        params=params)
 
 def make_request_custom_success(endpoint, success_handler, method="GET", 
                                 success_callback=None, failure_callback=None, 
-                                progress_callback=None, data={}, body=None,
-                                header=None):
+                                progress_callback=None, data=None, body=None,
+                                header=None, params=None):
     '''
     Creates a request with a custom success handler and the default failure
     and progress handlers.
@@ -209,6 +215,8 @@ def make_request_custom_success(endpoint, success_handler, method="GET",
         UrlRequest: The request being made.
 
     '''
+    if data is None:
+        data = {}
     data['success_callback'] = success_callback
     data['failure_callback'] = failure_callback
     data['progress_callback'] = progress_callback
@@ -216,7 +224,7 @@ def make_request_custom_success(endpoint, success_handler, method="GET",
                         on_failure=default_failure, on_error=default_error,
                         on_redirect=default_redirect,
                         on_progress=default_progress,
-                        body=body, header=header, data=data)
+                        body=body, header=header, data=data, params=params)
 
 
 def default_redirect(req, results, data):

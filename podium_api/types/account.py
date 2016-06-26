@@ -35,3 +35,19 @@ class PodiumAccount(object):
         self.streams_uri = streams_uri
         self.user_uri = user_uri
         self.events_uri = events_uri
+
+
+def get_account_from_json(json):
+    '''
+    Returns a PodiumAccount object from the json dict received from podium api.
+
+    Args:
+        json (dict): Dict of data from REST api
+
+    Return:
+        PodiumUser: The PodiumAccount object for the data.
+    '''
+    return PodiumAccount(json['id'], json['username'],
+                         json['email'], json['devices_uri'],
+                         json['exports_uri'], json['streams_uri'],
+                         json['user_uri'], json['events_uri'])

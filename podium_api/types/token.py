@@ -17,3 +17,16 @@ class PodiumToken(object):
         self.token = token
         self.token_type = token_type
         self.created = created
+
+def get_token_from_json(json):
+    '''
+    Returns a PodiumToken object from the json dict received from podium api.
+
+    Args:
+        json (dict): Dict of data from REST api
+
+    Return:
+        PodiumToken: The PodiumToken object for the data.
+    '''
+    return PodiumToken(json['access_token'], json['token_type'],
+                       json['created_at'])

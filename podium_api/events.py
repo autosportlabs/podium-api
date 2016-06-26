@@ -1,20 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from podium_api.async import make_request_custom_success, get_json_header_token
-from podium_api.types.user import get_user_from_json
+from podium_api.types.paged_response import get_paged_response_from_json
 
-def make_users_get(token, endpoint,
-                   expand=False, quiet=None, success_callback=None,
-                   failure_callback=None, progress_callback=None):
+def make_events_get(token, start=None, per_page=None,
+                    endpoint=None, expand=False,
+                    quiet=None, success_callback=None,
+                    failure_callback=None, progress_callback=None):
     '''
-    Request that hits the /oauth/token endpoint to log a user in. Will 
-    internally use **make_request_custom_success**.
+    Request that returns a list of events. By default a get request to
+    'https://podium.live/api/v1/events' will be made.
 
     Args:
         token (PodiumToken): The authentication token for this session.
-
-        endpoint (str): The URI to make the request too. Typically should be
-        provided by some api object.
 
     Kwargs:
         expand (bool): Expand all objects in response output. Defaults to False
@@ -24,7 +22,7 @@ def make_users_get(token, endpoint,
 
         success_callback (function): Callback for a successful request,
         will have the signature:
-            on_success(token (string))
+            on_success(PodiumPagedResponse)
         Defaults to None.
 
         failure_callback (function): Callback for redirects, failures, and
@@ -38,15 +36,32 @@ def make_users_get(token, endpoint,
             on_progress(current_size (int), total_size (int), data (dict))
         Defaults to None.
 
+        start (int): Starting index for events list. 0 indexed.
+
+        per_page (int): Number per page of results, max of 100.
+
+        endpoint (str): If provided the start, per_page, expand, and quiet
+        params will not be used instead making a request based on the provided
+        endpoint.
+
     Return:
         UrlRequest: The request being made.
 
     '''
-    params = {"expand": expand}
-    if quiet is not None:
-        params['quiet'] = quiet
+    if endpoint is None:
+        endpoint = 'https://podium.live/api/v1/events'
+        per_page = min(per_page, 100)
+        params = {"expand": expand}
+        if quiet is not None:
+            params['quiet'] = quiet
+        if start is not None:
+            params['start'] = start
+        if per_page is not None:
+            params['per_page'] = per_page
+    else:
+        params = None
     header = get_json_header_token(token)
-    return make_request_custom_success(endpoint, users_success_handler,
+    return make_request_custom_success(endpoint, events_success_handler,
                                        method="GET",
                                        success_callback=success_callback,
                                        failure_callback=failure_callback,
@@ -54,11 +69,13 @@ def make_users_get(token, endpoint,
                                        params=params, header=header)
 
 
-def users_success_handler(req, results, data):
+def events_success_handler(req, results, data):
     '''
-    Creates and returns a  PodiumToken to the success_callback found in data.
+    Creates and returns a PodiumPagedResponse with PodiumEvent as the payload
+    to the success_callback
+    found in data.
 
-    Called automatically by **make_login_request**.
+    Called automatically by **make_account_request**.
 
     Args:
         req (UrlRequest): Instace of the request that was made.
@@ -74,4 +91,5 @@ def users_success_handler(req, results, data):
 
     '''
     if data['success_callback'] is not None:
-        data['success_callback'](get_user_from_json(results['user']))
+        data['success_callback'](get_paged_response_from_json(results,
+                                                              "events"))

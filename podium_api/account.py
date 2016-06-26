@@ -1,9 +1,11 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from podium_api.async import make_request_custom_success, get_json_header_token
-from podium_api.types.account import PodiumAccount
+from podium_api.types.account import get_account_from_json
 
-def make_account_request(token, expand=False, quiet=None,
-                         success_callback=None,
-                         failure_callback=None, progress_callback=None):
+def make_account_get(token, expand=False, quiet=None,
+                     success_callback=None,
+                     failure_callback=None, progress_callback=None):
     '''
     Request that returns the account for the provided authentication token.
     Hits the api/v1/account endpoint with a GET request.
@@ -38,32 +40,16 @@ def make_account_request(token, expand=False, quiet=None,
 
     '''
     endpoint = "https://podium.live/api/v1/account"
-    body = {"expand": expand}
+    params = {"expand": expand}
     if quiet is not None:
-        body['quiet'] = quiet
+        params['quiet'] = quiet
     header = get_json_header_token(token)
     return make_request_custom_success(endpoint, account_success_handler,
                                        method="GET",
                                        success_callback=success_callback,
                                        failure_callback=failure_callback,
                                        progress_callback=progress_callback,
-                                       body=body, header=header)
-
-
-def get_account_from_json(json):
-    '''
-    Returns a PodiumAccount object from the json dict received from podium api.
-
-    Args:
-        json (dict): Dict of data from REST api
-
-    Return:
-        PodiumUser: The PodiumAccount object for the data.
-    '''
-    return PodiumAccount(json['id'], json['username'],
-                         json['email'], json['devices_uri'],
-                         json['exports_uri'], json['streams_uri'],
-                         json['user_uri'], json['events_uri'])
+                                       params=params, header=header)
 
 
 def account_success_handler(req, results, data):

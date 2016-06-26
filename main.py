@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 from kivy.app import App
 from podium_api import register_podium_application
-from podium_api.login import make_login_request
-from podium_api.users import make_users_request
-from podium_api.account import make_account_request
+from podium_api.login import make_login_post
+from podium_api.users import make_users_get
+from podium_api.account import make_account_get
+from podium_api.events import make_events_get
 from podium_api.types.token import PodiumToken
 from plyer import keystore
 
@@ -22,17 +23,25 @@ class PodiumApp(App):
         register_podium_application(APP_ID, APP_SECRET)
         email = "kovac1066@gmail.com" #put a username here
         secret = "zaeron19" #put a password here
-        req = make_login_request(email, secret,
-                                 success_callback=self.login_success,
-                                 failure_callback=self.failure,
-                                 progress_callback=self.progress)
+        req = make_login_post(email, secret,
+                              success_callback=self.login_success,
+                              failure_callback=self.failure,
+                              progress_callback=self.progress)
 
 
     def account_success(self, account):
-        make_users_request(TOKEN, account.user_uri,
-                           success_callback=self.users_success,
-                           failure_callback=self.failure,
-                           progress_callback=self.progress)
+        make_users_get(TOKEN, account.user_uri,
+                       success_callback=self.users_success,
+                       failure_callback=self.failure,
+                       progress_callback=self.progress)
+        make_events_get(TOKEN, start=0, per_page=100,
+                        success_callback=self.events_success,
+                        failure_callback=self.failure,
+                        progress_callback=self.progress)
+        make_events_get(TOKEN, endpoint=account.events_uri,
+                        success_callback=self.events_success,
+                        failure_callback=self.failure,
+                        progress_callback=self.progress)
 
     def store_token(self, token):
         #example of fully serializing a token
@@ -54,6 +63,15 @@ class PodiumApp(App):
             raise NoStoredToken()
         return PodiumToken(token, token_type, int(created))
 
+    def events_success(self, paged_response):
+        print(paged_response, len(paged_response.events))
+        if paged_response.next_uri is not None:
+            make_events_get(TOKEN, endpoint=paged_response.next_uri,
+                            success_callback=self.events_success,
+                            failure_callback=self.failure,
+                            progress_callback=self.progress)
+
+
     def users_success(self, user):
         print(user, user.__dict__)
 
@@ -62,10 +80,10 @@ class PodiumApp(App):
         self.store_token(token)
         global TOKEN
         TOKEN = self.load_token()
-        make_account_request(token,
-                             success_callback=self.account_success,
-                             failure_callback=self.failure,
-                             progress_callback=self.progress)
+        make_account_get(token,
+                         success_callback=self.account_success,
+                         failure_callback=self.failure,
+                         progress_callback=self.progress)
 
     def failure(self, error_type, results, data):
         #handle errors

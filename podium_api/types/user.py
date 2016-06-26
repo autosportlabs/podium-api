@@ -33,3 +33,19 @@ class PodiumUser(object):
         self.links = links
         self.friendships_uri = friendships_uri
         self.followers_uri = followers_uri
+
+
+def get_user_from_json(json):
+    '''
+    Returns a PodiumUser object from the json dict received from podium api.
+
+    Args:
+        json (dict): Dict of data from REST api
+
+    Return:
+        PodiumUser: The PodiumUser object for the data.
+    '''
+    return PodiumUser(json['id'], json['URI'],
+                      json['username'], json['description'],
+                      json['avatar_url'], json['links'],
+                      json['friendships_uri'], json['followers_uri'])

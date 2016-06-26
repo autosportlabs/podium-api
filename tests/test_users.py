@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 import unittest
 import podium_api
-from podium_api.users import make_users_request, get_user_from_json
+from podium_api.users import make_users_get
+from podium_api.types.user import get_user_from_json
 from podium_api.types.token import PodiumToken
 from unittest.mock import patch, Mock
 try:
@@ -37,18 +38,28 @@ class TestAccountRequest(unittest.TestCase):
         self.result = get_user_from_json(self.result_json)
         self.check_results()
 
+    @patch('podium_api.async.UrlRequest.run')
+    def test_params(self, mock_request):
+        req = make_users_get(self.token,
+                             'https://podium.live/api/v1/users/test',
+                             expand=True,
+                             success_callback=self.success_cb)
+        self.assertEqual(req._method, "GET")
+        self.assertEqual(req.url,
+                         'https://podium.live/api/v1/users/test?expand=True')
+
+
     def success_cb(self, result):
         self.result = result
 
     @patch('podium_api.async.UrlRequest.run')
     def test_account(self, mock_request):
-        req = make_users_request(self.token,
-                                 'https://podium.live/api/v1/users/test',
-                                 success_callback=self.success_cb)
+        req = make_users_get(self.token,
+                             'https://podium.live/api/v1/users/test',
+                             success_callback=self.success_cb)
         self.assertEqual(req._method, "GET")
-        self.assertEqual(req.url, 'https://podium.live/api/v1/users/test',)
-        self.assertEqual(req.req_body,
-                         urlencode({"expand": False}))
+        self.assertEqual(req.url,
+                         'https://podium.live/api/v1/users/test?expand=False')
         self.assertEqual(req.req_headers['Content-Type'],
                          "application/x-www-form-urlencoded")
         self.assertEqual(req.req_headers['Authorization'],
@@ -62,9 +73,9 @@ class TestAccountRequest(unittest.TestCase):
     @patch('podium_api.async.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
-        req = make_users_request(self.token,
-                                 'https://podium.live/api/v1/users/test',
-                                 failure_callback=error_cb)
+        req = make_users_get(self.token,
+                             'https://podium.live/api/v1/users/test',
+                             failure_callback=error_cb)
         #simulate calling the requests on_error
         req.on_error()(req, {})
         #assert our lambda called the mock correctly
@@ -76,9 +87,9 @@ class TestAccountRequest(unittest.TestCase):
     @patch('podium_api.async.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
-        req = make_users_request(self.token,
-                                 'https://podium.live/api/v1/users/test',
-                                 failure_callback=error_cb)
+        req = make_users_get(self.token,
+                             'https://podium.live/api/v1/users/test',
+                             failure_callback=error_cb)
         #simulate calling the requests on_failure
         req.on_failure()(req, {})
         #assert our lambda called the mock correctly
@@ -90,9 +101,9 @@ class TestAccountRequest(unittest.TestCase):
     @patch('podium_api.async.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
         error_cb = Mock()
-        req = make_users_request(self.token,
-                                 'https://podium.live/api/v1/users/test',
-                                 failure_callback=error_cb)
+        req = make_users_get(self.token,
+                             'https://podium.live/api/v1/users/test',
+                             failure_callback=error_cb)
         #simulate calling the requests on_redirect
         req.on_redirect()(req, {})
         #assert our lambda called the mock correctly
@@ -104,9 +115,9 @@ class TestAccountRequest(unittest.TestCase):
     @patch('podium_api.async.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
-        req = make_users_request(self.token,
-                                 'https://podium.live/api/v1/users/test',
-                                 progress_callback=progress_cb)
+        req = make_users_get(self.token,
+                             'https://podium.live/api/v1/users/test',
+                             progress_callback=progress_cb)
         #simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
         #assert our lambda called the mock correctly
@@ -114,8 +125,6 @@ class TestAccountRequest(unittest.TestCase):
                                        {'success_callback': None,
                                         'failure_callback': None,
                                         'progress_callback': progress_cb})
-
-
 
     def tearDown(self):
         podium_api.unregister_podium_application()
