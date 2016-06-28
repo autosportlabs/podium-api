@@ -44,13 +44,6 @@ class PodiumApp(App):
                           failure_callback=self.failure,
                           progress_callback=self.progress)
 
-    def event_update_success(self, server_message, event_uri):
-        print(server_message, event_uri)
-        make_event_get(TOKEN, event_uri,
-                       success_callback=self.event_get_success,
-                       failure_callback=self.failure,
-                       progress_callback=self.progress)
-
     def create_success(self, redirect_object):
         print("redirect after create", redirect_object.__dict__)
         make_event_update(TOKEN, redirect_object.location,
@@ -59,9 +52,12 @@ class PodiumApp(App):
                           failure_callback=self.failure,
                           progress_callback=self.progress)
 
-
-    def delete_success(self, deleted_uri):
-        print(deleted_uri, " was deleted")
+    def event_update_success(self, server_message, event_uri):
+        print(server_message, event_uri)
+        make_event_get(TOKEN, event_uri,
+                       success_callback=self.event_get_success,
+                       failure_callback=self.failure,
+                       progress_callback=self.progress)
 
     def event_get_success(self, event):
         print(event.title)
@@ -69,6 +65,9 @@ class PodiumApp(App):
                           success_callback=self.delete_success,
                           failure_callback=self.failure,
                           progress_callback=self.progress)
+
+    def delete_success(self, deleted_uri):
+        print(deleted_uri, " was deleted")
 
     def store_token(self, token):
         #example of fully serializing a token
