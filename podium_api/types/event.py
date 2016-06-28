@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 class PodiumEvent(object):
     '''
     Object that represents an Event.
@@ -38,7 +37,7 @@ class PodiumEvent(object):
 
 def get_event_from_json(json):
     '''
-    Returns a PodiumToken object from the json dict received from podium api.
+    Returns a PodiumEvent object from the json dict received from podium api.
 
     Args:
         json (dict): Dict of data from REST api
@@ -46,6 +45,7 @@ def get_event_from_json(json):
     Return:
         PodiumEvent: The PodiumEvent object for this data.
     '''
-    return PodiumEvent(json['id'], json['URI'], json['devices_uri'],
-                       json['title'], json['start_time'], json['end_time'],
-                       json.get("venue_uri", None), json['private'])
+    return PodiumEvent(json['id'], json['URI'], json.get('devices_uri', None),
+                       json.get('title', None), json.get('start_time', None), 
+                       json.get('end_time', None),
+                       json.get("venue_uri", None), json.get("private", None))

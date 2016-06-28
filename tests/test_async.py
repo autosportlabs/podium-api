@@ -33,6 +33,20 @@ class TestMakeRequestDefault(unittest.TestCase):
                          urlencode({"test1": "test2"}))
 
     @patch('podium_api.async.UrlRequest.run')
+    def test_params(self, mock_request):
+        req = make_request_default('test/test', params={"test1": "test2"})
+        self.assertEqual(req.url,
+                         'test/test?' + urlencode({"test1": "test2"}))
+
+    @patch('podium_api.async.UrlRequest.run')
+    def test_params_with_params(self, mock_request):
+        req = make_request_default('test/test?test3=test4', 
+            params={"test1": "test2"})
+        self.assertEqual(
+            req.url, 'test/test?test3=test4&' + urlencode({"test1": "test2"})
+            )
+
+    @patch('podium_api.async.UrlRequest.run')
     def test_header(self, mock_request):
         req = make_request_default('test/test', header={"test1": "test2"})
         self.assertEqual(req.req_headers, {"test1": "test2"})
@@ -47,7 +61,8 @@ class TestMakeRequestDefault(unittest.TestCase):
         success_cb.assert_called_with({}, 
                                       {'success_callback': success_cb,
                                        'failure_callback': None,
-                                       'progress_callback': None})
+                                       'progress_callback': None,
+                                       'redirect_callback': None})
 
     @patch('podium_api.async.UrlRequest.run')
     def test_error_callback(self, mock_request):
@@ -59,7 +74,8 @@ class TestMakeRequestDefault(unittest.TestCase):
         error_cb.assert_called_with('error', {}, 
                                     {'success_callback': None,
                                      'failure_callback': error_cb,
-                                     'progress_callback': None})
+                                     'progress_callback': None,
+                                     'redirect_callback': None})
 
     @patch('podium_api.async.UrlRequest.run')
     def test_failure_callback(self, mock_request):
@@ -71,19 +87,21 @@ class TestMakeRequestDefault(unittest.TestCase):
         error_cb.assert_called_with('failure', {}, 
                                     {'success_callback': None,
                                      'failure_callback': error_cb,
-                                     'progress_callback': None})
+                                     'progress_callback': None,
+                                     'redirect_callback': None})
 
     @patch('podium_api.async.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
-        error_cb = Mock()
-        req = make_request_default('test/test', failure_callback=error_cb)
+        redir_cb = Mock()
+        req = make_request_default('test/test', redirect_callback=redir_cb)
         #simulate calling the requests on_success
         req.on_redirect()(req, {})
         #assert our lambda called the mock correctly
-        error_cb.assert_called_with('redirect', {}, 
+        redir_cb.assert_called_with(req, None, 
                                     {'success_callback': None,
-                                     'failure_callback': error_cb,
-                                     'progress_callback': None})
+                                     'failure_callback': None,
+                                     'progress_callback': None,
+                                     'redirect_callback': redir_cb})
 
     @patch('podium_api.async.UrlRequest.run')
     def test_progress_callback(self, mock_request):
@@ -95,7 +113,8 @@ class TestMakeRequestDefault(unittest.TestCase):
         progress_cb.assert_called_with(0, 10, 
                                        {'success_callback': None,
                                         'failure_callback': None,
-                                        'progress_callback': progress_cb})
+                                        'progress_callback': progress_cb,
+                                        'redirect_callback': None})
 
 
     @patch('podium_api.async.UrlRequest.run')
@@ -110,6 +129,7 @@ class TestMakeRequestDefault(unittest.TestCase):
                                       {'success_callback': success_cb,
                                        'failure_callback': None,
                                        'progress_callback': None,
+                                       'redirect_callback': None,
                                        'custom': 'test'})
 
 
@@ -157,7 +177,8 @@ class TestMakeRequestCustomSuccess(unittest.TestCase):
         success_handler.assert_called_with(req, {}, 
                                            {'success_callback': None,
                                             'failure_callback': None,
-                                            'progress_callback': None})
+                                            'progress_callback': None,
+                                            'redirect_callback': None})
 
     @patch('podium_api.async.UrlRequest.run')
     def test_error_callback(self, mock_request):
@@ -171,7 +192,8 @@ class TestMakeRequestCustomSuccess(unittest.TestCase):
         error_cb.assert_called_with('error', {}, 
                                     {'success_callback': None,
                                      'failure_callback': error_cb,
-                                     'progress_callback': None})
+                                     'progress_callback': None,
+                                     'redirect_callback': None})
 
     @patch('podium_api.async.UrlRequest.run')
     def test_failure_callback(self, mock_request):
@@ -185,21 +207,23 @@ class TestMakeRequestCustomSuccess(unittest.TestCase):
         error_cb.assert_called_with('failure', {}, 
                                     {'success_callback': None,
                                      'failure_callback': error_cb,
-                                     'progress_callback': None})
+                                     'progress_callback': None,
+                                     'redirect_callback': None})
 
     @patch('podium_api.async.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
         success_handler = Mock()
-        error_cb = Mock()
+        redir_cb = Mock()
         req = make_request_custom_success('test/test', success_handler,
-                                          failure_callback=error_cb)
+                                          redirect_callback=redir_cb)
         #simulate calling the requests on_redirect
         req.on_redirect()(req, {})
         #assert our lambda called the mock correctly
-        error_cb.assert_called_with('redirect', {}, 
+        redir_cb.assert_called_with(req, None, 
                                     {'success_callback': None,
-                                     'failure_callback': error_cb,
-                                     'progress_callback': None})
+                                     'failure_callback': None,
+                                     'progress_callback': None,
+                                     'redirect_callback': redir_cb})
 
     @patch('podium_api.async.UrlRequest.run')
     def test_progress_callback(self, mock_request):
@@ -213,7 +237,8 @@ class TestMakeRequestCustomSuccess(unittest.TestCase):
         progress_cb.assert_called_with(0, 10, 
                                        {'success_callback': None,
                                         'failure_callback': None,
-                                        'progress_callback': progress_cb})
+                                        'progress_callback': progress_cb,
+                                        'redirect_callback': None})
 
 
     @patch('podium_api.async.UrlRequest.run')
@@ -228,6 +253,7 @@ class TestMakeRequestCustomSuccess(unittest.TestCase):
                                            {'success_callback': None,
                                             'failure_callback': None,
                                             'progress_callback': None,
+                                            'redirect_callback': None,
                                             'custom': 'test'})
 
 

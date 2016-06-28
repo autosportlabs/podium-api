@@ -41,16 +41,18 @@ PAYLOAD_NAME_TO_OBJECT = {
 
 def get_paged_response_from_json(json, payload_name):
     '''
-    Returns a PodiumToken object from the json dict received from podium api.
+    Returns a PodiumPagedResponse object from the json dict received from
+    podium api.
 
     Args:
         json (dict): Dict of data from REST api
 
         payload_name (str): Name of the actual paged data in the json dict.
         Will be used to determine the object the data gets converted into.
+        The "payload" attr will also be returned with lookup by payload_name.
 
     Return:
-        PodiumToken: The PodiumToken object for the data.
+        PodiumPagedResponse: The PodiumPagedResponse object for the data.
     '''
     conversion_func = PAYLOAD_NAME_TO_OBJECT[payload_name]
     data = [conversion_func(x) for x in json[payload_name]]

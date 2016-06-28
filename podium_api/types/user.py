@@ -22,7 +22,6 @@ class PodiumUser(object):
 
         **followers_uri** (string): URI to followers list.
     '''
-
     def __init__(self, user_id, uri, username, description, avatar_url,
                  links, friendships_uri, followers_uri):
         self.user_id = user_id
@@ -49,3 +48,4 @@ def get_user_from_json(json):
                       json['username'], json['description'],
                       json['avatar_url'], json['links'],
                       json['friendships_uri'], json['followers_uri'])
+    

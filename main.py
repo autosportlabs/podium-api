@@ -3,11 +3,14 @@
 from kivy.app import App
 from podium_api import register_podium_application
 from podium_api.login import make_login_post
-from podium_api.users import make_users_get
+from podium_api.users import make_user_get
 from podium_api.account import make_account_get
-from podium_api.events import make_events_get
+from podium_api.events import (
+    make_events_get, make_event_create, make_event_get
+    )
 from podium_api.types.token import PodiumToken
 from plyer import keystore
+from datetime import date
 
 APP_ID = "00833f5ab53d1f696735793f5fac320de0211ccf231b35c447562066e97caaaf"
 APP_SECRET = "eda2bdee04abfa484688c77a0e438cad2dfa6eef07879a24cb102d85c9da2674"
@@ -30,18 +33,22 @@ class PodiumApp(App):
 
 
     def account_success(self, account):
-        make_users_get(TOKEN, account.user_uri,
+        # make_events_get(TOKEN, endpoint=account.events_uri,
+        #                 success_callback=self.events_success,
+        #                 failure_callback=self.failure,
+        #                 progress_callback=self.progress)
+        make_event_create(TOKEN, "test event", date(2016, 6, 27).isoformat(),
+                          date(2016, 6, 28).isoformat(),
+                          redirect_callback=self.create_success,
+                          failure_callback=self.failure,
+                          progress_callback=self.progress)
+
+    def create_success(self, redirect_object):
+        print("redirect after create", redirect_object.__dict__)
+        make_event_get(TOKEN, redirect_object.location,
                        success_callback=self.users_success,
                        failure_callback=self.failure,
                        progress_callback=self.progress)
-        make_events_get(TOKEN, start=0, per_page=100,
-                        success_callback=self.events_success,
-                        failure_callback=self.failure,
-                        progress_callback=self.progress)
-        make_events_get(TOKEN, endpoint=account.events_uri,
-                        success_callback=self.events_success,
-                        failure_callback=self.failure,
-                        progress_callback=self.progress)
 
     def store_token(self, token):
         #example of fully serializing a token

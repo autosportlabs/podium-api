@@ -65,8 +65,8 @@ def make_request(endpoint, method="GET", on_success=None, on_failure=None,
             on_failure(request (UrlRequest), result (dict), data (dict))
         Defaults to None.
 
-        on_error (function): Callback for request that  errors, will have
-        the signature:
+        on_error (function): Callback for request that handles errors and 
+        failures, will have the signature:
             on_error(request (UrlRequest), result (dict), data (dict))
         Defaults to None.
 
@@ -96,9 +96,13 @@ def make_request(endpoint, method="GET", on_success=None, on_failure=None,
     '''
     if body is not None:
         body = urlencode(body)
-    if params is not None:
+    if params is not None and params != {}:
         params = urlencode(params)
-        endpoint = "{}?{}".format(endpoint, params)
+        if "?" in endpoint:
+            endpoint = "{}&{}".format(endpoint, params)
+        else:
+            endpoint = "{}?{}".format(endpoint, params)
+    print(endpoint)
     return UrlRequest(
         endpoint, method=method, req_body=body, req_headers=header,
         on_success=(lambda req, res: on_success(
@@ -107,14 +111,16 @@ def make_request(endpoint, method="GET", on_success=None, on_failure=None,
                     req, res, data)) if on_failure is not None else None,
         on_redirect=(lambda req, res: on_redirect(
                      req, res, data)) if on_redirect is not None else None,
-        on_progress=(lambda req, cur, tot: on_progress(
-                     req, cur, tot, data)) if on_progress is not None else None,
+        on_progress=(lambda req, cur, tot: 
+            on_progress(req, cur, tot, data)
+            ) if on_progress is not None else None,
         on_error=(lambda req, res: on_error(
                   req, res, data)) if on_error is not None else None
         )
 
 def make_request_default(endpoint, method="GET", success_callback=None,
                          failure_callback=None, progress_callback=None,
+                         redirect_callback=None,
                          data=None, body=None, header=None, params=None):
     '''
     Creates a URL Request with simplified, default callbacks. Error,
@@ -131,11 +137,15 @@ def make_request_default(endpoint, method="GET", success_callback=None,
             on_success(result (dict), data (dict))
         Defaults to None.
 
-        failure_callback (function): Callback for redirects, failures, and
-        errors. Will have the signature:
+        failure_callback (function): Callback for failures and errors. 
+        Will have the signature:
             on_failure(failure_type (string), result (dict), data (dict))
-        Values for failure type are: 'error', 'redirect', 'failure'. Defaults
-        to None.
+        Values for failure type are: 'error', 'failure'. Defaults to None.
+
+        redirect_callback (function): Callback for redirect, 
+        Will have the signature:
+            on_redirect(result (dict), data (dict))
+        Defaults to None.
 
         progress_callback (function): Callback for progress updates,
         will have the signature:
@@ -160,6 +170,7 @@ def make_request_default(endpoint, method="GET", success_callback=None,
     data['success_callback'] = success_callback
     data['failure_callback'] = failure_callback
     data['progress_callback'] = progress_callback
+    data['redirect_callback'] = redirect_callback
     return make_request(endpoint, method=method, on_success=default_success,
                         on_failure=default_failure, on_error=default_error,
                         on_redirect=default_redirect,
@@ -168,7 +179,8 @@ def make_request_default(endpoint, method="GET", success_callback=None,
                         params=params)
 
 def make_request_custom_success(endpoint, success_handler, method="GET", 
-                                success_callback=None, failure_callback=None, 
+                                success_callback=None, failure_callback=None,
+                                redirect_callback= None,
                                 progress_callback=None, data=None, body=None,
                                 header=None, params=None):
     '''
@@ -197,6 +209,11 @@ def make_request_custom_success(endpoint, success_handler, method="GET",
         Values for failure type are: 'error', 'redirect', 'failure'. Defaults
         to None.
 
+        redirect_callback (function): Callback for redirect, 
+        Will have the signature:
+            on_redirect(result (dict), data (dict))
+        Defaults to None.
+
         progress_callback (function): Callback for progress updates,
         will have the signature:
             on_progress(current_size (int), total_size (int), data (dict))
@@ -220,6 +237,7 @@ def make_request_custom_success(endpoint, success_handler, method="GET",
     data['success_callback'] = success_callback
     data['failure_callback'] = failure_callback
     data['progress_callback'] = progress_callback
+    data['redirect_callback'] = redirect_callback
     return make_request(endpoint, method=method, on_success=success_handler,
                         on_failure=default_failure, on_error=default_error,
                         on_redirect=default_redirect,
@@ -229,8 +247,8 @@ def make_request_custom_success(endpoint, success_handler, method="GET",
 
 def default_redirect(req, results, data):
     '''
-    Default handler for a redirect callback. Will call the 'failure_callback'
-    provided in data with the args: 'redirect', results, data
+    Default handler for a redirect callback. Will call the 'redirect_callback'
+    provided in data with the args: response headers (dict), data (dict)
 
     If the value of 'failure_callback' is None, nothing will be called.
 
@@ -241,15 +259,15 @@ def default_redirect(req, results, data):
 
         data (dict): Wildcard dict for containing data that needs to be passed
         to the various callbacks of a request. Will contain at least a 
-        'failure_callback' key.
+        'redirect_callback' key.
 
     Return:
         None, this function instead calls a callback.
 
     '''
-    if data['failure_callback'] is None:
+    if data['redirect_callback'] is None:
         return
-    data['failure_callback']("redirect", results, data)
+    data['redirect_callback'](req, req._resp_headers, data)
 
 def default_success(req, results, data):
     '''

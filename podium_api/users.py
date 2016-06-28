@@ -3,12 +3,13 @@
 from podium_api.async import make_request_custom_success, get_json_header_token
 from podium_api.types.user import get_user_from_json
 
-def make_users_get(token, endpoint,
+def make_user_get(token, endpoint,
                    expand=False, quiet=None, success_callback=None,
-                   failure_callback=None, progress_callback=None):
+                   failure_callback=None, progress_callback=None,
+                   redirect_callback=None):
     '''
-    Request that hits the /oauth/token endpoint to log a user in. Will 
-    internally use **make_request_custom_success**.
+    Returns a PodiumUser object found at the uri provided in the endpoint
+    arg.
 
     Args:
         token (PodiumToken): The authentication token for this session.
@@ -42,7 +43,9 @@ def make_users_get(token, endpoint,
         UrlRequest: The request being made.
 
     '''
-    params = {"expand": expand}
+    params = {}
+    if expand is not None:
+        params['expand'] = expand
     if quiet is not None:
         params['quiet'] = quiet
     header = get_json_header_token(token)
@@ -51,6 +54,7 @@ def make_users_get(token, endpoint,
                                        success_callback=success_callback,
                                        failure_callback=failure_callback,
                                        progress_callback=progress_callback,
+                                       redirect_callback=redirect_callback,
                                        params=params, header=header)
 
 

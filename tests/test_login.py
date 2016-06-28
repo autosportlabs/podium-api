@@ -60,7 +60,8 @@ class TestLoginRequest(unittest.TestCase):
         error_cb.assert_called_with('error', {}, 
                                     {'success_callback': None,
                                      'failure_callback': error_cb,
-                                     'progress_callback': None})
+                                     'progress_callback': None,
+                                     'redirect_callback': None})
 
     @patch('podium_api.async.UrlRequest.run')
     def test_failure_callback(self, mock_request):
@@ -73,20 +74,22 @@ class TestLoginRequest(unittest.TestCase):
         error_cb.assert_called_with('failure', {}, 
                                     {'success_callback': None,
                                      'failure_callback': error_cb,
-                                     'progress_callback': None})
+                                     'progress_callback': None,
+                                     'redirect_callback': None})
 
     @patch('podium_api.async.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
-        error_cb = Mock()
+        redir_cb = Mock()
         req = make_login_post("test", "test1",
-                              failure_callback=error_cb)
+                              redirect_callback=redir_cb)
         #simulate calling the requests on_redirect
         req.on_redirect()(req, {})
         #assert our lambda called the mock correctly
-        error_cb.assert_called_with('redirect', {}, 
+        redir_cb.assert_called_with(req, None, 
                                     {'success_callback': None,
-                                     'failure_callback': error_cb,
-                                     'progress_callback': None})
+                                     'failure_callback': None,
+                                     'progress_callback': None,
+                                     'redirect_callback': redir_cb})
 
     @patch('podium_api.async.UrlRequest.run')
     def test_progress_callback(self, mock_request):
@@ -99,7 +102,8 @@ class TestLoginRequest(unittest.TestCase):
         progress_cb.assert_called_with(0, 10, 
                                        {'success_callback': None,
                                         'failure_callback': None,
-                                        'progress_callback': progress_cb})
+                                        'progress_callback': progress_cb,
+                                        'redirect_callback': None})
 
     def tearDown(self):
         podium_api.unregister_podium_application()

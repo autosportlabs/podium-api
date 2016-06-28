@@ -5,7 +5,8 @@ from podium_api.types.account import get_account_from_json
 
 def make_account_get(token, expand=False, quiet=None,
                      success_callback=None,
-                     failure_callback=None, progress_callback=None):
+                     failure_callback=None, progress_callback=None,
+                     redirect_callback=None):
     '''
     Request that returns the account for the provided authentication token.
     Hits the api/v1/account endpoint with a GET request.
@@ -49,6 +50,7 @@ def make_account_get(token, expand=False, quiet=None,
                                        success_callback=success_callback,
                                        failure_callback=failure_callback,
                                        progress_callback=progress_callback,
+                                       redirect_callback=redirect_callback,
                                        params=params, header=header)
 
 
