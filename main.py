@@ -6,7 +6,8 @@ from podium_api.login import make_login_post
 from podium_api.users import make_user_get
 from podium_api.account import make_account_get
 from podium_api.events import (
-    make_events_get, make_event_create, make_event_get
+    make_events_get, make_event_create, make_event_get, make_event_delete,
+    make_event_update
     )
 from podium_api.types.token import PodiumToken
 from plyer import keystore
@@ -43,12 +44,31 @@ class PodiumApp(App):
                           failure_callback=self.failure,
                           progress_callback=self.progress)
 
-    def create_success(self, redirect_object):
-        print("redirect after create", redirect_object.__dict__)
-        make_event_get(TOKEN, redirect_object.location,
-                       success_callback=self.users_success,
+    def event_update_success(self, server_message, event_uri):
+        print(server_message, event_uri)
+        make_event_get(TOKEN, event_uri,
+                       success_callback=self.event_get_success,
                        failure_callback=self.failure,
                        progress_callback=self.progress)
+
+    def create_success(self, redirect_object):
+        print("redirect after create", redirect_object.__dict__)
+        make_event_update(TOKEN, redirect_object.location,
+                          title="new_title",
+                          success_callback=self.event_update_success,
+                          failure_callback=self.failure,
+                          progress_callback=self.progress)
+
+
+    def delete_success(self, deleted_uri):
+        print(deleted_uri, " was deleted")
+
+    def event_get_success(self, event):
+        print(event.title)
+        make_event_delete(TOKEN, event.uri,
+                          success_callback=self.delete_success,
+                          failure_callback=self.failure,
+                          progress_callback=self.progress)
 
     def store_token(self, token):
         #example of fully serializing a token
