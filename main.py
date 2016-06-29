@@ -10,13 +10,12 @@ from podium_api.events import (
     make_event_update
     )
 from podium_api.types.token import PodiumToken
+from podium_api.api import PodiumAPI
 from plyer import keystore
 from datetime import date
 
 APP_ID = "00833f5ab53d1f696735793f5fac320de0211ccf231b35c447562066e97caaaf"
 APP_SECRET = "eda2bdee04abfa484688c77a0e438cad2dfa6eef07879a24cb102d85c9da2674"
-
-TOKEN = None
 
 class NoStoredToken(Exception):
     pass
@@ -32,39 +31,56 @@ class PodiumApp(App):
                               failure_callback=self.failure,
                               progress_callback=self.progress)
 
+    def login_success(self, token):
+        #use plyer to save the token in crossplatform way
+        self.store_token(token)
+        self.podium = podium = PodiumAPI(token)
+        podium.account.get_account(success_callback=self.account_success,
+                                   failure_callback=self.failure,
+                                   progress_callback=self.progress)
+
 
     def account_success(self, account):
         # make_events_get(TOKEN, endpoint=account.events_uri,
         #                 success_callback=self.events_success,
         #                 failure_callback=self.failure,
         #                 progress_callback=self.progress)
-        make_event_create(TOKEN, "test event", date(2016, 6, 27).isoformat(),
-                          date(2016, 6, 28).isoformat(),
-                          redirect_callback=self.create_success,
-                          failure_callback=self.failure,
-                          progress_callback=self.progress)
+        self.podium.events.create_event(
+            "test event",
+            date(2016, 6, 27).isoformat(),
+            date(2016, 6, 28).isoformat(),
+            redirect_callback=self.create_success,
+            failure_callback=self.failure,
+            progress_callback=self.progress
+            )
 
     def create_success(self, redirect_object):
         print("redirect after create", redirect_object.__dict__)
-        make_event_update(TOKEN, redirect_object.location,
-                          title="new_title",
-                          success_callback=self.event_update_success,
-                          failure_callback=self.failure,
-                          progress_callback=self.progress)
+        self.podium.events.update_event(
+            redirect_object.location,
+            title="new_title",
+            success_callback=self.event_update_success,
+            failure_callback=self.failure,
+            progress_callback=self.progress
+            )
 
     def event_update_success(self, server_message, event_uri):
         print(server_message, event_uri)
-        make_event_get(TOKEN, event_uri,
-                       success_callback=self.event_get_success,
-                       failure_callback=self.failure,
-                       progress_callback=self.progress)
+        self.podium.events.get_event(
+            event_uri,
+            success_callback=self.event_get_success,
+            failure_callback=self.failure,
+            progress_callback=self.progress
+            )
 
     def event_get_success(self, event):
         print(event.title)
-        make_event_delete(TOKEN, event.uri,
-                          success_callback=self.delete_success,
-                          failure_callback=self.failure,
-                          progress_callback=self.progress)
+        self.podium.events.delete_event(
+            event.uri,
+            success_callback=self.delete_success,
+            failure_callback=self.failure,
+            progress_callback=self.progress
+            )
 
     def delete_success(self, deleted_uri):
         print(deleted_uri, " was deleted")
@@ -101,15 +117,6 @@ class PodiumApp(App):
     def users_success(self, user):
         print(user, user.__dict__)
 
-    def login_success(self, token):
-        #use plyer to save the token in crossplatform way
-        self.store_token(token)
-        global TOKEN
-        TOKEN = self.load_token()
-        make_account_get(token,
-                         success_callback=self.account_success,
-                         failure_callback=self.failure,
-                         progress_callback=self.progress)
 
     def failure(self, error_type, results, data):
         #handle errors
