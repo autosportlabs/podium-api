@@ -7,7 +7,7 @@ class PodiumRedirect(object):
     **Attributes:**
         **location** (str): URI for the redirected object.
 
-        **type** (str): Type of object. Can be 'event'
+        **type** (str): Type of object. Can be 'event', 'device'
     '''
     def __init__(self, location, object_type):
         self.location = location
@@ -26,5 +26,4 @@ def get_redirect_from_json(json, object_type):
     Return:
         PodiumRedirect: The PodiumRedirect object for this data.
     '''
-    print(json)
     return PodiumRedirect(json['location'], object_type)

@@ -35,9 +35,9 @@ class PodiumApp(App):
         #use plyer to save the token in crossplatform way
         self.store_token(token)
         self.podium = podium = PodiumAPI(token)
-        podium.account.get_account(success_callback=self.account_success,
-                                   failure_callback=self.failure,
-                                   progress_callback=self.progress)
+        podium.account.get(success_callback=self.account_success,
+                           failure_callback=self.failure,
+                           progress_callback=self.progress)
 
 
     def account_success(self, account):
@@ -45,18 +45,51 @@ class PodiumApp(App):
         #                 success_callback=self.events_success,
         #                 failure_callback=self.failure,
         #                 progress_callback=self.progress)
-        self.podium.events.create_event(
-            "test event",
-            date(2016, 6, 27).isoformat(),
-            date(2016, 6, 28).isoformat(),
-            redirect_callback=self.create_success,
+        # self.podium.events.create(
+        #     "test event",
+        #     date(2016, 6, 27).isoformat(),
+        #     date(2016, 6, 28).isoformat(),
+        #     redirect_callback=self.create_success,
+        #     failure_callback=self.failure,
+        #     progress_callback=self.progress
+        #     )
+        self.podium.devices.create(
+            "test device",
+            redirect_callback=self.create_device_success,
             failure_callback=self.failure,
             progress_callback=self.progress
             )
 
+    def device_success(self, device):
+        print(device, device.__dict__)
+        self.podium.devices.update(
+            device.uri,
+            name="new name",
+            success_callback=self.device_update_success,
+            )
+
+    def device_update_success(self, message, update_uri):
+        print(message, update_uri)
+        self.podium.devices.delete(
+            update_uri,
+            success_callback=lambda x: print(x),
+            failure_callback=self.failure,
+            progress_callback=self.progress
+            )
+
+    def create_device_success(self, redirect_object):
+        print("getting device")
+        self.podium.devices.get(
+            redirect_object.location,
+            success_callback=self.device_success,
+            failure_callback=self.failure,
+            progress_callback=self.progress
+            )
+
+
     def create_success(self, redirect_object):
         print("redirect after create", redirect_object.__dict__)
-        self.podium.events.update_event(
+        self.podium.events.update(
             redirect_object.location,
             title="new_title",
             success_callback=self.event_update_success,
@@ -66,7 +99,7 @@ class PodiumApp(App):
 
     def event_update_success(self, server_message, event_uri):
         print(server_message, event_uri)
-        self.podium.events.get_event(
+        self.podium.events.get(
             event_uri,
             success_callback=self.event_get_success,
             failure_callback=self.failure,
@@ -75,7 +108,7 @@ class PodiumApp(App):
 
     def event_get_success(self, event):
         print(event.title)
-        self.podium.events.delete_event(
+        self.podium.events.delete(
             event.uri,
             success_callback=self.delete_success,
             failure_callback=self.failure,
