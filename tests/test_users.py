@@ -23,7 +23,8 @@ class TestUserGet(unittest.TestCase):
                             'avatar_url': 'test/avatar/img.png',
                             'links': None,
                             'friendships_uri': 'test/friendships',
-                            'followers_uri': 'test/followers'}
+                            'followers_uri': 'test/followers',
+                            'friendship_uri': None}
         self.field_names = {'id': 'user_id', 'URI': 'uri'}
 
     def check_results(self):

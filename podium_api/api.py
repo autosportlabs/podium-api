@@ -63,149 +63,149 @@ class PodiumDevicesAPI(object):
         self.token = token
 
     def create(self, *args, **kwargs):
-    '''
-    Request that creates a new PodiumDevice.
+        '''
+        Request that creates a new PodiumDevice.
 
-    The uri for the newly created event will be provided to the
-    redirect_callback if one is provided in the form of a PodiumRedirect.
+        The uri for the newly created event will be provided to the
+        redirect_callback if one is provided in the form of a PodiumRedirect.
 
-    Args:
-        name(str): Name of the device.
+        Args:
+            name(str): Name of the device.
 
-    Kwargs:
-        success_callback (function): Callback for a successful request,
-        will have the signature: 
-            on_success(result (dict), data (dict))
-        Defaults to None..
+        Kwargs:
+            success_callback (function): Callback for a successful request,
+            will have the signature: 
+                on_success(result (dict), data (dict))
+            Defaults to None..
 
-        failure_callback (function): Callback for failures and errors. 
-        Will have the signature:
-            on_failure(failure_type (string), result (dict), data (dict))
-        Values for failure type are: 'error', 'failure'. Defaults to None.
+            failure_callback (function): Callback for failures and errors. 
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
 
-        redirect_callback (function): Callback for redirect, 
-        Will have the signature:
-            on_redirect(redirect_object (PodiumRedirect))
-        Defaults to None.
+            redirect_callback (function): Callback for redirect, 
+            Will have the signature:
+                on_redirect(redirect_object (PodiumRedirect))
+            Defaults to None.
 
-        progress_callback (function): Callback for progress updates,
-        will have the signature:
-            on_progress(current_size (int), total_size (int), data (dict))
-        Defaults to None.
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
 
-    Return:
-        UrlRequest: The request being made.
+        Return:
+            UrlRequest: The request being made.
 
-    '''
+        '''
         make_device_create(self.token, *args, **kwargs)
 
     def update(self, *args, **kwargs):
-    '''
-    Request that updates a PodiumDevice
+        '''
+        Request that updates a PodiumDevice
 
-    Args:
-        device_uri (str): URI for the device you are updating.
+        Args:
+            device_uri (str): URI for the device you are updating.
 
-    Kwargs:
-        name(str): Name of the device.
+        Kwargs:
+            name(str): Name of the device.
 
-        success_callback (function): Callback for a successful request,
-        will have the signature: 
-            on_success(result (dict), updated_uri (str))
-        Defaults to None..
+            success_callback (function): Callback for a successful request,
+            will have the signature: 
+                on_success(result (dict), updated_uri (str))
+            Defaults to None..
 
-        failure_callback (function): Callback for failures and errors. 
-        Will have the signature:
-            on_failure(failure_type (string), result (dict), data (dict))
-        Values for failure type are: 'error', 'failure'. Defaults to None.
+            failure_callback (function): Callback for failures and errors. 
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
 
-        redirect_callback (function): Callback for redirect, 
-        Will have the signature:
-            on_redirect(redirect_object (PodiumRedirect))
-        Defaults to None.
+            redirect_callback (function): Callback for redirect, 
+            Will have the signature:
+                on_redirect(redirect_object (PodiumRedirect))
+            Defaults to None.
 
-        progress_callback (function): Callback for progress updates,
-        will have the signature:
-            on_progress(current_size (int), total_size (int), data (dict))
-        Defaults to None.
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
 
-    Return:
-        UrlRequest: The request being made.
+        Return:
+            UrlRequest: The request being made.
 
-    '''
+        '''
         make_device_update(self.token, *args, **kwargs)
 
     def get(self, *args, **kwargs):
-    '''
-    Request that returns a PodiumDevice for the provided device_uri
+        '''
+        Request that returns a PodiumDevice for the provided device_uri
 
-    Args:
-        device_uri (str): URI for the device you want.
+        Args:
+            device_uri (str): URI for the device you want.
 
-    Kwargs:
-        expand (bool): Expand all objects in response output. Defaults to True
+        Kwargs:
+            expand (bool): Expand all objects in response output. Defaults to True
 
-        quiet (object): If not None HTML layout will not render endpoint
-        description. Defaults to None.
+            quiet (object): If not None HTML layout will not render endpoint
+            description. Defaults to None.
 
-        success_callback (function): Callback for a successful request,
-        will have the signature:
-            on_success(PodiumEvent)
-        Defaults to None.
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(PodiumEvent)
+            Defaults to None.
 
-        failure_callback (function): Callback for failures and errors. 
-        Will have the signature:
-            on_failure(failure_type (string), result (dict), data (dict))
-        Values for failure type are: 'error', 'failure'. Defaults to None.
+            failure_callback (function): Callback for failures and errors. 
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
 
-        redirect_callback (function): Callback for redirect, 
-        Will have the signature:
-            on_redirect(result (dict), data (dict))
-        Defaults to None.
+            redirect_callback (function): Callback for redirect, 
+            Will have the signature:
+                on_redirect(result (dict), data (dict))
+            Defaults to None.
 
-        progress_callback (function): Callback for progress updates,
-        will have the signature:
-            on_progress(current_size (int), total_size (int), data (dict))
-        Defaults to None.
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
 
-    Return:
-        UrlRequest: The request being made.
+        Return:
+            UrlRequest: The request being made.
 
-    '''
+        '''
         make_device_get(self.token, *args, **kwargs)
 
     def delete(self, *args, **kwargs):
-    '''
-    Deletes the device for the provided URI.
+        '''
+        Deletes the device for the provided URI.
 
-    Args:
-        device_uri (str): URI for the device you want.
+        Args:
+            device_uri (str): URI for the device you want.
 
-    Kwargs:
-        success_callback (function): Callback for a successful request,
-        will have the signature:
-            on_success(deleted_uri (str))
-        Defaults to None.
+        Kwargs:
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(deleted_uri (str))
+            Defaults to None.
 
-        failure_callback (function): Callback for failures and errors. 
-        Will have the signature:
-            on_failure(failure_type (string), result (dict), data (dict))
-        Values for failure type are: 'error', 'failure'. Defaults to None.
+            failure_callback (function): Callback for failures and errors. 
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
 
-        redirect_callback (function): Callback for redirect, 
-        Will have the signature:
-            on_redirect(result (dict), data (dict))
-        Defaults to None.
+            redirect_callback (function): Callback for redirect, 
+            Will have the signature:
+                on_redirect(result (dict), data (dict))
+            Defaults to None.
 
-        progress_callback (function): Callback for progress updates,
-        will have the signature:
-            on_progress(current_size (int), total_size (int), data (dict))
-        Defaults to None.
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
 
-    Return:
-        UrlRequest: The request being made.
+        Return:
+            UrlRequest: The request being made.
 
-    '''
+        '''
         make_device_delete(self.token, *args, **kwargs)
 
 

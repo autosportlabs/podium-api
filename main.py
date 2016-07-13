@@ -5,6 +5,10 @@ from podium_api import register_podium_application
 from podium_api.login import make_login_post
 from podium_api.users import make_user_get
 from podium_api.account import make_account_get
+from podium_api.friendships import (
+    make_friendships_get, make_friendship_create, make_friendship_get,
+    make_friendship_delete
+    )
 from podium_api.events import (
     make_events_get, make_event_create, make_event_get, make_event_delete,
     make_event_update
@@ -35,12 +39,36 @@ class PodiumApp(App):
         #use plyer to save the token in crossplatform way
         self.store_token(token)
         self.podium = podium = PodiumAPI(token)
+        self.token = token
         podium.account.get(success_callback=self.account_success,
                            failure_callback=self.failure,
                            progress_callback=self.progress)
 
+    def user_success(self, user):
+        print(user.__dict__)
+        self.user = user
+        make_friendships_get(self.token, user.friendships_uri,
+                             success_callback=self.friendship_success)
+
+    def friendship_success2(self, paged_response):
+        print(paged_response.__dict__)
+
+    def friendship_success(self, paged_response):
+        print(paged_response.__dict__)
+        make_friendship_delete(self.token, 
+                               paged_response.users[0].friendship_uri)
+        make_friendships_get(self.token, self.user.friendships_uri,
+                             success_callback=self.friendship_success2)
+
+    def friendship_redirect(self, redirect):
+        make_friendship_get(self.token, redirect.location,
+                            success_callback=self.users_success)
 
     def account_success(self, account):
+        # make_friendship_create(self.token, 22,
+        #                        redirect_callback=self.friendship_redirect)
+        make_user_get(self.token, endpoint=account.user_uri,
+                      success_callback=self.user_success)
         # make_events_get(TOKEN, endpoint=account.events_uri,
         #                 success_callback=self.events_success,
         #                 failure_callback=self.failure,
@@ -53,12 +81,12 @@ class PodiumApp(App):
         #     failure_callback=self.failure,
         #     progress_callback=self.progress
         #     )
-        self.podium.devices.create(
-            "test device",
-            redirect_callback=self.create_device_success,
-            failure_callback=self.failure,
-            progress_callback=self.progress
-            )
+        # self.podium.devices.create(
+        #     "test device",
+        #     redirect_callback=self.create_device_success,
+        #     failure_callback=self.failure,
+        #     progress_callback=self.progress
+        #     )
 
     def device_success(self, device):
         print(device, device.__dict__)

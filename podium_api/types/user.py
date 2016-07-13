@@ -21,9 +21,13 @@ class PodiumUser(object):
         **friendships_uri** (string): URI to friends list.
 
         **followers_uri** (string): URI to followers list.
+
+        **friendship_uri** (string): If this User has been friended
+        by the user this attr will have a value, otherwise None. Defaults to
+        None.
     '''
     def __init__(self, user_id, uri, username, description, avatar_url,
-                 links, friendships_uri, followers_uri):
+                 links, friendships_uri, followers_uri, friendship_uri):
         self.user_id = user_id
         self.uri = uri
         self.username = username
@@ -32,6 +36,7 @@ class PodiumUser(object):
         self.links = links
         self.friendships_uri = friendships_uri
         self.followers_uri = followers_uri
+        self.friendship_uri = friendship_uri
 
 
 def get_user_from_json(json):
@@ -47,5 +52,6 @@ def get_user_from_json(json):
     return PodiumUser(json['id'], json['URI'],
                       json['username'], json['description'],
                       json['avatar_url'], json['links'],
-                      json['friendships_uri'], json['followers_uri'])
-    
+                      json['friendships_uri'], json['followers_uri'],
+                      json.get("friendship_uri", None)
+                      )

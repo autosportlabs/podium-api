@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from podium_api.types.event import get_event_from_json
+from podium_api.types.friendship import get_friendship_from_json
+from podium_api.types.user import get_user_from_json
 
 class PodiumPagedResponse(object):
     '''
@@ -36,6 +38,8 @@ class PodiumPagedResponse(object):
 
 PAYLOAD_NAME_TO_OBJECT = {
     'events': get_event_from_json,
+    'friendships': get_friendship_from_json,
+    'users': get_user_from_json,
 }
 
 
@@ -54,6 +58,7 @@ def get_paged_response_from_json(json, payload_name):
     Return:
         PodiumPagedResponse: The PodiumPagedResponse object for the data.
     '''
+    print(json)
     conversion_func = PAYLOAD_NAME_TO_OBJECT[payload_name]
     data = [conversion_func(x) for x in json[payload_name]]
     return PodiumPagedResponse(data, json['total'], json.get('nextURI', None),

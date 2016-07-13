@@ -283,9 +283,8 @@ def make_events_get(token, start=None, per_page=None,
 
         per_page (int): Number per page of results, max of 100.
 
-        endpoint (str): If provided the start, per_page, expand, and quiet
-        params will not be used instead making a request based on the provided
-        endpoint.
+        endpoint (str): If provided this endpoint will be used instead of
+        the default: 'https://podium.live/api/v1/events'
 
     Return:
         UrlRequest: The request being made.

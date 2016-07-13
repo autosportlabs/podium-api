@@ -7,7 +7,7 @@ class PodiumRedirect(object):
     **Attributes:**
         **location** (str): URI for the redirected object.
 
-        **type** (str): Type of object. Can be 'event', 'device'
+        **type** (str): Type of object. Can be 'event', 'device '
     '''
     def __init__(self, location, object_type):
         self.location = location
