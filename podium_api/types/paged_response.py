@@ -3,6 +3,8 @@
 from podium_api.types.event import get_event_from_json
 from podium_api.types.friendship import get_friendship_from_json
 from podium_api.types.user import get_user_from_json
+from podium_api.types.eventdevice import get_eventdevice_from_json
+from podium_api.types.device import get_device_from_json
 
 class PodiumPagedResponse(object):
     '''
@@ -40,6 +42,8 @@ PAYLOAD_NAME_TO_OBJECT = {
     'events': get_event_from_json,
     'friendships': get_friendship_from_json,
     'users': get_user_from_json,
+    'eventdevices': get_eventdevice_from_json,
+    'devices': get_device_from_json,
 }
 
 

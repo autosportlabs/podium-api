@@ -429,6 +429,5 @@ def event_update_success_handler(req, results, data):
         None, this function instead calls a callback.
 
     '''
-    print(req, results, data)
     if data['success_callback'] is not None:
         data['success_callback'](results, data['updated_uri'])

@@ -65,8 +65,8 @@ def make_request(endpoint, method="GET", on_success=None, on_failure=None,
             on_failure(request (UrlRequest), result (dict), data (dict))
         Defaults to None.
 
-        on_error (function): Callback for request that handles errors and 
-        failures, will have the signature:
+        on_error (function): Callback for request that handles errors, will have
+        the signature:
             on_error(request (UrlRequest), result (dict), data (dict))
         Defaults to None.
 

@@ -5,7 +5,15 @@ from podium_api.events import (
     )
 from podium_api.devices import (
     make_device_get, make_device_create, make_device_update,
-    make_device_delete
+    make_device_delete, make_devices_get
+    )
+from podium_api.friendships import (
+    make_friendship_get, make_friendships_get, make_friendship_create,
+    make_friendship_delete
+    )
+from podium_api.users import make_user_get
+from podium_api.eventdevices import (
+    make_eventdevices_get, make_eventdevice_create, make_eventdevice_update
     )
 
 class PodiumAPI(object):
@@ -15,6 +23,51 @@ class PodiumAPI(object):
         self.account = PodiumAccountAPI(token)
         self.events = PodiumEventsAPI(token)
         self.devices = PodiumDevicesAPI(token)
+        self.friendships = PodiumFriendshipsAPI(token)
+        self.users = PodiumUsersAPI(token)
+        self.eventdevices = PodiumEventDevicesAPI(token)
+
+
+class PodiumEventDevicesAPI(object):
+
+    def __init__(self, token):
+        self.token = token
+
+    def list(self, *args, **kwargs):
+        make_eventdevices_get(self.token, *args, **kwargs)
+
+    def create(self, *args, **kwargs):
+        make_eventdevice_create(self.token, *args, **kwargs)
+
+    def update(self, *args, **kwargs):
+        make_eventdevice_update(self.token, *args, **kwargs)
+
+
+class PodiumUsersAPI(object):
+
+    def __init__(self, token):
+        self.token = token
+
+    def get(self, *args, **kwargs):
+        make_user_get(self.token, *args, **kwargs)
+
+
+class PodiumFriendshipsAPI(object):
+
+    def __init__(self, token):
+        self.token = token
+
+    def get(self, *args, **kwargs):
+        make_friendship_get(self.token, *args, **kwargs)
+
+    def list(self, *args, **kwargs):
+        make_friendships_get(self.token, *args, **kwargs)
+
+    def create(self, *args, **kwargs):
+        make_friendship_create(self.token, *args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        make_friendship_delete(self.token, *args, **kwargs)
 
 
 class PodiumAccountAPI(object):
@@ -208,6 +261,8 @@ class PodiumDevicesAPI(object):
         '''
         make_device_delete(self.token, *args, **kwargs)
 
+    def list(self, *args, **kwargs):
+        make_devices_get(self.token, *args, **kwargs)
 
 
 class PodiumEventsAPI(object):
