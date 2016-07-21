@@ -30,6 +30,8 @@ class PodiumApp(App):
         register_podium_application(APP_ID, APP_SECRET)
         email = "kovac1066@gmail.com" #put a username here
         secret = "zaeron19" #put a password here
+        self.events = []
+        self.devices = []
         req = make_login_post(email, secret,
                               success_callback=self.login_success,
                               failure_callback=self.failure,
@@ -44,21 +46,48 @@ class PodiumApp(App):
                            failure_callback=self.failure,
                            progress_callback=self.progress)
 
+    def create_eventdevice_for_event(self):
+        event = self.events[0]
+        device = self.devices[1]
+        print(event.__dict__)
+        print(device.__dict__)
+        self.podium.eventdevices.create(
+            event.event_id, device.device_id, "test name",
+            redirect_callback=self.eventdevices_success,
+            failure_callback=self.failure)
+
+        # podium.eventdevices.create()
+
+
+    def eventdevices_success(self, redirect):
+        print("event device created", redirect.__dict__)
+
     def user_success(self, user):
         print(user.__dict__)
         self.user = user
-        make_friendships_get(self.token, user.friendships_uri,
-                             success_callback=self.friendship_success)
+        # self.podium.events.get(endpoint=user.events_uri)
+        # make_friendships_get(self.token, user.friendships_uri,
+        #                      success_callback=self.friendship_success)
 
     def friendship_success2(self, paged_response):
         print(paged_response.__dict__)
 
+    def devices_success(self, paged_response):
+        print("devices")
+        print(paged_response.__dict__)
+        self.devices += paged_response.devices
+        if paged_response.next_uri is not None:
+            self.podium.devices.list(paged_response.next_uri,
+                                     success_callback=self.devices_success)
+        else:
+            self.create_eventdevice_for_event()
+
     def friendship_success(self, paged_response):
         print(paged_response.__dict__)
-        make_friendship_delete(self.token, 
-                               paged_response.users[0].friendship_uri)
-        make_friendships_get(self.token, self.user.friendships_uri,
-                             success_callback=self.friendship_success2)
+        # make_friendship_delete(self.token, 
+        #                        paged_response.users[0].friendship_uri)
+        # make_friendships_get(self.token, self.user.friendships_uri,
+        #                      success_callback=self.friendship_success2)
 
     def friendship_redirect(self, redirect):
         make_friendship_get(self.token, redirect.location,
@@ -67,12 +96,13 @@ class PodiumApp(App):
     def account_success(self, account):
         # make_friendship_create(self.token, 22,
         #                        redirect_callback=self.friendship_redirect)
-        make_user_get(self.token, endpoint=account.user_uri,
-                      success_callback=self.user_success)
-        # make_events_get(TOKEN, endpoint=account.events_uri,
-        #                 success_callback=self.events_success,
-        #                 failure_callback=self.failure,
-        #                 progress_callback=self.progress)
+        self.account = account
+        self.podium.users.get(endpoint=account.user_uri,
+                              success_callback=self.user_success)
+        self.podium.events.list(endpoint=account.events_uri,
+                                success_callback=self.events_success,
+                                failure_callback=self.failure,
+                                progress_callback=self.progress)
         # self.podium.events.create(
         #     "test event",
         #     date(2016, 6, 27).isoformat(),
@@ -168,11 +198,17 @@ class PodiumApp(App):
 
     def events_success(self, paged_response):
         print(paged_response, len(paged_response.events))
+        self.events += paged_response.events
         if paged_response.next_uri is not None:
             make_events_get(TOKEN, endpoint=paged_response.next_uri,
                             success_callback=self.events_success,
                             failure_callback=self.failure,
                             progress_callback=self.progress)
+        else:
+            self.podium.devices.list(self.account.devices_uri,
+                                     success_callback=self.devices_success)
+   
+
 
 
     def users_success(self, user):

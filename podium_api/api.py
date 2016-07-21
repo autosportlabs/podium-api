@@ -13,8 +13,8 @@ from podium_api.friendships import (
     )
 from podium_api.users import make_user_get
 from podium_api.eventdevices import (
-    make_eventdevices_get, make_eventdevice_create, make_eventdevice_update
-    )
+    make_eventdevices_get, make_eventdevice_create, make_eventdevice_update,
+    make_eventdevice_get, make_eventdevice_delete)
 
 class PodiumAPI(object):
     
@@ -41,6 +41,12 @@ class PodiumEventDevicesAPI(object):
 
     def update(self, *args, **kwargs):
         make_eventdevice_update(self.token, *args, **kwargs)
+
+    def get(self, *args, **kwargs):
+        make_eventdevice_get(self.token, *args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        make_eventdevice_delete(self.token, *args, **kwargs)
 
 
 class PodiumUsersAPI(object):

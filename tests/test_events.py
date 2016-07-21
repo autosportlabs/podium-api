@@ -257,7 +257,6 @@ class TestEventCreate(unittest.TestCase):
         #simulate calling the requests on_success
         self.assertEqual(req.on_success, None)
 
-
     @patch('podium_api.async.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
@@ -265,9 +264,9 @@ class TestEventCreate(unittest.TestCase):
                                 '2016-06-28T00:00:00Z',
                                 '2016-06-29T00:00:00Z',
                                 progress_callback=progress_cb)
-        #simulate calling the requests on_progress
+        # simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
-        #assert our lambda called the mock correctly
+        # assert our lambda called the mock correctly
         progress_cb.assert_called_with(
             0, 10, 
            {'success_callback': None,
@@ -296,7 +295,7 @@ class TestEventDelete(unittest.TestCase):
     def test_event_delete(self, mock_request):
         req = make_event_delete(self.token,
                                 'https://podium.live/api/v1/events/test',
-                                 success_callback=self.success_cb)
+                                success_callback=self.success_cb)
         self.assertEqual(req._method, 'DELETE')
         self.assertEqual(req.url, 
                          'https://podium.live/api/v1/events/test')

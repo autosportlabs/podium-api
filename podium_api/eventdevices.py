@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from podium_api.types.eventdevice import get_eventdevice_from_json
+
 try:
     from urllib.parse import urlencode
 except:
@@ -95,8 +97,8 @@ def make_eventdevices_get(token, event_id=None,
 
 
 def make_eventdevice_update(token, eventdevice_uri, name=None,
-                      success_callback=None, failure_callback=None,
-                      progress_callback=None, redirect_callback=None):
+                            success_callback=None, failure_callback=None,
+                            progress_callback=None, redirect_callback=None):
     '''
     Request that updates a PodiumEventDevice.
 
@@ -135,20 +137,172 @@ def make_eventdevice_update(token, eventdevice_uri, name=None,
 
     '''
     body = {}
-    if title is not None:
+    if name is not None:
         body['eventdevice[name]'] = name
     header = get_json_header_token(token)
     return make_request_custom_success(
-        event_uri, eventdevice_update_success_handler,
+        eventdevice_uri, eventdevice_update_success_handler,
         method="PUT",
         success_callback=success_callback,
         redirect_callback=redirect_callback,
         failure_callback=failure_callback,
         progress_callback=progress_callback,
         body=body, header=header,
-        data={'updated_uri': event_uri}
+        data={'updated_uri': eventdevice_uri}
         )
 
+
+def make_eventdevice_get(token, eventdevice_uri, expand=True,
+                         quiet=None, success_callback=None,
+                         redirect_callback=None,
+                         failure_callback=None, progress_callback=None):
+
+
+    '''
+    Request that returns a PodiumEventDevice for the provided eventdevice_uri
+
+    Args:
+        token (PodiumToken): The authentication token for this session.
+
+        eventdevice_uri (str): URI for the eventdevice you want.
+
+    Kwargs:
+
+        expand (bool): Expand all objects in response output. Defaults to True
+
+        quiet (object): If not None HTML layout will not render endpoint
+        description. Defaults to None.
+
+        success_callback (function): Callback for a successful request,
+        will have the signature:
+            on_success(PodiumEvent)
+        Defaults to None.
+
+        failure_callback (function): Callback for failures and errors.
+        Will have the signature:
+            on_failure(failure_type (string), result (dict), data (dict))
+        Values for failure type are: 'error', 'failure'. Defaults to None.
+
+        redirect_callback (function): Callback for redirect,
+        Will have the signature:
+            on_redirect(result (dict), data (dict))
+        Defaults to None.
+
+        progress_callback (function): Callback for progress updates,
+        will have the signature:
+            on_progress(current_size (int), total_size (int), data (dict))
+        Defaults to None.
+
+    Return:
+        UrlRequest: The request being made.
+
+    '''
+    params = {}
+    if expand is not None:
+        params["expand"] = expand
+    if quiet is not None:
+        params['quiet'] = quiet
+    header = get_json_header_token(token)
+    return make_request_custom_success(eventdevice_uri, eventdevice_success_handler,
+                                       method="GET",
+                                       success_callback=success_callback,
+                                       failure_callback=failure_callback,
+                                       progress_callback=progress_callback,
+                                       redirect_callback=redirect_callback,
+                                       params=params, header=header)
+
+def eventdevice_success_handler(req, results, data):
+    '''
+    Creates and returns a PodiumDevice to the success_callback found in data
+    if there is one.
+
+    Called automatically by **make_device_get**
+
+    Args:
+        req (UrlRequest): Instace of the request that was made.
+
+        results (dict): Dict returned by the request.
+
+        data (dict): Wildcard dict for containing data that needs to be passed
+        to the various callbacks of a request. Will contain at least a
+        'success_callback' key.
+
+    Return:
+        None, this function instead calls a callback.
+    '''
+    if data['success_callback'] is not None:
+        data['success_callback'](get_eventdevice_from_json(results["eventdevice"]))
+
+
+def make_eventdevice_delete(token, eventdevice_uri,
+                            success_callback=None, failure_callback=None,
+                            progress_callback=None, redirect_callback=None):
+
+    '''
+    Deletes the device for the provided URI.
+
+    Args:
+        token (PodiumToken): The authentication token for this session.
+
+        eventdevice_uri (str): URI for the eventdevice you want.
+
+    Kwargs:
+        success_callback (function): Callback for a successful request,
+        will have the signature:
+            on_success(deleted_uri (str))
+        Defaults to None.
+
+        failure_callback (function): Callback for failures and errors.
+        Will have the signature:
+            on_failure(failure_type (string), result (dict), data (dict))
+        Values for failure type are: 'error', 'failure'. Defaults to None.
+
+        redirect_callback (function): Callback for redirect,
+        Will have the signature:
+            on_redirect(result (dict), data (dict))
+        Defaults to None.
+
+        progress_callback (function): Callback for progress updates,
+        will have the signature:
+            on_progress(current_size (int), total_size (int), data (dict))
+        Defaults to None.
+
+    Return:
+        UrlRequest: The request being made.
+
+    '''
+    header = get_json_header_token(token)
+    return make_request_custom_success(
+        eventdevice_uri, eventdevice_delete_handler,
+        method="DELETE",
+        success_callback=success_callback,
+        redirect_callback=redirect_callback,
+        failure_callback=failure_callback,
+        progress_callback=progress_callback,
+        header=header,
+        data={"deleted_uri": eventdevice_uri}
+    )
+
+def eventdevice_delete_handler(req, results, data):
+    '''
+    Returns the URI for the deleted resource to the user set success_callback
+
+    Called automatically by **make_eventdevice_delete**
+
+    Args:
+        req (UrlRequest): Instance of the request that was made.
+
+        results (dict): Dict returned by the request.
+
+        data (dict): Wildcard dict for containing data that needs to be passed
+        to the various callbacks of a request. Will contain at least a
+        'success_callback' key.
+
+    Return:
+        None, this function instead calls a callback.
+    '''
+    if data['success_callback'] is not None:
+        data['success_callback'](data['deleted_uri'])
 
 
 def make_eventdevice_create(token, event_id, device_id, name,
@@ -211,6 +365,7 @@ def make_eventdevice_create(token, event_id, device_id, name,
         data={"_redirect_callback": redirect_callback}
         )
 
+
 def create_eventdevice_redirect_handler(req, results, data):
     '''
     Handles the success redirect of a **make_event_device_create** call.
@@ -261,6 +416,7 @@ def eventdevice_update_success_handler(req, results, data):
     '''
     if data['success_callback'] is not None:
         data['success_callback'](results, data['updated_uri'])
+
 
 def eventdevices_success_handler(req, results, data):
     '''

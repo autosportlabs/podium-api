@@ -5,7 +5,7 @@ class PodiumEventDevice(object):
     Object that represents a device at an event.
 
     **Attributes:**
-        **event_device_id** (str): Unique id for device at this event
+        **eventdevice_id** (str): Unique id for device at this event
 
         **uri** (str): URI for this device at this event.
 
@@ -21,9 +21,9 @@ class PodiumEventDevice(object):
 
     '''
 
-    def __init__(self, event_device_id, uri, channels, name, device_uri,
+    def __init__(self, eventdevice_id, uri, channels, name, device_uri,
                  laps_uri):
-        self.event_device_id = event_device_id
+        self.eventdevice_id = eventdevice_id
         self.uri = uri
         self.channels = channels
         self.name = name

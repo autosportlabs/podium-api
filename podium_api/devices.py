@@ -294,7 +294,7 @@ def device_delete_handler(req, results, data):
     Called automatically by **make_device_delete**
 
     Args:
-        req (UrlRequest): Instace of the request that was made.
+        req (UrlRequest): Instance of the request that was made.
 
         results (dict): Dict returned by the request.
 
@@ -317,7 +317,7 @@ def devices_success_handler(req, results, data):
     Called automatically by **make_events_get**.
 
     Args:
-        req (UrlRequest): Instace of the request that was made.
+        req (UrlRequest): Instance of the request that was made.
 
         results (dict): Dict returned by the request.
 
