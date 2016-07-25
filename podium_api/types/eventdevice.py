@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 class PodiumEventDevice(object):
-    '''
+    """
     Object that represents a device at an event.
 
     **Attributes:**
@@ -19,7 +19,7 @@ class PodiumEventDevice(object):
 
         **laps_uri** (str): URI of lap data.
 
-    '''
+    """
 
     def __init__(self, eventdevice_id, uri, channels, name, device_uri,
                  laps_uri):
@@ -32,7 +32,7 @@ class PodiumEventDevice(object):
         
 
 def get_eventdevice_from_json(json):
-    '''
+    """
     Returns a PodiumEventDevice object from the json dict received from
     podium api.
 
@@ -41,7 +41,7 @@ def get_eventdevice_from_json(json):
 
     Return:
         PodiumEvent: The PodiumEvent object for this data.
-    '''
+    """
     return PodiumEventDevice(json['id'], json['URI'],
                              json.get('channels', []),
                              json.get('name', None),

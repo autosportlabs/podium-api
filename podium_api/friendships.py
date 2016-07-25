@@ -6,12 +6,11 @@ from podium_api.types.redirect import get_redirect_from_json
 from podium_api.types.friendship import get_friendship_from_json
 
 def make_friendship_get(token, endpoint,
-                        start=None, per_page=None,
                         expand=True,
                         quiet=None, success_callback=None,
                         redirect_callback=None,
                         failure_callback=None, progress_callback=None):
-    '''
+    """
     Request that returns a PodiumFriendship that represents a specific
     friendship found at the URI. 
 
@@ -49,7 +48,7 @@ def make_friendship_get(token, endpoint,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     params = {}
     if expand is not None:
         params['expand'] = expand
@@ -70,7 +69,7 @@ def make_friendships_get(token, endpoint,
                          quiet=None, success_callback=None,
                          redirect_callback=None,
                          failure_callback=None, progress_callback=None):
-    '''
+    """
     Request that returns a PodiumPagedRequest of friendships. 
 
     Args:
@@ -111,7 +110,7 @@ def make_friendships_get(token, endpoint,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     params = {}
     if expand is not None:
         params['expand'] = expand
@@ -135,7 +134,7 @@ def make_friendships_get(token, endpoint,
 def make_friendship_delete(token, friendship_uri, 
                            success_callback=None, redirect_callback=None,
                            failure_callback=None, progress_callback=None):
-    '''
+    """
     Deletes the friendship for the provided URI.
 
     Args:
@@ -167,7 +166,7 @@ def make_friendship_delete(token, friendship_uri,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     header = get_json_header_token(token)
     return make_request_custom_success(friendship_uri,
                                        friendship_delete_handler,
@@ -182,7 +181,7 @@ def make_friendship_delete(token, friendship_uri,
 def make_friendship_create(token, friend_id,
                            success_callback=None, failure_callback=None,
                            progress_callback=None, redirect_callback=None):
-    '''
+    """
     Request that adds a friendship for the user whose token is in use.
 
     The uri for the newly created event will be provided to the
@@ -215,7 +214,7 @@ def make_friendship_create(token, friend_id,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     endpoint = 'https://podium.live/api/v1/friendships'
     body = {'friendship[user_id]': friend_id}
     header = get_json_header_token(token)
@@ -231,7 +230,7 @@ def make_friendship_create(token, friend_id,
 
 
 def friendship_delete_handler(req, results, data):
-    '''
+    """
     Returns the URI for the deleted resource to the user set success_callback
 
     Called automatically by **make_friendship_delete**
@@ -247,12 +246,12 @@ def friendship_delete_handler(req, results, data):
 
     Return:
         None, this function instead calls a callback.
-    '''
+    """
     if data['success_callback'] is not None:
         data['success_callback'](data['deleted_uri'])
 
 def create_friendship_redirect_handler(req, results, data):
-    '''
+    """
     Handles the success redirect of a **make_friendship_create** call.
 
     Returns a PodiumRedirect with a uri for the newly created event to the
@@ -273,14 +272,14 @@ def create_friendship_redirect_handler(req, results, data):
     Return:
         None, this function instead calls a callback.
 
-    '''
+    """
     if data['_redirect_callback'] is not None:
         data['_redirect_callback'](get_redirect_from_json(results,
                                                           "friendship"))
 
 
 def friendship_success_handler(req, results, data):
-    '''
+    """
     Creates and returns a PodiumFriendship.
     Called automatically by **make_friendship_get**.
 
@@ -296,14 +295,14 @@ def friendship_success_handler(req, results, data):
     Return:
         None, this function instead calls a callback.
 
-    '''
+    """
     if data['success_callback'] is not None:
         data['success_callback'](
             get_friendship_from_json(results['friendship'])
             )
 
 def friendships_success_handler(req, results, data):
-    '''
+    """
     Creates and returns a PodiumPagedResponse with PodiumUser as the
     payload to the success_callback found in data if there is one.
 
@@ -321,7 +320,7 @@ def friendships_success_handler(req, results, data):
     Return:
         None, this function instead calls a callback.
 
-    '''
+    """
     if data['success_callback'] is not None:
         data['success_callback'](get_paged_response_from_json(results,
                                                               "users"))

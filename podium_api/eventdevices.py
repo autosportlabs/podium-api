@@ -20,7 +20,7 @@ def make_eventdevices_get(token, event_id=None,
                           redirect_callback=None,
                           failure_callback=None,
                           progress_callback=None):
-    '''
+    """
     Request that returns a PodiumPagedRequest of events. 
     By default a get request to 
     'https://podium.live/api/v1/events/{event_id}/devices' will be made.
@@ -67,7 +67,7 @@ def make_eventdevices_get(token, event_id=None,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     if endpoint is None:
         if event_id is None:
             raise NoEndpointOrEventIdProvided()
@@ -99,7 +99,7 @@ def make_eventdevices_get(token, event_id=None,
 def make_eventdevice_update(token, eventdevice_uri, name=None,
                             success_callback=None, failure_callback=None,
                             progress_callback=None, redirect_callback=None):
-    '''
+    """
     Request that updates a PodiumEventDevice.
 
     Args:
@@ -135,7 +135,7 @@ def make_eventdevice_update(token, eventdevice_uri, name=None,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     body = {}
     if name is not None:
         body['eventdevice[name]'] = name
@@ -158,7 +158,7 @@ def make_eventdevice_get(token, eventdevice_uri, expand=True,
                          failure_callback=None, progress_callback=None):
 
 
-    '''
+    """
     Request that returns a PodiumEventDevice for the provided eventdevice_uri
 
     Args:
@@ -196,7 +196,7 @@ def make_eventdevice_get(token, eventdevice_uri, expand=True,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     params = {}
     if expand is not None:
         params["expand"] = expand
@@ -212,7 +212,7 @@ def make_eventdevice_get(token, eventdevice_uri, expand=True,
                                        params=params, header=header)
 
 def eventdevice_success_handler(req, results, data):
-    '''
+    """
     Creates and returns a PodiumDevice to the success_callback found in data
     if there is one.
 
@@ -229,7 +229,7 @@ def eventdevice_success_handler(req, results, data):
 
     Return:
         None, this function instead calls a callback.
-    '''
+    """
     if data['success_callback'] is not None:
         data['success_callback'](get_eventdevice_from_json(results["eventdevice"]))
 
@@ -238,7 +238,7 @@ def make_eventdevice_delete(token, eventdevice_uri,
                             success_callback=None, failure_callback=None,
                             progress_callback=None, redirect_callback=None):
 
-    '''
+    """
     Deletes the device for the provided URI.
 
     Args:
@@ -270,7 +270,7 @@ def make_eventdevice_delete(token, eventdevice_uri,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     header = get_json_header_token(token)
     return make_request_custom_success(
         eventdevice_uri, eventdevice_delete_handler,
@@ -284,7 +284,7 @@ def make_eventdevice_delete(token, eventdevice_uri,
     )
 
 def eventdevice_delete_handler(req, results, data):
-    '''
+    """
     Returns the URI for the deleted resource to the user set success_callback
 
     Called automatically by **make_eventdevice_delete**
@@ -300,7 +300,7 @@ def eventdevice_delete_handler(req, results, data):
 
     Return:
         None, this function instead calls a callback.
-    '''
+    """
     if data['success_callback'] is not None:
         data['success_callback'](data['deleted_uri'])
 
@@ -308,7 +308,7 @@ def eventdevice_delete_handler(req, results, data):
 def make_eventdevice_create(token, event_id, device_id, name,
                             success_callback=None, failure_callback=None,
                             progress_callback=None, redirect_callback=None):
-    '''
+    """
     Request that creates a new PodiumEventDevice.
 
     The uri for the newly created event device will be provided to the
@@ -349,7 +349,7 @@ def make_eventdevice_create(token, event_id, device_id, name,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     endpoint = 'https://podium.live/api/v1/events/{}/devices'.format(
         event_id
         )
@@ -367,7 +367,7 @@ def make_eventdevice_create(token, event_id, device_id, name,
 
 
 def create_eventdevice_redirect_handler(req, results, data):
-    '''
+    """
     Handles the success redirect of a **make_event_device_create** call.
 
     Returns a PodiumRedirect with a uri for the newly created event to the
@@ -388,14 +388,14 @@ def create_eventdevice_redirect_handler(req, results, data):
     Return:
         None, this function instead calls a callback.
 
-    '''
+    """
     if data['_redirect_callback'] is not None:
         data['_redirect_callback'](get_redirect_from_json(results,
                                                           "eventdevice"))
 
 
 def eventdevice_update_success_handler(req, results, data):
-    '''
+    """
     Success callback after updating an event. Will return the message from
     the server and the event uri to the success_callback.
 
@@ -413,13 +413,13 @@ def eventdevice_update_success_handler(req, results, data):
     Return:
         None, this function instead calls a callback.
 
-    '''
+    """
     if data['success_callback'] is not None:
         data['success_callback'](results, data['updated_uri'])
 
 
 def eventdevices_success_handler(req, results, data):
-    '''
+    """
     Creates and returns a PodiumPagedResponse with PodiumEventDevice as the
     payload
     to the success_callback found in data if there is one.
@@ -438,7 +438,7 @@ def eventdevices_success_handler(req, results, data):
     Return:
         None, this function instead calls a callback.
 
-    '''
+    """
     if data['success_callback'] is not None:
         data['success_callback'](get_paged_response_from_json(results,
                                                               "eventdevices"))

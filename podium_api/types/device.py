@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 class PodiumDevice(object):
-    '''
+    """
     Object that represents a Device.
 
     **Attributes:**
@@ -15,7 +15,7 @@ class PodiumDevice(object):
         **name** (str): Name of the device.
 
         **private** (bool): Is the event only viewable to creator?
-    '''
+    """
 
     def __init__(self, device_id, uri, serial, name, private):
         self.device_id = device_id
@@ -26,7 +26,7 @@ class PodiumDevice(object):
 
 
 def get_device_from_json(json):
-    '''
+    """
     Returns a PodiumEvent object from the json dict received from podium api.
 
     Args:
@@ -34,6 +34,6 @@ def get_device_from_json(json):
 
     Return:
         PodiumEvent: The PodiumEvent object for this data.
-    '''
+    """
     return PodiumDevice(json['id'], json['URI'], json.get('serial', None),
                         json.get('name', None), json.get('private', None))

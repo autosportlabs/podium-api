@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 class PodiumUser(object):
-    '''
+    """
     Object that represents a particular User.
 
     **Attributes:**
@@ -25,7 +25,7 @@ class PodiumUser(object):
         **friendship_uri** (string): If this User has been friended
         by the user this attr will have a value, otherwise None. Defaults to
         None.
-    '''
+    """
     def __init__(self, user_id, uri, username, description, avatar_url,
                  links, friendships_uri, followers_uri, friendship_uri):
         self.user_id = user_id
@@ -40,7 +40,7 @@ class PodiumUser(object):
 
 
 def get_user_from_json(json):
-    '''
+    """
     Returns a PodiumUser object from the json dict received from podium api.
 
     Args:
@@ -48,7 +48,7 @@ def get_user_from_json(json):
 
     Return:
         PodiumUser: The PodiumUser object for the data.
-    '''
+    """
     return PodiumUser(json['id'], json['URI'],
                       json['username'], json['description'],
                       json['avatar_url'], json['links'],

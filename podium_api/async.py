@@ -9,7 +9,7 @@ except:
 from podium_api.types.exceptions import PodiumApplicationNotRegistered
 
 def get_json_header_token(token):
-    '''
+    """
     Returns a header prepared with the app_id and app_secret set to tell
     the server to return json. Content-Type will be
     'application/x-www-form-urlencoded'
@@ -17,7 +17,7 @@ def get_json_header_token(token):
     Return:
         dict: Dict containing the header data for a request.
 
-    '''
+    """
     if podium_api.PODIUM_APP is None:
         raise PodiumApplicationNotRegistered()
     return {"Content-Type": "application/x-www-form-urlencoded",
@@ -26,7 +26,7 @@ def get_json_header_token(token):
 
 
 def get_json_header():
-    '''
+    """
     Returns a header prepared with the app_id and app_secret set to tell
     the server to return json. Content-Type will be
     'application/x-www-form-urlencoded'
@@ -34,7 +34,7 @@ def get_json_header():
     Return:
         dict: Dict containing the header data for a request.
 
-    '''
+    """
     if podium_api.PODIUM_APP is None:
         raise PodiumApplicationNotRegistered()
     return {"Content-Type": "application/x-www-form-urlencoded",
@@ -46,7 +46,7 @@ def get_json_header():
 def make_request(endpoint, method="GET", on_success=None, on_failure=None,
                  on_error=None, on_redirect=None, on_progress=None,
                  body=None, header=None, data=None, params=None):
-    '''
+    """
     Creates and starts a UrlRequest.
 
     Args:
@@ -93,7 +93,7 @@ def make_request(endpoint, method="GET", on_success=None, on_failure=None,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     if body is not None:
         body = urlencode(body)
     if params is not None and params != {}:
@@ -122,7 +122,7 @@ def make_request_default(endpoint, method="GET", success_callback=None,
                          failure_callback=None, progress_callback=None,
                          redirect_callback=None,
                          data=None, body=None, header=None, params=None):
-    '''
+    """
     Creates a URL Request with simplified, default callbacks. Error,
     failure, and redirect will be condensed into one callback. 
 
@@ -164,7 +164,7 @@ def make_request_default(endpoint, method="GET", success_callback=None,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     if data is None:
         data = {}
     data['success_callback'] = success_callback
@@ -183,7 +183,7 @@ def make_request_custom_success(endpoint, success_handler, method="GET",
                                 redirect_callback= None,
                                 progress_callback=None, data=None, body=None,
                                 header=None, params=None):
-    '''
+    """
     Creates a request with a custom success handler and the default failure
     and progress handlers.
 
@@ -231,7 +231,7 @@ def make_request_custom_success(endpoint, success_handler, method="GET",
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     if data is None:
         data = {}
     data['success_callback'] = success_callback
@@ -246,7 +246,7 @@ def make_request_custom_success(endpoint, success_handler, method="GET",
 
 
 def default_redirect(req, results, data):
-    '''
+    """
     Default handler for a redirect callback. Will call the 'redirect_callback'
     provided in data with the args: response headers (dict), data (dict)
 
@@ -264,13 +264,13 @@ def default_redirect(req, results, data):
     Return:
         None, this function instead calls a callback.
 
-    '''
+    """
     if data['redirect_callback'] is None:
         return
     data['redirect_callback'](req, req._resp_headers, data)
 
 def default_success(req, results, data):
-    '''
+    """
     Default handler for a success callback. Will call the 'failure_callback'
     provided in data with the args: results, data
 
@@ -288,13 +288,13 @@ def default_success(req, results, data):
     Return:
         None, this function instead calls a callback.
         
-    '''
+    """
     if data['success_callback'] is None:
         return
     data['success_callback'](results, data)
 
 def default_failure(req, results, data):
-    '''
+    """
     Default handler for a failure callback. Will call the 'success_callback'
     provided in data with the args: 'failure', results, data
 
@@ -312,13 +312,13 @@ def default_failure(req, results, data):
     Return:
         None, this function instead calls a callback.
         
-    '''
+    """
     if data['failure_callback'] is None:
         return
     data['failure_callback']('failure', results, data)
 
 def default_error(req, results, data):
-    '''
+    """
     Default handler for an error callback. Will call the 'failure_callback'
     provided in data with the args: 'error', results, data
 
@@ -336,13 +336,13 @@ def default_error(req, results, data):
     Return:
         None, this function instead calls a callback.
         
-    '''
+    """
     if data['failure_callback'] is None:
         return
     data['failure_callback']('error', results, data)
 
 def default_progress(req, current_size, total_size, data):
-    '''
+    """
     Default handler for a progress callback. Will call the 'progress_callback'
     provided in data with the args: current_size, total_size, data
 
@@ -360,7 +360,7 @@ def default_progress(req, current_size, total_size, data):
     Return:
         None, this function instead calls a callback.
         
-    '''
+    """
     if data['progress_callback'] is None:
         return
     data['progress_callback'](current_size, total_size, data)

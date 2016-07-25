@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 class PodiumAccount(object):
-    '''
+    """
     Object that represents a particular User.
 
     **Attributes:**
@@ -23,7 +23,7 @@ class PodiumAccount(object):
         **streams_uri** (str): URI to account's current live streams
 
         **exports_uri** (str): URI to account's telemetry exports
-    '''
+    """
 
     def __init__(self, account_id, username, email, devices_uri, exports_uri,
                  streams_uri, user_uri, events_uri):
@@ -38,7 +38,7 @@ class PodiumAccount(object):
 
 
 def get_account_from_json(json):
-    '''
+    """
     Returns a PodiumAccount object from the json dict received from podium api.
 
     Args:
@@ -46,7 +46,7 @@ def get_account_from_json(json):
 
     Return:
         PodiumUser: The PodiumAccount object for the data.
-    '''
+    """
     return PodiumAccount(json['id'], json['username'],
                          json['email'], json['devices_uri'],
                          json['exports_uri'], json['streams_uri'],

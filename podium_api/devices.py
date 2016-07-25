@@ -9,7 +9,7 @@ from podium_api.types.paged_response import get_paged_response_from_json
 def make_device_update(token, device_uri, name=None,
                        success_callback=None, failure_callback=None,
                        progress_callback=None, redirect_callback=None):
-    '''
+    """
     Request that updates a PodiumDevice
 
     Args:
@@ -43,7 +43,7 @@ def make_device_update(token, device_uri, name=None,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     body = {}
     if name is not None:
         body['device[name]'] = name
@@ -65,7 +65,7 @@ def make_devices_get(token, endpoint,
                      quiet=None, success_callback=None,
                      redirect_callback=None,
                      failure_callback=None, progress_callback=None):
-    '''
+    """
     Request that returns a PodiumPagedRequest of PodiumDevice. 
 
     Args:
@@ -106,7 +106,7 @@ def make_devices_get(token, endpoint,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     params = {}
     if expand is not None:
         params['expand'] = expand
@@ -131,7 +131,7 @@ def make_devices_get(token, endpoint,
 def make_device_create(token, name,
                        success_callback=None, failure_callback=None,
                        progress_callback=None, redirect_callback=None):
-    '''
+    """
     Request that creates a new PodiumDevice.
 
     The uri for the newly created event will be provided to the
@@ -166,7 +166,7 @@ def make_device_create(token, name,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     endpoint = 'https://podium.live/api/v1/devices'
     body = {"device[name]": name}
     header = get_json_header_token(token)
@@ -184,7 +184,7 @@ def make_device_create(token, name,
 def make_device_delete(token, device_uri, 
                        success_callback=None, redirect_callback=None,
                        failure_callback=None, progress_callback=None):
-    '''
+    """
     Deletes the device for the provided URI.
 
     Args:
@@ -216,7 +216,7 @@ def make_device_delete(token, device_uri,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     header = get_json_header_token(token)
     return make_request_custom_success(device_uri, device_delete_handler,
                                        method="DELETE",
@@ -233,7 +233,7 @@ def make_device_get(token, device_uri, expand=True,
                     quiet=None, success_callback=None,
                     redirect_callback=None,
                     failure_callback=None, progress_callback=None):
-    '''
+    """
     Request that returns a PodiumDevice for the provided device_uri
 
     Args:
@@ -270,7 +270,7 @@ def make_device_get(token, device_uri, expand=True,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     params = {}
     if expand is not None:
         params["expand"] = expand
@@ -288,7 +288,7 @@ def make_device_get(token, device_uri, expand=True,
 
 
 def device_delete_handler(req, results, data):
-    '''
+    """
     Returns the URI for the deleted resource to the user set success_callback
 
     Called automatically by **make_device_delete**
@@ -304,13 +304,13 @@ def device_delete_handler(req, results, data):
 
     Return:
         None, this function instead calls a callback.
-    '''
+    """
     if data['success_callback'] is not None:
         data['success_callback'](data['deleted_uri'])
 
 
 def devices_success_handler(req, results, data):
-    '''
+    """
     Creates and returns a PodiumPagedResponse with PodiumEvent as the payload
     to the success_callback found in data if there is one.
 
@@ -328,14 +328,14 @@ def devices_success_handler(req, results, data):
     Return:
         None, this function instead calls a callback.
 
-    '''
+    """
     if data['success_callback'] is not None:
         data['success_callback'](get_paged_response_from_json(results,
                                                               "devices"))
 
 
 def device_success_handler(req, results, data):
-    '''
+    """
     Creates and returns a PodiumDevice to the success_callback found in data
     if there is one.
 
@@ -352,14 +352,14 @@ def device_success_handler(req, results, data):
 
     Return:
         None, this function instead calls a callback.
-    '''
+    """
     print(results)
     if data['success_callback'] is not None:
         data['success_callback'](get_device_from_json(results["device"]))
 
 
 def create_device_redirect_handler(req, results, data):
-    '''
+    """
     Handles the success redirect of a **make_device_create** call.
 
     Returns a PodiumRedirect with a uri for the newly created event to the
@@ -380,13 +380,13 @@ def create_device_redirect_handler(req, results, data):
     Return:
         None, this function instead calls a callback.
 
-    '''
+    """
     if data['_redirect_callback'] is not None:
         data['_redirect_callback'](get_redirect_from_json(results, "device"))
 
 
 def device_update_success_handler(req, results, data):
-    '''
+    """
     Success callback after updating an event. Will return the message from
     the server and the device uri to the success_callback.
 
@@ -404,6 +404,6 @@ def device_update_success_handler(req, results, data):
     Return:
         None, this function instead calls a callback.
 
-    '''
+    """
     if data['success_callback'] is not None:
         data['success_callback'](results, data['updated_uri'])

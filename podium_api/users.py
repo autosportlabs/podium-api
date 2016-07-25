@@ -7,7 +7,7 @@ def make_user_get(token, endpoint,
                    expand=False, quiet=None, success_callback=None,
                    failure_callback=None, progress_callback=None,
                    redirect_callback=None):
-    '''
+    """
     Returns a PodiumUser object found at the uri provided in the endpoint
     arg.
 
@@ -42,7 +42,7 @@ def make_user_get(token, endpoint,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     params = {}
     if expand is not None:
         params['expand'] = expand
@@ -59,7 +59,7 @@ def make_user_get(token, endpoint,
 
 
 def users_success_handler(req, results, data):
-    '''
+    """
     Creates and returns a  PodiumToken to the success_callback found in data.
 
     Called automatically by **make_login_request**.
@@ -76,6 +76,6 @@ def users_success_handler(req, results, data):
     Return:
         None, this function instead calls a callback.
 
-    '''
+    """
     if data['success_callback'] is not None:
         data['success_callback'](get_user_from_json(results['user']))

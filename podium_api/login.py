@@ -6,7 +6,7 @@ from podium_api.async import make_request_custom_success, get_json_header
 def make_login_post(username, password, success_callback=None,
                     failure_callback=None, progress_callback=None,
                     redirect_callback=None):
-    '''
+    """
     Request that hits the /oauth/token endpoint to log a user in. Will 
     internally use **make_request_custom_success**.
 
@@ -35,7 +35,7 @@ def make_login_post(username, password, success_callback=None,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     endpoint = "https://podium.live/oauth/token"
     body = {"grant_type": "password", "username": username,
             "password": password}
@@ -50,7 +50,7 @@ def make_login_post(username, password, success_callback=None,
 
 
 def login_success_handler(req, results, data):
-    '''
+    """
     Creates and returns a  PodiumToken to the success_callback found in data.
 
     Called automatically by **make_login_request**.
@@ -67,6 +67,6 @@ def login_success_handler(req, results, data):
     Return:
         None, this function instead calls a callback.
 
-    '''
+    """
     if data['success_callback'] is not None:
         data['success_callback'](get_token_from_json(results))

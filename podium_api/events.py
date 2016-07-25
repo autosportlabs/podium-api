@@ -10,7 +10,7 @@ def make_event_update(token, event_uri, title=None, start_time=None,
                       end_time=None, venue_id=None,
                       success_callback=None, failure_callback=None,
                       progress_callback=None, redirect_callback=None):
-    '''
+    """
     Request that updates a PodiumEvent.
 
     Args:
@@ -50,7 +50,7 @@ def make_event_update(token, event_uri, title=None, start_time=None,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     body = {}
     if title is not None:
         body['event[title]'] = title
@@ -76,7 +76,7 @@ def make_event_update(token, event_uri, title=None, start_time=None,
 def make_event_create(token, title, start_time, end_time, venue_id=None,
                       success_callback=None, failure_callback=None,
                       progress_callback=None, redirect_callback=None):
-    '''
+    """
     Request that creates a new PodiumEvent.
 
     The uri for the newly created event will be provided to the
@@ -117,7 +117,7 @@ def make_event_create(token, title, start_time, end_time, venue_id=None,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     endpoint = 'https://podium.live/api/v1/events'
     body = {"event[title]": title, "event[start_time]": start_time,
             "event[end_time]": end_time}
@@ -138,7 +138,7 @@ def make_event_create(token, title, start_time, end_time, venue_id=None,
 def make_event_delete(token, event_uri, 
                       success_callback=None, redirect_callback=None,
                       failure_callback=None, progress_callback=None):
-    '''
+    """
     Deletes the event for the provided URI.
 
     Args:
@@ -170,7 +170,7 @@ def make_event_delete(token, event_uri,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     header = get_json_header_token(token)
     return make_request_custom_success(event_uri, event_delete_handler,
                                        method="DELETE",
@@ -187,7 +187,7 @@ def make_event_get(token, event_uri, expand=True,
                    quiet=None, success_callback=None,
                    redirect_callback=None,
                    failure_callback=None, progress_callback=None):
-    '''
+    """
     Request that returns a PodiumEvent for the provided event_uri. 
 
     Args:
@@ -224,7 +224,7 @@ def make_event_get(token, event_uri, expand=True,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     params = {}
     if expand is not None:
         params["expand"] = expand
@@ -245,7 +245,7 @@ def make_events_get(token, start=None, per_page=None,
                     quiet=None, success_callback=None,
                     redirect_callback=None,
                     failure_callback=None, progress_callback=None):
-    '''
+    """
     Request that returns a PodiumPagedRequest of events. 
     By default a get request to 
     'https://podium.live/api/v1/events' will be made.
@@ -289,7 +289,7 @@ def make_events_get(token, start=None, per_page=None,
     Return:
         UrlRequest: The request being made.
 
-    '''
+    """
     if endpoint is None:
         endpoint = 'https://podium.live/api/v1/events'
     params = {}
@@ -314,7 +314,7 @@ def make_events_get(token, start=None, per_page=None,
 
 
 def event_delete_handler(req, results, data):
-    '''
+    """
     Returns the URI for the deleted resource to the user set success_callback
 
     Called automatically by **make_event_delete**
@@ -330,13 +330,13 @@ def event_delete_handler(req, results, data):
 
     Return:
         None, this function instead calls a callback.
-    '''
+    """
     if data['success_callback'] is not None:
         data['success_callback'](data['deleted_uri'])
 
 
 def event_success_handler(req, results, data):
-    '''
+    """
     Creates and returns a PodiumEvent to the success_callback found in data
     if there is one.
 
@@ -353,13 +353,13 @@ def event_success_handler(req, results, data):
 
     Return:
         None, this function instead calls a callback.
-    '''
+    """
     if data['success_callback'] is not None:
         data['success_callback'](get_event_from_json(results["event"]))
 
 
 def events_success_handler(req, results, data):
-    '''
+    """
     Creates and returns a PodiumPagedResponse with PodiumEvent as the payload
     to the success_callback found in data if there is one.
 
@@ -377,13 +377,13 @@ def events_success_handler(req, results, data):
     Return:
         None, this function instead calls a callback.
 
-    '''
+    """
     if data['success_callback'] is not None:
         data['success_callback'](get_paged_response_from_json(results,
                                                               "events"))
 
 def create_event_redirect_handler(req, results, data):
-    '''
+    """
     Handles the success redirect of a **make_event_create** call.
 
     Returns a PodiumRedirect with a uri for the newly created event to the
@@ -404,13 +404,13 @@ def create_event_redirect_handler(req, results, data):
     Return:
         None, this function instead calls a callback.
 
-    '''
+    """
     if data['_redirect_callback'] is not None:
         data['_redirect_callback'](get_redirect_from_json(results, "event"))
 
 
 def event_update_success_handler(req, results, data):
-    '''
+    """
     Success callback after updating an event. Will return the message from
     the server and the event uri to the success_callback.
 
@@ -428,6 +428,6 @@ def event_update_success_handler(req, results, data):
     Return:
         None, this function instead calls a callback.
 
-    '''
+    """
     if data['success_callback'] is not None:
         data['success_callback'](results, data['updated_uri'])

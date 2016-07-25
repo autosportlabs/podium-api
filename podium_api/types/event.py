@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 class PodiumEvent(object):
-    '''
+    """
     Object that represents an Event.
 
     **Attributes:**
@@ -21,7 +21,7 @@ class PodiumEvent(object):
         **venue_uri** (str): Endpoint for accessing venue information.
 
         **private** (bool): Is the event only viewable to creator?
-    '''
+    """
 
     def __init__(self, event_id, uri, devices_uri, title, start_time,
                  end_time, venue_uri, private):
@@ -36,7 +36,7 @@ class PodiumEvent(object):
 
 
 def get_event_from_json(json):
-    '''
+    """
     Returns a PodiumEvent object from the json dict received from podium api.
 
     Args:
@@ -44,7 +44,7 @@ def get_event_from_json(json):
 
     Return:
         PodiumEvent: The PodiumEvent object for this data.
-    '''
+    """
     return PodiumEvent(json['id'], json['URI'], json.get('devices_uri', None),
                        json.get('title', None), json.get('start_time', None), 
                        json.get('end_time', None),

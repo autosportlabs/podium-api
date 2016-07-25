@@ -7,7 +7,7 @@ from podium_api.types.eventdevice import get_eventdevice_from_json
 from podium_api.types.device import get_device_from_json
 
 class PodiumPagedResponse(object):
-    '''
+    """
     Object that represents data returned from a paged request.
 
     **Attributes:**
@@ -22,7 +22,7 @@ class PodiumPagedResponse(object):
         **payload_name** (str): If a payload_name is provided attribute access
         on this name will also return the payload. Defaults to None. Used to
         mirror the web api.
-    '''
+    """
 
     def __init__(self, payload, total, next_uri, prev_uri, payload_name=None):
         self.payload = payload
@@ -48,7 +48,7 @@ PAYLOAD_NAME_TO_OBJECT = {
 
 
 def get_paged_response_from_json(json, payload_name):
-    '''
+    """
     Returns a PodiumPagedResponse object from the json dict received from
     podium api.
 
@@ -61,7 +61,7 @@ def get_paged_response_from_json(json, payload_name):
 
     Return:
         PodiumPagedResponse: The PodiumPagedResponse object for the data.
-    '''
+    """
     print(json)
     conversion_func = PAYLOAD_NAME_TO_OBJECT[payload_name]
     data = [conversion_func(x) for x in json[payload_name]]
