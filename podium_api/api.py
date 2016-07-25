@@ -14,7 +14,9 @@ from podium_api.friendships import (
 from podium_api.users import make_user_get
 from podium_api.eventdevices import (
     make_eventdevices_get, make_eventdevice_create, make_eventdevice_update,
-    make_eventdevice_get, make_eventdevice_delete)
+    make_eventdevice_get, make_eventdevice_delete
+)
+from podium_api.laps import make_laps_get, make_lap_get
 
 class PodiumAPI(object):
     """
@@ -46,6 +48,8 @@ class PodiumAPI(object):
         **eventdevices** (PodiumEventDevicesAPI): API object for event-device
         requests.
 
+        **laps** (PodiumLapsAPI): API object for lap requests.
+
     """
     
     def __init__(self, token):
@@ -56,6 +60,106 @@ class PodiumAPI(object):
         self.friendships = PodiumFriendshipsAPI(token)
         self.users = PodiumUsersAPI(token)
         self.eventdevices = PodiumEventDevicesAPI(token)
+        self.laps = PodiumLapsAPI(token)
+
+
+class PodiumLapsAPI(object):
+    """
+    Object that handles lap requests and keeps track of the
+    authentication token necessary to do so. Usually accessed via
+    PodiumAPI object.
+
+    **Attributes:**
+        **token** (PodiumToken): The token for the logged in user.
+
+    """
+    def __init__(self, token):
+        self.token = token
+
+    def list(self, *args, **kwargs):
+        """
+        Request that returns a PodiumPagedRequest of laps.
+
+        Args:
+            endpoint (str): The endpoint to make the request too.
+
+        Kwargs:
+            expand (bool): Expand all objects in response output.
+            Defaults to True
+
+            quiet (object): If not None HTML layout will not render endpoint
+            description. Defaults to None.
+
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(PodiumPagedResponse)
+            Defaults to None.
+
+            failure_callback (function): Callback for failures and errors.
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
+
+            redirect_callback (function): Callback for redirect,
+            Will have the signature:
+                on_redirect(result (dict), data (dict))
+            Defaults to None.
+
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
+
+            start (int): Starting index for events list. 0 indexed.
+
+            per_page (int): Number per page of results, max of 100.
+
+        Return:
+            UrlRequest: The request being made.
+
+        """
+        make_laps_get(self.token, *args, **kwargs)
+
+    def get(self, *args, **kwargs):
+        """
+       Request that returns a PodiumLap that represents a specific
+       lap found at the URI.
+
+       Args:
+           endpoint (str): The URI for the lap.
+
+       Kwargs:
+           expand (bool): Expand all objects in response output.
+           Defaults to True
+
+           quiet (object): If not None HTML layout will not render endpoint
+           description. Defaults to None.
+
+           success_callback (function): Callback for a successful request,
+           will have the signature:
+               on_success(PodiumLap)
+           Defaults to None.
+
+           failure_callback (function): Callback for failures and errors.
+           Will have the signature:
+               on_failure(failure_type (string), result (dict), data (dict))
+           Values for failure type are: 'error', 'failure'. Defaults to None.
+
+           redirect_callback (function): Callback for redirect,
+           Will have the signature:
+               on_redirect(result (dict), data (dict))
+           Defaults to None.
+
+           progress_callback (function): Callback for progress updates,
+           will have the signature:
+               on_progress(current_size (int), total_size (int), data (dict))
+           Defaults to None.
+
+       Return:
+           UrlRequest: The request being made.
+
+       """
+        make_lap_get(self.token, *args, **kwargs)
 
 
 class PodiumEventDevicesAPI(object):

@@ -5,6 +5,7 @@ from podium_api.types.paged_response import get_paged_response_from_json
 from podium_api.types.redirect import get_redirect_from_json
 from podium_api.types.friendship import get_friendship_from_json
 
+
 def make_friendship_get(token, endpoint,
                         expand=True,
                         quiet=None, success_callback=None,
@@ -27,7 +28,7 @@ def make_friendship_get(token, endpoint,
 
         success_callback (function): Callback for a successful request,
         will have the signature:
-            on_success(PodiumPagedResponse)
+            on_success(PodiumFriendship)
         Defaults to None.
 
         failure_callback (function): Callback for failures and errors. 
@@ -62,6 +63,7 @@ def make_friendship_get(token, endpoint,
                                        progress_callback=progress_callback,
                                        redirect_callback=redirect_callback,
                                        params=params, header=header)
+
 
 def make_friendships_get(token, endpoint,
                          start=None, per_page=None,
@@ -131,6 +133,7 @@ def make_friendships_get(token, endpoint,
                                        redirect_callback=redirect_callback,
                                        params=params, header=header)
 
+
 def make_friendship_delete(token, friendship_uri, 
                            success_callback=None, redirect_callback=None,
                            failure_callback=None, progress_callback=None):
@@ -177,6 +180,7 @@ def make_friendship_delete(token, friendship_uri,
                                        redirect_callback=redirect_callback,
                                        header=header,
                                        data={"deleted_uri": friendship_uri})
+
 
 def make_friendship_create(token, friend_id,
                            success_callback=None, failure_callback=None,
@@ -250,6 +254,7 @@ def friendship_delete_handler(req, results, data):
     if data['success_callback'] is not None:
         data['success_callback'](data['deleted_uri'])
 
+
 def create_friendship_redirect_handler(req, results, data):
     """
     Handles the success redirect of a **make_friendship_create** call.
@@ -300,6 +305,7 @@ def friendship_success_handler(req, results, data):
         data['success_callback'](
             get_friendship_from_json(results['friendship'])
             )
+
 
 def friendships_success_handler(req, results, data):
     """

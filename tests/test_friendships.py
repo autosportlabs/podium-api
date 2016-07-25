@@ -233,6 +233,7 @@ class TestFriendshipDelete(unittest.TestCase):
     def tearDown(self):
         podium_api.unregister_podium_application()
 
+
 class TestFriendshipsGet(unittest.TestCase):
 
     def setUp(self):
@@ -364,6 +365,7 @@ class TestFriendshipsGet(unittest.TestCase):
 
     def tearDown(self):
         podium_api.unregister_podium_application()
+
 
 class TestFriendshipGet(unittest.TestCase):
 
