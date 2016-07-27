@@ -53,5 +53,5 @@ def get_user_from_json(json):
                       json['username'], json['description'],
                       json['avatar_url'], json['links'],
                       json['friendships_uri'], json['followers_uri'],
-                      json.get("friendship_uri", None)
+                      json.get("friendship_uri", None),
                       )

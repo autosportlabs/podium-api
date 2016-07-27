@@ -18,6 +18,7 @@ from podium_api.eventdevices import (
 )
 from podium_api.laps import make_laps_get, make_lap_get
 
+
 class PodiumAPI(object):
     """
     The PodiumApi object holds references to the interfaces to the

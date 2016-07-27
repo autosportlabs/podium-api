@@ -18,8 +18,8 @@ from podium_api.api import PodiumAPI
 from plyer import keystore
 from datetime import date
 
-APP_ID = "00833f5ab53d1f696735793f5fac320de0211ccf231b35c447562066e97caaaf"
-APP_SECRET = "eda2bdee04abfa484688c77a0e438cad2dfa6eef07879a24cb102d85c9da2674"
+APP_ID = "YOUR_ID_HERE"
+APP_SECRET = "YOUR_SECRET_HERE"
 
 class NoStoredToken(Exception):
     pass
@@ -28,8 +28,8 @@ class PodiumApp(App):
 
     def on_start(self):
         register_podium_application(APP_ID, APP_SECRET)
-        email = "kovac1066@gmail.com" #put a username here
-        secret = "zaeron19" #put a password here
+        email = "" #put a username here
+        secret = "" #put a password here
         self.events = []
         self.devices = []
         req = make_login_post(email, secret,
@@ -103,20 +103,20 @@ class PodiumApp(App):
                                 success_callback=self.events_success,
                                 failure_callback=self.failure,
                                 progress_callback=self.progress)
-        # self.podium.events.create(
-        #     "test event",
-        #     date(2016, 6, 27).isoformat(),
-        #     date(2016, 6, 28).isoformat(),
-        #     redirect_callback=self.create_success,
-        #     failure_callback=self.failure,
-        #     progress_callback=self.progress
-        #     )
-        # self.podium.devices.create(
-        #     "test device",
-        #     redirect_callback=self.create_device_success,
-        #     failure_callback=self.failure,
-        #     progress_callback=self.progress
-        #     )
+        self.podium.events.create(
+            "test event",
+            date(2016, 6, 27).isoformat(),
+            date(2016, 6, 28).isoformat(),
+            redirect_callback=self.create_success,
+            failure_callback=self.failure,
+            progress_callback=self.progress
+            )
+        self.podium.devices.create(
+            "test device",
+            redirect_callback=self.create_device_success,
+            failure_callback=self.failure,
+            progress_callback=self.progress
+            )
 
     def device_success(self, device):
         print(device, device.__dict__)
