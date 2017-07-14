@@ -5,7 +5,7 @@ import podium_api
 from podium_api.types.lap import get_lap_from_json
 from podium_api.laps import make_lap_get, make_laps_get
 from podium_api.types.token import PodiumToken
-from unittest.mock import patch, Mock
+from mock import patch, Mock
 try:
     from urllib.parse import urlencode
 except:

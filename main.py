@@ -130,7 +130,7 @@ class PodiumApp(App):
         print(message, update_uri)
         self.podium.devices.delete(
             update_uri,
-            success_callback=lambda x: print(x),
+            success_callback=self.success,
             failure_callback=self.failure,
             progress_callback=self.progress
             )
@@ -200,7 +200,7 @@ class PodiumApp(App):
         print(paged_response, len(paged_response.events))
         self.events += paged_response.events
         if paged_response.next_uri is not None:
-            make_events_get(TOKEN, endpoint=paged_response.next_uri,
+            make_events_get(self.token, endpoint=paged_response.next_uri,
                             success_callback=self.events_success,
                             failure_callback=self.failure,
                             progress_callback=self.progress)
@@ -214,6 +214,9 @@ class PodiumApp(App):
     def users_success(self, user):
         print(user, user.__dict__)
 
+    
+    def success(self, result):
+        print(result)
 
     def failure(self, error_type, results, data):
         #handle errors

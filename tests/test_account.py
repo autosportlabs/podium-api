@@ -5,7 +5,7 @@ import podium_api
 from podium_api.account import make_account_get
 from podium_api.types.account import get_account_from_json
 from podium_api.types.token import PodiumToken
-from unittest.mock import patch, Mock
+from mock import patch, Mock
 try:
     from urllib.parse import urlencode
 except:

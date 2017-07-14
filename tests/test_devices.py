@@ -9,7 +9,7 @@ from podium_api.devices import (
 from podium_api.types.device import get_device_from_json
 from podium_api.types.redirect import get_redirect_from_json
 from podium_api.types.token import PodiumToken
-from unittest.mock import patch, Mock
+from mock import patch, Mock
 try:
     from urllib.parse import urlencode
 except:

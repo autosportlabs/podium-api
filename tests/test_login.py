@@ -4,7 +4,7 @@ import unittest
 import podium_api
 from podium_api.login import make_login_post
 from podium_api.types.token import get_token_from_json
-from unittest.mock import patch, Mock
+from mock import patch, Mock
 try:
     from urllib.parse import urlencode
 except:
