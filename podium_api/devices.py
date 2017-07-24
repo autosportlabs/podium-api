@@ -353,7 +353,6 @@ def device_success_handler(req, results, data):
     Return:
         None, this function instead calls a callback.
     """
-    print(results)
     if data['success_callback'] is not None:
         data['success_callback'](get_device_from_json(results["device"]))
 

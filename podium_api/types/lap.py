@@ -39,7 +39,6 @@ def get_lap_from_json(json):
     Return:
         PodiumEvent: The PodiumEvent object for this data.
     """
-    print(json)
     return PodiumLap(json["URI"], json["raw_data_uri"], json['lap_number'],
                      json['end_time'], json.get('aggregates', None),
                      json['lap_time'])

@@ -64,7 +64,6 @@ def get_paged_response_from_json(json, payload_name):
     Return:
         PodiumPagedResponse: The PodiumPagedResponse object for the data.
     """
-    print(json)
     conversion_func = PAYLOAD_NAME_TO_OBJECT[payload_name]
     data = [conversion_func(x) for x in json[payload_name]]
     return PodiumPagedResponse(data, json['total'], json.get('nextURI', None),

@@ -102,8 +102,6 @@ def make_request(endpoint, method="GET", on_success=None, on_failure=None,
             endpoint = "{}&{}".format(endpoint, params)
         else:
             endpoint = "{}?{}".format(endpoint, params)
-    print('params ' + str(params))
-    print(endpoint)
     return UrlRequest(
         endpoint, method=method, req_body=body, req_headers=header,
         on_success=(lambda req, res: on_success(
