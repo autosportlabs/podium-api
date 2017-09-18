@@ -144,6 +144,8 @@ class TestEventDevicesGet(unittest.TestCase):
             'device_uri': 'https://podium.live/api/v1/devices/test_device',
             'name': 'test name',
             'laps_uri': 'test/laps',
+            'user_uri': 'test/user',
+            'event_uri': 'test/event',
             'channels': [],
             }
         self.paged_event_json = {'total': 1, 'eventdevices': [self.result_json]}
@@ -291,7 +293,7 @@ class TestEventDeviceDelete(unittest.TestCase):
         self.assertEqual(req.req_headers['Authorization'],
                          'Bearer {}'.format(self.token.token))
         self.assertEqual(req.req_headers['Accept'], 'application/json')
-        #simulate successful request
+        # simulate successful request
         req.on_success()(req, {})
         self.check_results()
 
@@ -303,9 +305,9 @@ class TestEventDeviceDelete(unittest.TestCase):
             'https://podium.live/api/v1/events/test_event/devices/test_device',
             failure_callback=error_cb
         )
-        #simulate calling the requests on_error
+        # simulate calling the requests on_error
         req.on_error()(req, {})
-        #assert our lambda called the mock correctly
+        # assert our lambda called the mock correctly
         error_cb.assert_called_with(
             'error', {},
             {'success_callback': None,
@@ -324,9 +326,9 @@ class TestEventDeviceDelete(unittest.TestCase):
             'https://podium.live/api/v1/events/test_event/devices/test_device',
             failure_callback=error_cb
         )
-        #simulate calling the requests on_failure
+        # simulate calling the requests on_failure
         req.on_failure()(req, {})
-        #assert our lambda called the mock correctly
+        # assert our lambda called the mock correctly
         error_cb.assert_called_with(
             'failure', {},
             {'success_callback': None,
@@ -345,9 +347,9 @@ class TestEventDeviceDelete(unittest.TestCase):
             'https://podium.live/api/v1/events/test_event/devices/test_device',
             redirect_callback=redir_cb
         )
-        #simulate calling the requests on_redirect
+        # simulate calling the requests on_redirect
         req.on_redirect()(req, {})
-        #assert our lambda called the mock correctly
+        # assert our lambda called the mock correctly
         redir_cb.assert_called_with(
             req, None,
             {'success_callback': None,
@@ -366,9 +368,9 @@ class TestEventDeviceDelete(unittest.TestCase):
             'https://podium.live/api/v1/events/test_event/devices/test_device',
             progress_callback=progress_cb
         )
-        #simulate calling the requests on_progress
+        # simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
-        #assert our lambda called the mock correctly
+        # assert our lambda called the mock correctly
         progress_cb.assert_called_with(
             0, 10,
             {'success_callback': None,
