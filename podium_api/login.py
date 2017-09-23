@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from podium_api.types.token import get_token_from_json
 from podium_api.async import make_request_custom_success, get_json_header
-from podium_api import PODIUM_URL
+import podium_api
 def make_login_post(username, password, success_callback=None,
                     failure_callback=None, progress_callback=None,
                     redirect_callback=None):
@@ -36,7 +36,7 @@ def make_login_post(username, password, success_callback=None,
         UrlRequest: The request being made.
 
     """
-    endpoint = '{}/oauth/token'.format(PODIUM_URL)
+    endpoint = '{}/oauth/token'.format(podium_api.PODIUM_APP.podium_url)
     body = {'grant_type': 'password', 'username': username,
             'password': password}
     header = get_json_header()

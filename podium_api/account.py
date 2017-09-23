@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from podium_api.async import make_request_custom_success, get_json_header_token
 from podium_api.types.account import get_account_from_json
-from podium_api import PODIUM_URL
+import podium_api
 
 def make_account_get(token, expand=False, quiet=None,
                      success_callback=None,
@@ -41,7 +41,7 @@ def make_account_get(token, expand=False, quiet=None,
         UrlRequest: The request being made.
 
     """
-    endpoint = '{}/api/v1/account'.format(PODIUM_URL)
+    endpoint = '{}/api/v1/account'.format(podium_api.PODIUM_APP.podium_url)
     params = {'expand': expand}
     if quiet is not None:
         params['quiet'] = quiet
@@ -75,5 +75,9 @@ def account_success_handler(req, results, data):
         None, this function instead calls a callback.
 
     """
-    if data['success_callback'] is not None:
-        data['success_callback'](get_account_from_json(results['account']))
+    account = results['account']
+    if account is not None:
+        if data['success_callback'] is not None:
+            data['success_callback'](get_account_from_json(results['account']))
+    elif data['failure_callback'] is not None:
+            data['failure_callback']('None', results, data)

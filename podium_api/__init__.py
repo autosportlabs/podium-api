@@ -20,16 +20,7 @@ API. It is built on top of Kivy's UrlRequest.
 
 PODIUM_APP = None
 
-"""
-
-    **PODIUM_URL** (String): The base URL for the Podium API
- 
-"""
-
-PODIUM_URL = 'https://podium.live'
-
-
-def register_podium_application(app_id, app_secret):
+def register_podium_application(app_id, app_secret, podium_url = None):
     """Registers an id and secret for the application for use with the Podium
     API. Should only ever be invoked once per run of program. If invoked more
     than once, a PodiumApplicationAlreadyRegistered exception will be 
@@ -41,12 +32,15 @@ def register_podium_application(app_id, app_secret):
 
         app_secret (string): The secret for your application as registered with
         the Podium API.
+        
+        podium_url (String): Optional podium url. defaults to https://podium.live
     """
+        
     if PODIUM_APP is not None:
         raise PodiumApplicationAlreadyRegistered()
     else:
         global PODIUM_APP
-        PODIUM_APP = PodiumApplication(app_id, app_secret)
+        PODIUM_APP = PodiumApplication(app_id, app_secret, podium_url=podium_url)
 
 def unregister_podium_application():
     global PODIUM_APP

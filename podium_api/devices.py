@@ -4,7 +4,7 @@ from podium_api.async import make_request_custom_success, get_json_header_token
 from podium_api.types.device import get_device_from_json
 from podium_api.types.redirect import get_redirect_from_json
 from podium_api.types.paged_response import get_paged_response_from_json
-from podium_api import PODIUM_URL
+import podium_api
 
 def make_device_update(token, device_uri, name=None,
                        success_callback=None, failure_callback=None,
@@ -167,7 +167,7 @@ def make_device_create(token, name,
         UrlRequest: The request being made.
 
     """
-    endpoint = '{}/api/v1/devices'.format(PODIUM_URL)
+    endpoint = '{}/api/v1/devices'.format(podium_api.PODIUM_APP.podium_url)
     body = {'device[name]': name}
     header = get_json_header_token(token)
     return make_request_custom_success(

@@ -10,7 +10,7 @@ from podium_api.async import make_request_custom_success, get_json_header_token
 from podium_api.types.paged_response import get_paged_response_from_json
 from podium_api.types.redirect import get_redirect_from_json
 from podium_api.types.exceptions import NoEndpointOrEventIdProvided
-from podium_api import PODIUM_URL
+import podium_api
 
 def make_eventdevices_get(token, event_id=None,
                           endpoint=None,
@@ -72,7 +72,7 @@ def make_eventdevices_get(token, event_id=None,
         if event_id is None:
             raise NoEndpointOrEventIdProvided()
         endpoint = '{}/api/v1/events/{}/devices'.format(
-            PODIUM_URL,
+            podium_api.PODIUM_APP.podium_url,
             event_id
             )
     params = {}
@@ -352,7 +352,7 @@ def make_eventdevice_create(token, event_id, device_id, name,
 
     """
     endpoint = '{}/api/v1/events/{}/devices'.format(
-        PODIUM_URL,
+        podium_api.PODIUM_APP.podium_url,
         event_id
         )
     body = {'eventdevice[device_id]': device_id, 'eventdevice[name]': name}

@@ -4,7 +4,7 @@ from podium_api.async import make_request_custom_success, get_json_header_token
 from podium_api.types.paged_response import get_paged_response_from_json
 from podium_api.types.event import get_event_from_json
 from podium_api.types.redirect import get_redirect_from_json
-from podium_api import PODIUM_URL
+import podium_api
 
 def make_event_update(token, event_uri, title=None, start_time=None,
                       end_time=None, venue_id=None,
@@ -118,7 +118,7 @@ def make_event_create(token, title, start_time, end_time, venue_id=None,
         UrlRequest: The request being made.
 
     """
-    endpoint = '{}/api/v1/events'.format(PODIUM_URL)
+    endpoint = '{}/api/v1/events'.format(podium_api.PODIUM_APP.podium_url)
     body = {'event[title]': title, 'event[start_time]': start_time,
             'event[end_time]': end_time}
     if venue_id is not None:
@@ -291,7 +291,7 @@ def make_events_get(token, start=None, per_page=None,
 
     """
     if endpoint is None:
-        endpoint = '{}/api/v1/events'.format(PODIUM_URL)
+        endpoint = '{}/api/v1/events'.format(podium_api.PODIUM_APP.podium_url)
     params = {}
     if expand is not None:
         params['expand'] = expand

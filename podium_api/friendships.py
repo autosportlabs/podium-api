@@ -4,7 +4,7 @@ from podium_api.async import make_request_custom_success, get_json_header_token
 from podium_api.types.paged_response import get_paged_response_from_json
 from podium_api.types.redirect import get_redirect_from_json
 from podium_api.types.friendship import get_friendship_from_json
-from podium_api import PODIUM_URL
+import podium_api
 
 def make_friendship_get(token, endpoint,
                         expand=True,
@@ -219,7 +219,7 @@ def make_friendship_create(token, friend_id,
         UrlRequest: The request being made.
 
     """
-    endpoint = '{}/api/v1/friendships'.format(PODIUM_URL)
+    endpoint = '{}/api/v1/friendships'.format(podium_api.PODIUM_APP.podium_url)
     body = {'friendship[user_id]': friend_id}
     header = get_json_header_token(token)
     return make_request_custom_success(
