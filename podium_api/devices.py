@@ -4,7 +4,7 @@ from podium_api.async import make_request_custom_success, get_json_header_token
 from podium_api.types.device import get_device_from_json
 from podium_api.types.redirect import get_redirect_from_json
 from podium_api.types.paged_response import get_paged_response_from_json
-
+from podium_api import PODIUM_URL
 
 def make_device_update(token, device_uri, name=None,
                        success_callback=None, failure_callback=None,
@@ -167,21 +167,21 @@ def make_device_create(token, name,
         UrlRequest: The request being made.
 
     """
-    endpoint = 'https://podium.live/api/v1/devices'
-    body = {"device[name]": name}
+    endpoint = '{}/api/v1/devices'.format(PODIUM_URL)
+    body = {'device[name]': name}
     header = get_json_header_token(token)
     return make_request_custom_success(
-        endpoint, None, method="POST",
+        endpoint, None, method='POST',
         success_callback=success_callback,
         redirect_callback=create_device_redirect_handler,
         failure_callback=failure_callback,
         progress_callback=progress_callback,
         body=body, header=header,
-        data={"_redirect_callback": redirect_callback}
+        data={'_redirect_callback': redirect_callback}
         )
 
 
-def make_device_delete(token, device_uri, 
+def make_device_delete(token, device_uri,
                        success_callback=None, redirect_callback=None,
                        failure_callback=None, progress_callback=None):
     """
@@ -219,13 +219,13 @@ def make_device_delete(token, device_uri,
     """
     header = get_json_header_token(token)
     return make_request_custom_success(device_uri, device_delete_handler,
-                                       method="DELETE",
+                                       method='DELETE',
                                        success_callback=success_callback,
                                        failure_callback=failure_callback,
                                        progress_callback=progress_callback,
                                        redirect_callback=redirect_callback,
                                        header=header,
-                                       data={"deleted_uri": device_uri})
+                                       data={'deleted_uri': device_uri})
 
 
 
@@ -273,12 +273,12 @@ def make_device_get(token, device_uri, expand=True,
     """
     params = {}
     if expand is not None:
-        params["expand"] = expand
+        params['expand'] = expand
     if quiet is not None:
         params['quiet'] = quiet
     header = get_json_header_token(token)
     return make_request_custom_success(device_uri, device_success_handler,
-                                       method="GET",
+                                       method='GET',
                                        success_callback=success_callback,
                                        failure_callback=failure_callback,
                                        progress_callback=progress_callback,
@@ -331,7 +331,7 @@ def devices_success_handler(req, results, data):
     """
     if data['success_callback'] is not None:
         data['success_callback'](get_paged_response_from_json(results,
-                                                              "devices"))
+                                                              'devices'))
 
 
 def device_success_handler(req, results, data):
@@ -354,7 +354,7 @@ def device_success_handler(req, results, data):
         None, this function instead calls a callback.
     """
     if data['success_callback'] is not None:
-        data['success_callback'](get_device_from_json(results["device"]))
+        data['success_callback'](get_device_from_json(results['device']))
 
 
 def create_device_redirect_handler(req, results, data):
@@ -381,7 +381,7 @@ def create_device_redirect_handler(req, results, data):
 
     """
     if data['_redirect_callback'] is not None:
-        data['_redirect_callback'](get_redirect_from_json(results, "device"))
+        data['_redirect_callback'](get_redirect_from_json(results, 'device'))
 
 
 def device_update_success_handler(req, results, data):

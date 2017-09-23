@@ -4,7 +4,7 @@ from podium_api.async import make_request_custom_success, get_json_header_token
 from podium_api.types.paged_response import get_paged_response_from_json
 from podium_api.types.redirect import get_redirect_from_json
 from podium_api.types.friendship import get_friendship_from_json
-
+from podium_api import PODIUM_URL
 
 def make_friendship_get(token, endpoint,
                         expand=True,
@@ -134,7 +134,7 @@ def make_friendships_get(token, endpoint,
                                        params=params, header=header)
 
 
-def make_friendship_delete(token, friendship_uri, 
+def make_friendship_delete(token, friendship_uri,
                            success_callback=None, redirect_callback=None,
                            failure_callback=None, progress_callback=None):
     """
@@ -219,17 +219,17 @@ def make_friendship_create(token, friend_id,
         UrlRequest: The request being made.
 
     """
-    endpoint = 'https://podium.live/api/v1/friendships'
+    endpoint = '{}/api/v1/friendships'.format(PODIUM_URL)
     body = {'friendship[user_id]': friend_id}
     header = get_json_header_token(token)
     return make_request_custom_success(
-        endpoint, None, method="POST",
+        endpoint, None, method='POST',
         success_callback=success_callback,
         redirect_callback=create_friendship_redirect_handler,
         failure_callback=failure_callback,
         progress_callback=progress_callback,
         body=body, header=header,
-        data={"_redirect_callback": redirect_callback}
+        data={'_redirect_callback': redirect_callback}
         )
 
 
@@ -280,7 +280,7 @@ def create_friendship_redirect_handler(req, results, data):
     """
     if data['_redirect_callback'] is not None:
         data['_redirect_callback'](get_redirect_from_json(results,
-                                                          "friendship"))
+                                                          'friendship'))
 
 
 def friendship_success_handler(req, results, data):
@@ -329,4 +329,4 @@ def friendships_success_handler(req, results, data):
     """
     if data['success_callback'] is not None:
         data['success_callback'](get_paged_response_from_json(results,
-                                                              "users"))
+                                                              'users'))

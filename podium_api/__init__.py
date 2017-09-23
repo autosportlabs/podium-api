@@ -7,6 +7,9 @@ The podium_api module allows you to asynchronously interact with the Podium
 API. It is built on top of Kivy's UrlRequest. 
 
 **Module Attributes:**
+"""
+
+"""
 
     **PODIUM_APP** (PodiumApplication): The instance of a PodiumApplication
     storing the app uuid and secret for the Podium API. Starts out as None,
@@ -16,6 +19,15 @@ API. It is built on top of Kivy's UrlRequest.
 """
 
 PODIUM_APP = None
+
+"""
+
+    **PODIUM_URL** (String): The base URL for the Podium API
+ 
+"""
+
+PODIUM_URL = 'https://podium.live'
+
 
 def register_podium_application(app_id, app_secret):
     """Registers an id and secret for the application for use with the Podium

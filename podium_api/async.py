@@ -99,9 +99,9 @@ def make_request(endpoint, method="GET", on_success=None, on_failure=None,
     if params is not None and params != {}:
         params = urlencode(params)
         if "?" in endpoint:
-            endpoint = "{}&{}".format(endpoint, params)
+            endpoint = '{}&{}'.format(endpoint, params)
         else:
-            endpoint = "{}?{}".format(endpoint, params)
+            endpoint = '{}?{}'.format(endpoint, params)
     return UrlRequest(
         endpoint, method=method, req_body=body, req_headers=header,
         on_success=(lambda req, res: on_success(
@@ -110,7 +110,7 @@ def make_request(endpoint, method="GET", on_success=None, on_failure=None,
                     req, res, data)) if on_failure is not None else None,
         on_redirect=(lambda req, res: on_redirect(
                      req, res, data)) if on_redirect is not None else None,
-        on_progress=(lambda req, cur, tot: 
+        on_progress=(lambda req, cur, tot:
             on_progress(req, cur, tot, data)
             ) if on_progress is not None else None,
         on_error=(lambda req, res: on_error(
@@ -177,9 +177,9 @@ def make_request_default(endpoint, method="GET", success_callback=None,
                         body=body, header=header, data=data,
                         params=params)
 
-def make_request_custom_success(endpoint, success_handler, method="GET", 
+def make_request_custom_success(endpoint, success_handler, method="GET",
                                 success_callback=None, failure_callback=None,
-                                redirect_callback= None,
+                                redirect_callback=None,
                                 progress_callback=None, data=None, body=None,
                                 header=None, params=None):
     """

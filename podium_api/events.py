@@ -4,7 +4,7 @@ from podium_api.async import make_request_custom_success, get_json_header_token
 from podium_api.types.paged_response import get_paged_response_from_json
 from podium_api.types.event import get_event_from_json
 from podium_api.types.redirect import get_redirect_from_json
-
+from podium_api import PODIUM_URL
 
 def make_event_update(token, event_uri, title=None, start_time=None,
                       end_time=None, venue_id=None,
@@ -118,24 +118,24 @@ def make_event_create(token, title, start_time, end_time, venue_id=None,
         UrlRequest: The request being made.
 
     """
-    endpoint = 'https://podium.live/api/v1/events'
-    body = {"event[title]": title, "event[start_time]": start_time,
-            "event[end_time]": end_time}
+    endpoint = '{}/api/v1/events'.format(PODIUM_URL)
+    body = {'event[title]': title, 'event[start_time]': start_time,
+            'event[end_time]': end_time}
     if venue_id is not None:
         body['event[venue_id]'] = venue_id
     header = get_json_header_token(token)
     return make_request_custom_success(
-        endpoint, None, method="POST",
+        endpoint, None, method='POST',
         success_callback=success_callback,
         redirect_callback=create_event_redirect_handler,
         failure_callback=failure_callback,
         progress_callback=progress_callback,
         body=body, header=header,
-        data={"_redirect_callback": redirect_callback}
+        data={'_redirect_callback': redirect_callback}
         )
 
 
-def make_event_delete(token, event_uri, 
+def make_event_delete(token, event_uri,
                       success_callback=None, redirect_callback=None,
                       failure_callback=None, progress_callback=None):
     """
@@ -173,13 +173,13 @@ def make_event_delete(token, event_uri,
     """
     header = get_json_header_token(token)
     return make_request_custom_success(event_uri, event_delete_handler,
-                                       method="DELETE",
+                                       method='DELETE',
                                        success_callback=success_callback,
                                        failure_callback=failure_callback,
                                        progress_callback=progress_callback,
                                        redirect_callback=redirect_callback,
                                        header=header,
-                                       data={"deleted_uri": event_uri})
+                                       data={'deleted_uri': event_uri})
 
 
 
@@ -227,12 +227,12 @@ def make_event_get(token, event_uri, expand=True,
     """
     params = {}
     if expand is not None:
-        params["expand"] = expand
+        params['expand'] = expand
     if quiet is not None:
         params['quiet'] = quiet
     header = get_json_header_token(token)
     return make_request_custom_success(event_uri, event_success_handler,
-                                       method="GET",
+                                       method='GET',
                                        success_callback=success_callback,
                                        failure_callback=failure_callback,
                                        progress_callback=progress_callback,
@@ -291,7 +291,7 @@ def make_events_get(token, start=None, per_page=None,
 
     """
     if endpoint is None:
-        endpoint = 'https://podium.live/api/v1/events'
+        endpoint = '{}/api/v1/events'.format(PODIUM_URL)
     params = {}
     if expand is not None:
         params['expand'] = expand
@@ -305,7 +305,7 @@ def make_events_get(token, start=None, per_page=None,
 
     header = get_json_header_token(token)
     return make_request_custom_success(endpoint, events_success_handler,
-                                       method="GET",
+                                       method='GET',
                                        success_callback=success_callback,
                                        failure_callback=failure_callback,
                                        progress_callback=progress_callback,
@@ -355,7 +355,7 @@ def event_success_handler(req, results, data):
         None, this function instead calls a callback.
     """
     if data['success_callback'] is not None:
-        data['success_callback'](get_event_from_json(results["event"]))
+        data['success_callback'](get_event_from_json(results['event']))
 
 
 def events_success_handler(req, results, data):
@@ -380,7 +380,7 @@ def events_success_handler(req, results, data):
     """
     if data['success_callback'] is not None:
         data['success_callback'](get_paged_response_from_json(results,
-                                                              "events"))
+                                                              'events'))
 
 def create_event_redirect_handler(req, results, data):
     """
@@ -406,7 +406,7 @@ def create_event_redirect_handler(req, results, data):
 
     """
     if data['_redirect_callback'] is not None:
-        data['_redirect_callback'](get_redirect_from_json(results, "event"))
+        data['_redirect_callback'](get_redirect_from_json(results, 'event'))
 
 
 def event_update_success_handler(req, results, data):

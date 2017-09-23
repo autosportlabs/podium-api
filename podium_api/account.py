@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from podium_api.async import make_request_custom_success, get_json_header_token
 from podium_api.types.account import get_account_from_json
+from podium_api import PODIUM_URL
 
 def make_account_get(token, expand=False, quiet=None,
                      success_callback=None,
@@ -40,13 +41,13 @@ def make_account_get(token, expand=False, quiet=None,
         UrlRequest: The request being made.
 
     """
-    endpoint = "https://podium.live/api/v1/account"
-    params = {"expand": expand}
+    endpoint = '{}/api/v1/account'.format(PODIUM_URL)
+    params = {'expand': expand}
     if quiet is not None:
         params['quiet'] = quiet
     header = get_json_header_token(token)
     return make_request_custom_success(endpoint, account_success_handler,
-                                       method="GET",
+                                       method='GET',
                                        success_callback=success_callback,
                                        failure_callback=failure_callback,
                                        progress_callback=progress_callback,
