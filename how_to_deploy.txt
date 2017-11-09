@@ -1,4 +1,6 @@
-* Update setup.py with new versions
+* Update setup.py to reflect new version numbers
+
+nano setup.py
 
 * Commit updates
 
@@ -13,10 +15,6 @@ git push --tags origin master
 * Remove items from dist/
 
 rm dist/*
-
-* Update setup.py to reflect new version numbers
-
-nano setup.py
 
 * Build source distribution
 
