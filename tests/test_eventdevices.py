@@ -5,7 +5,7 @@ import podium_api
 from podium_api.eventdevices import (
     make_eventdevice_create, create_eventdevice_redirect_handler,
     make_eventdevices_get, make_eventdevice_delete, make_eventdevice_get,
-    make_eventdevice_update)
+    make_livestreams_get, make_eventdevice_update)
 from podium_api.types.eventdevice import get_eventdevice_from_json
 from podium_api.types.redirect import get_redirect_from_json
 from podium_api.types.token import PodiumToken
@@ -184,6 +184,27 @@ class TestEventDevicesGet(unittest.TestCase):
         self.assertEqual(req._method, 'GET')
         self.assertTrue(
             'https://podium.live/api/v1/events/test_event/devices' in req.url
+        )
+        self.assertTrue('per_page=100' in req.url)
+        self.assertTrue('start=0' in req.url)
+        self.assertTrue('expand=True' in req.url)
+        self.assertEqual(req.req_headers['Content-Type'],
+                         'application/x-www-form-urlencoded')
+        self.assertEqual(req.req_headers['Authorization'],
+                         'Bearer {}'.format(self.token.token))
+        self.assertEqual(req.req_headers['Accept'], 'application/json')
+        # simulate successful request
+        req.on_success()(req, self.paged_event_json)
+        self.check_results_paged_response()
+
+    @patch('podium_api.async.UrlRequest.run')
+    def test_livestreams_get(self, mock_request):
+        req = make_livestreams_get(self.token,
+                                    per_page=100, start=0,
+                                    success_callback=self.success_cb)
+        self.assertEqual(req._method, 'GET')
+        self.assertTrue(
+            'https://podium.live/api/v1/livestreams' in req.url
         )
         self.assertTrue('per_page=100' in req.url)
         self.assertTrue('start=0' in req.url)

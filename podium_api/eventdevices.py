@@ -21,7 +21,7 @@ def make_eventdevices_get(token, event_id=None,
                           failure_callback=None,
                           progress_callback=None):
     """
-    Request that returns a PodiumPagedRequest of events. 
+    Request that returns a PodiumPagedRequest of event devices. 
     By default a get request to 
     'https://podium.live/api/v1/events/{event_id}/devices' will be made.
 
@@ -96,6 +96,82 @@ def make_eventdevices_get(token, event_id=None,
                                        params=params, header=header)
 
 
+
+def make_livestreams_get(token,
+                          endpoint=None,
+                          start=None, per_page=None,
+                          expand=True, quiet=None,
+                          success_callback=None,
+                          redirect_callback=None,
+                          failure_callback=None,
+                          progress_callback=None):
+    """
+    Request that returns a PodiumPagedRequest of event devices for current livestreams. 
+    By default a get request to 
+    'https://podium.live/api/v1/livestreams' will be made.
+
+    Args:
+        token (PodiumToken): The authentication token for this session.
+
+    Kwargs:
+        expand (bool): Expand all objects in response output. Defaults to True
+
+        quiet (object): If not None HTML layout will not render endpoint
+        description. Defaults to None.
+
+        success_callback (function): Callback for a successful request,
+        will have the signature:
+            on_success(PodiumPagedResponse)
+        Defaults to None.
+
+        failure_callback (function): Callback for failures and errors. 
+        Will have the signature:
+            on_failure(failure_type (string), result (dict), data (dict))
+        Values for failure type are: 'error', 'failure'. Defaults to None.
+
+        redirect_callback (function): Callback for redirect, 
+        Will have the signature:
+            on_redirect(result (dict), data (dict))
+        Defaults to None.
+
+        progress_callback (function): Callback for progress updates,
+        will have the signature:
+            on_progress(current_size (int), total_size (int), data (dict))
+        Defaults to None.
+
+        start (int): Starting index for events list. 0 indexed.
+
+        per_page (int): Number per page of results, max of 100.
+
+        endpoint (str): If provided this endpoint will be used instead of
+        the default: 'https://podium.live/api/v1/eventdevices'
+
+    Return:
+        UrlRequest: The request being made.
+
+    """
+    if endpoint is None:
+        endpoint = '{}/api/v1/livestreams'.format(
+            podium_api.PODIUM_APP.podium_url)
+    params = {}
+    if expand is not None:
+        params['expand'] = expand
+    if quiet is not None:
+        params['quiet'] = quiet
+    if start is not None:
+        params['start'] = start
+    if per_page is not None:
+        per_page = min(per_page, 100)
+        params['per_page'] = per_page
+
+    header = get_json_header_token(token)
+    return make_request_custom_success(endpoint, eventdevices_success_handler,
+                                       method='GET',
+                                       success_callback=success_callback,
+                                       failure_callback=failure_callback,
+                                       progress_callback=progress_callback,
+                                       redirect_callback=redirect_callback,
+                                       params=params, header=header)
 
 def make_eventdevice_update(token, eventdevice_uri, name=None,
                             success_callback=None, failure_callback=None,
