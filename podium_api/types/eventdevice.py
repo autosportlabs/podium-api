@@ -20,11 +20,16 @@ class PodiumEventDevice(object):
         **laps_uri** (str): URI of lap data.
         
         **avatar_uri** (str): URI of the device avatar
+        
+        **user_avatar_uri** (str): URI of the user avatar
+        
+        **event_title** (str): Title of the event
 
     """
 
     def __init__(self, eventdevice_id, uri, channels, name, device_uri,
-                 laps_uri, user_uri, event_uri, avatar_uri):
+                 laps_uri, user_uri, event_uri, avatar_uri,
+                 user_avatar_uri, event_title):
         self.eventdevice_id = eventdevice_id
         self.uri = uri
         self.channels = channels
@@ -34,6 +39,8 @@ class PodiumEventDevice(object):
         self.user_uri = user_uri
         self.event_uri = event_uri
         self.avatar_uri = avatar_uri
+        self.user_avatar_uri = user_avatar_uri
+        self.event_title = event_title
 
 
 
@@ -55,4 +62,6 @@ def get_eventdevice_from_json(json):
                              json.get('laps_uri', None),
                              json.get('user_uri', None),
                              json.get('event_uri', None),
-                             json.get('avatar', None))
+                             json.get('avatar', None),
+                             json.get('user_avatar', None),
+                             json.get('event_title', None))
