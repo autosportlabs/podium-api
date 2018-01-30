@@ -21,10 +21,14 @@ class PodiumEvent(object):
         **venue_uri** (str): Endpoint for accessing venue information.
 
         **private** (bool): Is the event only viewable to creator?
+        
+        **user_uri** (str): Endpoint for accessing user information
+        
+        **user_avatar_uri** (str): URI for user avatar
     """
 
     def __init__(self, event_id, uri, devices_uri, title, start_time,
-                 end_time, venue_uri, private):
+                 end_time, venue_uri, private, user_uri, user_avatar_uri):
         self.event_id = event_id
         self.uri = uri
         self.devices_uri = devices_uri
@@ -33,6 +37,8 @@ class PodiumEvent(object):
         self.end_time = end_time
         self.venue_uri = venue_uri
         self.private = private
+        self.user_uri = user_uri
+        self.user_avatar_uri = user_avatar_uri
 
 
 def get_event_from_json(json):
@@ -46,6 +52,7 @@ def get_event_from_json(json):
         PodiumEvent: The PodiumEvent object for this data.
     """
     return PodiumEvent(json['id'], json['URI'], json.get('devices_uri', None),
-                       json.get('title', None), json.get('start_time', None), 
+                       json.get('title', None), json.get('start_time', None),
                        json.get('end_time', None),
-                       json.get("venue_uri", None), json.get("private", None))
+                       json.get('venue_uri', None), json.get('private', None),
+                       json.get('user_uri', None), json.get('user_avatar_uri', None))
