@@ -26,13 +26,14 @@ class PodiumUser(object):
         by the user this attr will have a value, otherwise None. Defaults to
         None.
     """
-    def __init__(self, user_id, uri, username, description, avatar_url,
+    def __init__(self, user_id, uri, username, description, avatar_url, profile_image_url,
                  links, friendships_uri, followers_uri, friendship_uri):
         self.user_id = user_id
         self.uri = uri
         self.username = username
         self.description = description
         self.avatar_url = avatar_url
+        self.profile_image_url = profile_image_url
         self.links = links
         self.friendships_uri = friendships_uri
         self.followers_uri = followers_uri
@@ -49,9 +50,14 @@ def get_user_from_json(json):
     Return:
         PodiumUser: The PodiumUser object for the data.
     """
-    return PodiumUser(json['id'], json['URI'],
-                      json['username'], json['description'],
-                      json['avatar_url'], json['links'],
-                      json['friendships_uri'], json['followers_uri'],
-                      json.get("friendship_uri", None),
+    return PodiumUser(json['id'], 
+                      json['URI'],
+                      json['username'], 
+                      json['description'],
+                      json['avatar_url'],
+                      json['profile_image_url'],
+                      json['links'],
+                      json['friendships_uri'],
+                      json['followers_uri'],
+                      json.get("friendship_uri", None)
                       )
