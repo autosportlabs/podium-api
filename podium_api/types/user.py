@@ -27,7 +27,7 @@ class PodiumUser(object):
         None.
     """
     def __init__(self, user_id, uri, username, description, avatar_url, profile_image_url,
-                 links, friendships_uri, followers_uri, friendship_uri):
+                 links, friendships_uri, followers_uri, friendship_uri, events_uri):
         self.user_id = user_id
         self.uri = uri
         self.username = username
@@ -38,6 +38,7 @@ class PodiumUser(object):
         self.friendships_uri = friendships_uri
         self.followers_uri = followers_uri
         self.friendship_uri = friendship_uri
+        self.events_uri = events_uri
 
 
 def get_user_from_json(json):
@@ -50,14 +51,15 @@ def get_user_from_json(json):
     Return:
         PodiumUser: The PodiumUser object for the data.
     """
-    return PodiumUser(json['id'], 
+    return PodiumUser(json['id'],
                       json['URI'],
-                      json['username'], 
+                      json['username'],
                       json['description'],
                       json['avatar_url'],
                       json['profile_image_url'],
                       json['links'],
                       json['friendships_uri'],
                       json['followers_uri'],
-                      json.get("friendship_uri", None)
+                      json.get("friendship_uri", None),
+                      json['events_uri']
                       )
