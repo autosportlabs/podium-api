@@ -10,7 +10,7 @@ try:
     from urllib.parse import urlencode
 except:
     from urllib import urlencode
-    
+
 class TestUserGet(unittest.TestCase):
 
     def setUp(self):
@@ -24,7 +24,10 @@ class TestUserGet(unittest.TestCase):
                             'links': None,
                             'friendships_uri': 'test/friendships',
                             'followers_uri': 'test/followers',
-                            'friendship_uri': None}
+                            'friendship_uri': None,
+                            'profile_image_url': 'test/avatar/img.png',
+                            'events_uri':'test/events',
+                            'venues_uri':'test/venues'}
         self.field_names = {'id': 'user_id', 'URI': 'uri'}
 
     def check_results(self):
@@ -66,7 +69,7 @@ class TestUserGet(unittest.TestCase):
         self.assertEqual(req.req_headers['Authorization'],
                          'Bearer {}'.format(self.token.token))
         self.assertEqual(req.req_headers['Accept'], "application/json")
-        #simulate successful request
+        # simulate successful request
         req.on_success()(req, {'user': self.result_json})
         self.check_results()
 
@@ -77,10 +80,10 @@ class TestUserGet(unittest.TestCase):
         req = make_user_get(self.token,
                              'https://podium.live/api/v1/users/test',
                              failure_callback=error_cb)
-        #simulate calling the requests on_error
+        # simulate calling the requests on_error
         req.on_error()(req, {})
-        #assert our lambda called the mock correctly
-        error_cb.assert_called_with('error', {}, 
+        # assert our lambda called the mock correctly
+        error_cb.assert_called_with('error', {},
                                     {'success_callback': None,
                                      'failure_callback': error_cb,
                                      'progress_callback': None,
@@ -92,10 +95,10 @@ class TestUserGet(unittest.TestCase):
         req = make_user_get(self.token,
                              'https://podium.live/api/v1/users/test',
                              failure_callback=error_cb)
-        #simulate calling the requests on_failure
+        # simulate calling the requests on_failure
         req.on_failure()(req, {})
-        #assert our lambda called the mock correctly
-        error_cb.assert_called_with('failure', {}, 
+        # assert our lambda called the mock correctly
+        error_cb.assert_called_with('failure', {},
                                     {'success_callback': None,
                                      'failure_callback': error_cb,
                                      'progress_callback': None,
@@ -107,10 +110,10 @@ class TestUserGet(unittest.TestCase):
         req = make_user_get(self.token,
                              'https://podium.live/api/v1/users/test',
                              redirect_callback=redir_cb)
-        #simulate calling the requests on_redirect
+        # simulate calling the requests on_redirect
         req.on_redirect()(req, {})
-        #assert our lambda called the mock correctly
-        redir_cb.assert_called_with(req, None, 
+        # assert our lambda called the mock correctly
+        redir_cb.assert_called_with(req, None,
                                     {'success_callback': None,
                                      'failure_callback': None,
                                      'progress_callback': None,
@@ -122,10 +125,10 @@ class TestUserGet(unittest.TestCase):
         req = make_user_get(self.token,
                              'https://podium.live/api/v1/users/test',
                              progress_callback=progress_cb)
-        #simulate calling the requests on_progress
+        # simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
-        #assert our lambda called the mock correctly
-        progress_cb.assert_called_with(0, 10, 
+        # assert our lambda called the mock correctly
+        progress_cb.assert_called_with(0, 10,
                                        {'success_callback': None,
                                         'failure_callback': None,
                                         'progress_callback': progress_cb,

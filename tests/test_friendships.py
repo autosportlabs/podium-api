@@ -36,13 +36,13 @@ class TestFriendshipCreate(unittest.TestCase):
     def test_get_redirect_from_json(self):
         self.result = get_redirect_from_json(self.result_json, 'friendship')
         self.check_results()
-        
+
     def success_cb(self, result):
         self.result = result
 
     @patch('podium_api.async.UrlRequest.run')
     def test_friendship_create(self, mock_request):
-        req = make_friendship_create(self.token, 1, 
+        req = make_friendship_create(self.token, 1,
                                      redirect_callback=self.success_cb)
         self.assertEqual(req._method, 'POST')
         self.assertEqual(req.url, 'https://podium.live/api/v1/friendships')
@@ -55,22 +55,22 @@ class TestFriendshipCreate(unittest.TestCase):
         self.assertEqual(req.req_headers['Authorization'],
                          'Bearer {}'.format(self.token.token))
         self.assertEqual(req.req_headers['Accept'], 'application/json')
-        #simulate response header
+        # simulate response header
         req._resp_headers = self.result_json
-        #simulate successful request
+        # simulate successful request
         req.on_redirect()(req, {})
         self.check_results()
 
     @patch('podium_api.async.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
-        req = make_friendship_create(self.token, 1, 
+        req = make_friendship_create(self.token, 1,
                                      failure_callback=error_cb)
-        #simulate calling the requests on_error
+        # simulate calling the requests on_error
         req.on_error()(req, {})
-        #assert our lambda called the mock correctly
+        # assert our lambda called the mock correctly
         error_cb.assert_called_with(
-            'error', {}, 
+            'error', {},
             {'success_callback': None,
              'failure_callback': error_cb,
              'progress_callback': None,
@@ -81,13 +81,13 @@ class TestFriendshipCreate(unittest.TestCase):
     @patch('podium_api.async.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
-        req = make_friendship_create(self.token, 1,  
+        req = make_friendship_create(self.token, 1,
                                      failure_callback=error_cb)
-        #simulate calling the requests on_failure
+        # simulate calling the requests on_failure
         req.on_failure()(req, {})
-        #assert our lambda called the mock correctly
+        # assert our lambda called the mock correctly
         error_cb.assert_called_with(
-            'failure', {}, 
+            'failure', {},
             {'success_callback': None,
              'failure_callback': error_cb,
              'progress_callback': None,
@@ -98,22 +98,22 @@ class TestFriendshipCreate(unittest.TestCase):
     @patch('podium_api.async.UrlRequest.run')
     def test_success_callback(self, mock_request):
         success_cb = Mock()
-        req = make_friendship_create(self.token, 1, 
+        req = make_friendship_create(self.token, 1,
                                      success_callback=success_cb)
-        #simulate calling the requests on_success
+        # simulate calling the requests on_success
         self.assertEqual(req.on_success, None)
 
 
     @patch('podium_api.async.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
-        req = make_friendship_create(self.token, 1, 
+        req = make_friendship_create(self.token, 1,
                                      progress_callback=progress_cb)
-        #simulate calling the requests on_progress
+        # simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
-        #assert our lambda called the mock correctly
+        # assert our lambda called the mock correctly
         progress_cb.assert_called_with(
-            0, 10, 
+            0, 10,
            {'success_callback': None,
             'failure_callback': None,
             'progress_callback': progress_cb,
@@ -143,14 +143,14 @@ class TestFriendshipDelete(unittest.TestCase):
                                 'https://podium.live/api/v1/friendships/1',
                                  success_callback=self.success_cb)
         self.assertEqual(req._method, 'DELETE')
-        self.assertEqual(req.url, 
+        self.assertEqual(req.url,
                          'https://podium.live/api/v1/friendships/1')
         self.assertEqual(req.req_headers['Content-Type'],
                          'application/x-www-form-urlencoded')
         self.assertEqual(req.req_headers['Authorization'],
                          'Bearer {}'.format(self.token.token))
         self.assertEqual(req.req_headers['Accept'], 'application/json')
-        #simulate successful request
+        # simulate successful request
         req.on_success()(req, {})
         self.check_results()
 
@@ -161,11 +161,11 @@ class TestFriendshipDelete(unittest.TestCase):
             self.token, 'https://podium.live/api/v1/friendships/1',
             failure_callback=error_cb
             )
-        #simulate calling the requests on_error
+        # simulate calling the requests on_error
         req.on_error()(req, {})
-        #assert our lambda called the mock correctly
+        # assert our lambda called the mock correctly
         error_cb.assert_called_with(
-            'error', {},     
+            'error', {},
             {'success_callback': None,
              'failure_callback': error_cb,
              'progress_callback': None,
@@ -180,11 +180,11 @@ class TestFriendshipDelete(unittest.TestCase):
             self.token, 'https://podium.live/api/v1/friendships/1',
             failure_callback=error_cb
             )
-        #simulate calling the requests on_failure
+        # simulate calling the requests on_failure
         req.on_failure()(req, {})
-        #assert our lambda called the mock correctly
+        # assert our lambda called the mock correctly
         error_cb.assert_called_with(
-            'failure', {}, 
+            'failure', {},
             {'success_callback': None,
              'failure_callback': error_cb,
              'progress_callback': None,
@@ -199,11 +199,11 @@ class TestFriendshipDelete(unittest.TestCase):
             self.token, 'https://podium.live/api/v1/friendships/1',
             redirect_callback=redir_cb
             )
-        #simulate calling the requests on_redirect
+        # simulate calling the requests on_redirect
         req.on_redirect()(req, {})
-        #assert our lambda called the mock correctly
+        # assert our lambda called the mock correctly
         redir_cb.assert_called_with(
-            req, None, 
+            req, None,
             {'success_callback': None,
              'failure_callback': None,
              'progress_callback': None,
@@ -218,11 +218,11 @@ class TestFriendshipDelete(unittest.TestCase):
             self.token, 'https://podium.live/api/v1/friendships/1',
             progress_callback=progress_cb
             )
-        #simulate calling the requests on_progress
+        # simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
-        #assert our lambda called the mock correctly
+        # assert our lambda called the mock correctly
         progress_cb.assert_called_with(
-            0, 10, 
+            0, 10,
            {'success_callback': None,
             'failure_callback': None,
             'progress_callback': progress_cb,
@@ -248,7 +248,10 @@ class TestFriendshipsGet(unittest.TestCase):
             'links': None,
             'friendships_uri': 'test/friendships',
             'followers_uri': 'test/followers',
-            'friendship_uri': 'https://podium.live/api/v1/friendships/1'
+            'friendship_uri': 'https://podium.live/api/v1/friendships/1',
+            'profile_image_url': 'test/avatar/img.png',
+            'events_uri':'test/events',
+            'venues_uri':'test/venues'
             }
         self.paged_event_json = {'total': 1, 'users': [self.result_json]}
         self.field_names = {'id': 'user_id', 'URI': 'uri'}
@@ -270,14 +273,14 @@ class TestFriendshipsGet(unittest.TestCase):
         for user in result.users:
             self.result = user
             self.check_results_user()
-        
+
     def success_cb(self, result):
         self.result = result
 
     @patch('podium_api.async.UrlRequest.run')
     def test_friendships_get(self, mock_request):
         req = make_friendships_get(
-            self.token, 
+            self.token,
             'https://podium.live/api/v1/user/friendships',
             success_callback=self.success_cb
             )
@@ -291,7 +294,7 @@ class TestFriendshipsGet(unittest.TestCase):
         self.assertEqual(req.req_headers['Authorization'],
                          'Bearer {}'.format(self.token.token))
         self.assertEqual(req.req_headers['Accept'], 'application/json')
-        #simulate successful request
+        # simulate successful request
         req.on_success()(req, self.paged_event_json)
         self.check_results_paged_response()
 
@@ -299,14 +302,14 @@ class TestFriendshipsGet(unittest.TestCase):
     def test_error_callback(self, mock_request):
         error_cb = Mock()
         req = make_friendships_get(
-            self.token, 
+            self.token,
             'https://podium.live/api/v1/user/friendships',
             failure_callback=error_cb
             )
-        #simulate calling the requests on_error
+        # simulate calling the requests on_error
         req.on_error()(req, {})
-        #assert our lambda called the mock correctly
-        error_cb.assert_called_with('error', {}, 
+        # assert our lambda called the mock correctly
+        error_cb.assert_called_with('error', {},
                                     {'success_callback': None,
                                      'failure_callback': error_cb,
                                      'progress_callback': None,
@@ -316,14 +319,14 @@ class TestFriendshipsGet(unittest.TestCase):
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
         req = make_friendships_get(
-            self.token, 
+            self.token,
             'https://podium.live/api/v1/user/friendships',
             failure_callback=error_cb
             )
-        #simulate calling the requests on_failure
+        # simulate calling the requests on_failure
         req.on_failure()(req, {})
-        #assert our lambda called the mock correctly
-        error_cb.assert_called_with('failure', {}, 
+        # assert our lambda called the mock correctly
+        error_cb.assert_called_with('failure', {},
                                     {'success_callback': None,
                                      'failure_callback': error_cb,
                                      'progress_callback': None,
@@ -333,14 +336,14 @@ class TestFriendshipsGet(unittest.TestCase):
     def test_redirect_callback(self, mock_request):
         redir_cb = Mock()
         req = make_friendships_get(
-            self.token, 
+            self.token,
             'https://podium.live/api/v1/user/friendships',
             redirect_callback=redir_cb
             )
-        #simulate calling the requests on_redirect
+        # simulate calling the requests on_redirect
         req.on_redirect()(req, {})
-        #assert our lambda called the mock correctly
-        redir_cb.assert_called_with(req, None, 
+        # assert our lambda called the mock correctly
+        redir_cb.assert_called_with(req, None,
                                     {'success_callback': None,
                                      'failure_callback': None,
                                      'progress_callback': None,
@@ -350,14 +353,14 @@ class TestFriendshipsGet(unittest.TestCase):
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_friendships_get(
-            self.token, 
+            self.token,
             'https://podium.live/api/v1/user/friendships',
             progress_callback=progress_cb
             )
-        #simulate calling the requests on_progress
+        # simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
-        #assert our lambda called the mock correctly
-        progress_cb.assert_called_with(0, 10, 
+        # assert our lambda called the mock correctly
+        progress_cb.assert_called_with(0, 10,
                                        {'success_callback': None,
                                         'failure_callback': None,
                                         'progress_callback': progress_cb,
@@ -391,7 +394,7 @@ class TestFriendshipGet(unittest.TestCase):
     def test_get_account_from_json(self):
         self.result = get_friendship_from_json(self.result_json)
         self.check_results()
-        
+
     def success_cb(self, result):
         self.result = result
 
@@ -410,7 +413,7 @@ class TestFriendshipGet(unittest.TestCase):
         self.assertEqual(req.req_headers['Authorization'],
                          'Bearer {}'.format(self.token.token))
         self.assertEqual(req.req_headers['Accept'], 'application/json')
-        #simulate successful request
+        # simulate successful request
         req.on_success()(req, {'friendship': self.result_json})
         self.check_results()
 
@@ -422,10 +425,10 @@ class TestFriendshipGet(unittest.TestCase):
             'https://podium.live/api/v1/friendships/test',
             failure_callback=error_cb
             )
-        #simulate calling the requests on_error
+        # simulate calling the requests on_error
         req.on_error()(req, {})
-        #assert our lambda called the mock correctly
-        error_cb.assert_called_with('error', {}, 
+        # assert our lambda called the mock correctly
+        error_cb.assert_called_with('error', {},
                                     {'success_callback': None,
                                      'failure_callback': error_cb,
                                      'progress_callback': None,
@@ -439,10 +442,10 @@ class TestFriendshipGet(unittest.TestCase):
             'https://podium.live/api/v1/friendships/test',
             failure_callback=error_cb
             )
-        #simulate calling the requests on_failure
+        # simulate calling the requests on_failure
         req.on_failure()(req, {})
-        #assert our lambda called the mock correctly
-        error_cb.assert_called_with('failure', {}, 
+        # assert our lambda called the mock correctly
+        error_cb.assert_called_with('failure', {},
                                     {'success_callback': None,
                                      'failure_callback': error_cb,
                                      'progress_callback': None,
@@ -456,10 +459,10 @@ class TestFriendshipGet(unittest.TestCase):
             'https://podium.live/api/v1/friendships/test',
             redirect_callback=redir_cb
             )
-        #simulate calling the requests on_redirect
+        # simulate calling the requests on_redirect
         req.on_redirect()(req, {})
-        #assert our lambda called the mock correctly
-        redir_cb.assert_called_with(req, None, 
+        # assert our lambda called the mock correctly
+        redir_cb.assert_called_with(req, None,
                                     {'success_callback': None,
                                      'failure_callback': None,
                                      'progress_callback': None,
@@ -473,10 +476,10 @@ class TestFriendshipGet(unittest.TestCase):
             'https://podium.live/api/v1/friendships/test',
             progress_callback=progress_cb
             )
-        #simulate calling the requests on_progress
+        # simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
-        #assert our lambda called the mock correctly
-        progress_cb.assert_called_with(0, 10, 
+        # assert our lambda called the mock correctly
+        progress_cb.assert_called_with(0, 10,
                                        {'success_callback': None,
                                         'failure_callback': None,
                                         'progress_callback': progress_cb,

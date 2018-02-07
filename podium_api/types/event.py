@@ -24,11 +24,11 @@ class PodiumEvent(object):
         
         **user_uri** (str): Endpoint for accessing user information
         
-        **user_avatar_uri** (str): URI for user avatar
+        **user_avatar_url** (str): URL for user avatar
     """
 
     def __init__(self, event_id, uri, devices_uri, title, start_time,
-                 end_time, venue_uri, private, user_uri, user_avatar_uri):
+                 end_time, venue_uri, private, user_uri, user_avatar_url):
         self.event_id = event_id
         self.uri = uri
         self.devices_uri = devices_uri
@@ -38,7 +38,7 @@ class PodiumEvent(object):
         self.venue_uri = venue_uri
         self.private = private
         self.user_uri = user_uri
-        self.user_avatar_uri = user_avatar_uri
+        self.user_avatar_url = user_avatar_url
 
 
 def get_event_from_json(json):
@@ -55,4 +55,4 @@ def get_event_from_json(json):
                        json.get('title', None), json.get('start_time', None),
                        json.get('end_time', None),
                        json.get('venue_uri', None), json.get('private', None),
-                       json.get('user_uri', None), json.get('user_avatar_uri', None))
+                       json.get('user_uri', None), json.get('user_avatar_url', None))
