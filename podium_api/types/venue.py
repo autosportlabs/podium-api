@@ -28,7 +28,6 @@ def get_venue_from_json(json):
     Return:
         PodiumVenue: The PodiumVenue object for the data.
     """
-    print('venue json {}'.format(json))
     return PodiumVenue(json['id'],
                       json['URI'],
                       'name'

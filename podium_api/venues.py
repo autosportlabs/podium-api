@@ -6,7 +6,7 @@ from podium_api.types.venue import get_venue_from_json
 
 
 def make_venue_get(token, endpoint,
-                 expand=True,
+                 expand=False,
                  quiet=None, success_callback=None,
                  redirect_callback=None,
                  failure_callback=None, progress_callback=None):
@@ -67,7 +67,7 @@ def make_venue_get(token, endpoint,
 
 def make_venues_get(token, endpoint,
                   start=None, per_page=None,
-                  expand=True,
+                  expand=False,
                   quiet=None, success_callback=None,
                   redirect_callback=None,
                   failure_callback=None, progress_callback=None):

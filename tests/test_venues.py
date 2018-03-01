@@ -18,11 +18,10 @@ class TestVenuesGet(unittest.TestCase):
         self.token = PodiumToken('test_token', 'test_type', 1)
         self.result_json = {
             'URI': 'test/venues',
-            'raw_data_uri': 'test/raw/data/uri',
             'id': '1234',
         }
         self.paged_event_json = {'total': 1, 'venues': [self.result_json]}
-        self.field_names = {'URI': 'uri'}
+        self.field_names = {'id': 'venue_id', 'URI': 'uri'}
 
     def check_results(self):
         for key in self.result_json:
@@ -144,10 +143,9 @@ class TestVenueGet(unittest.TestCase):
         self.token = PodiumToken('test_token', 'test_type', 1)
         self.result_json = {
             'URI': 'test/venues/1234',
-            'raw_data_uri': 'test/raw/data/uri',
             'id': '1234',
         }
-        self.field_names = {'URI': 'uri'}
+        self.field_names = {'id': 'venue_id', 'URI': 'uri'}
 
     def check_results(self):
         for key in self.result_json:
@@ -172,7 +170,7 @@ class TestVenueGet(unittest.TestCase):
             success_callback=self.success_cb)
         self.assertEqual(req._method, 'GET')
         self.assertEqual(
-            req.url, 'test/venue/1234?expand=True'
+            req.url, 'test/venues/1234?expand=True'
         )
         self.assertEqual(req.req_headers['Content-Type'],
                          'application/x-www-form-urlencoded')
