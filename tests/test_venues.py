@@ -19,6 +19,8 @@ class TestVenuesGet(unittest.TestCase):
         self.result_json = {
             'URI': 'test/venues',
             'id': '1234',
+            'created': '2018-03-02T16:23:00Z',
+            'updated': '2018-03-02T16:23:00Z'
         }
         self.paged_event_json = {'total': 1, 'venues': [self.result_json]}
         self.field_names = {'id': 'venue_id', 'URI': 'uri'}
@@ -55,7 +57,7 @@ class TestVenuesGet(unittest.TestCase):
         self.assertTrue(
             'test/venues' in req.url
         )
-        self.assertTrue('expand=True' in req.url)
+        self.assertTrue('expand=False' in req.url)
         self.assertEqual(req.req_headers['Content-Type'],
                          'application/x-www-form-urlencoded')
         self.assertEqual(req.req_headers['Authorization'],
@@ -144,6 +146,8 @@ class TestVenueGet(unittest.TestCase):
         self.result_json = {
             'URI': 'test/venues/1234',
             'id': '1234',
+            'created': '2018-03-02T16:23:00Z',
+            'updated': '2018-03-02T16:23:00Z'
         }
         self.field_names = {'id': 'venue_id', 'URI': 'uri'}
 
@@ -170,7 +174,7 @@ class TestVenueGet(unittest.TestCase):
             success_callback=self.success_cb)
         self.assertEqual(req._method, 'GET')
         self.assertEqual(
-            req.url, 'test/venues/1234?expand=True'
+            req.url, 'test/venues/1234?expand=False'
         )
         self.assertEqual(req.req_headers['Content-Type'],
                          'application/x-www-form-urlencoded')
