@@ -18,6 +18,7 @@ class TestVenuesGet(unittest.TestCase):
         self.token = PodiumToken('test_token', 'test_type', 1)
         self.result_json = {
             'URI': 'test/venues',
+            'events_uri': 'venue/events',
             'id': '1234',
             'created': '2018-03-02T16:23:00Z',
             'updated': '2018-03-02T16:23:00Z'
@@ -145,6 +146,7 @@ class TestVenueGet(unittest.TestCase):
         self.token = PodiumToken('test_token', 'test_type', 1)
         self.result_json = {
             'URI': 'test/venues/1234',
+            'events_uri': 'venue/events',
             'id': '1234',
             'created': '2018-03-02T16:23:00Z',
             'updated': '2018-03-02T16:23:00Z'

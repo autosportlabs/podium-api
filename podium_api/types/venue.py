@@ -12,7 +12,7 @@ class PodiumVenue(object):
 
         **name** (string): The Venue's name.
     """
-    def __init__(self, venue_id, uri, updated, created,
+    def __init__(self, venue_id, uri, events_uri, updated, created,
                  name,
                  centerpoint,
                  country_code,
@@ -25,6 +25,7 @@ class PodiumVenue(object):
                  ):
         self.venue_id = venue_id
         self.uri = uri
+        self.events_uri = events_uri
         self.updated = updated
         self.created = created
         self.name = name
@@ -49,6 +50,7 @@ def get_venue_from_json(json):
     """
     return PodiumVenue(json['id'],
                       json['URI'],
+                      json['events_uri'],
                       json['updated'],
                       json['created'],
                       json.get('name', None),
