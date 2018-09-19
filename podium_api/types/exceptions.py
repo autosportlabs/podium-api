@@ -11,12 +11,6 @@ class PodiumApplicationNotRegistered(Exception):
     calling register_podium_application"""
     pass
 
-class NoEndpointOrEventIdProvided(Exception):
-    """This exception is raised if a get eventdevices request is attempted
-    without providing an endpoint or event id.
-    """
-    pass
-
 class NoEndpointOrIdsProvided(Exception):
     """This exception is raised if a request is attempted
     without providing an endpoint or required ids.

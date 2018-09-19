@@ -1165,7 +1165,7 @@ class PodiumAlertMessagesAPI(object):
         Request that returns an AlertMessage for the provided alertmessage_uri. 
 
         Args:
-            alertmessage_uri (str): URI for the alertmessage you want.
+            endpoint (str): URI for the alertmessage you want.
 
         Kwargs:
             expand (bool): Expand all objects in response output.
@@ -1208,11 +1208,9 @@ class PodiumAlertMessagesAPI(object):
         redirect_callback if one is provided in the form of a PodiumRedirect.
 
         Args:
-            title (str): title for the vent.
+            message (str): message for the alertmessage
 
-            start_time (str): Starting time, use ISO 8601 format.
-
-            end_time (str): Ending time, use ISO 8601 format.
+            priority (int): priority of the alertmessage
 
         Kwargs:
             message(str): ID for the venue of event.

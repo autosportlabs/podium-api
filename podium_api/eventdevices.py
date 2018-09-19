@@ -9,7 +9,7 @@ except:
 from podium_api.async import make_request_custom_success, get_json_header_token
 from podium_api.types.paged_response import get_paged_response_from_json
 from podium_api.types.redirect import get_redirect_from_json
-from podium_api.types.exceptions import NoEndpointOrEventIdProvided
+from podium_api.types.exceptions import NoEndpointOrIdsProvided
 import podium_api
 
 def make_eventdevices_get(token, event_id=None,
@@ -70,7 +70,7 @@ def make_eventdevices_get(token, event_id=None,
     """
     if endpoint is None:
         if event_id is None:
-            raise NoEndpointOrEventIdProvided()
+            raise NoEndpointOrIdsProvided()
         endpoint = '{}/api/v1/events/{}/devices'.format(
             podium_api.PODIUM_APP.podium_url,
             event_id
