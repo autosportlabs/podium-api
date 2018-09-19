@@ -16,6 +16,13 @@ from podium_api.eventdevices import (
     make_eventdevices_get, make_eventdevice_create, make_eventdevice_update,
     make_eventdevice_get, make_eventdevice_delete
 )
+from podium_api.alertmessages import (
+    make_alertmessages_get, make_alertmessage_get, make_alertmessage_create
+    )
+
+from podium_api.venues import (
+    make_venues_get, make_venue_get
+    )
 from podium_api.laps import make_laps_get, make_lap_get
 
 
@@ -50,9 +57,11 @@ class PodiumAPI(object):
         requests.
 
         **laps** (PodiumLapsAPI): API object for lap requests.
+        
+        **alertmessages** (AlertMessagesAPI: API object for alertmessage requests.
 
     """
-    
+
     def __init__(self, token):
         self.token = token
         self.account = PodiumAccountAPI(token)
@@ -62,6 +71,7 @@ class PodiumAPI(object):
         self.users = PodiumUsersAPI(token)
         self.eventdevices = PodiumEventDevicesAPI(token)
         self.laps = PodiumLapsAPI(token)
+        self.alertmessages = PodiumAlertMessagesAPI(token)
 
 
 class PodiumLapsAPI(object):
@@ -1088,3 +1098,248 @@ class PodiumEventsAPI(object):
 
         """
         make_event_update(self.token, *args, **kwargs)
+
+class PodiumAlertMessagesAPI(object):
+    """
+    Object that handles event requests and keeps track of the
+    authentication token necessary to do so. Usually accessed via
+    PodiumAPI object.
+
+    **Attributes:**
+        **token** (PodiumToken): The token for the logged in user.
+
+    """
+
+    def __init__(self, token):
+        self.token = token
+
+    def list(self, *args, **kwargs):
+        """
+        Request that returns a PodiumPagedRequest of events. 
+        By default a get request to 
+        'https://podium.live/api/v1/events' will be made.
+
+        Kwargs:
+            expand (bool): Expand all objects in response output. 
+            Defaults to True
+
+            quiet (object): If not None HTML layout will not render endpoint
+            description. Defaults to None.
+
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(PodiumPagedResponse)
+            Defaults to None.
+
+            failure_callback (function): Callback for failures and errors. 
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
+
+            redirect_callback (function): Callback for redirect, 
+            Will have the signature:
+                on_redirect(result (dict), data (dict))
+            Defaults to None.
+
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
+
+            start (int): Starting index for events list. 0 indexed.
+
+            per_page (int): Number per page of results, max of 100.
+
+            endpoint (str): If provided the start, per_page, expand, and quiet
+            params will not be used instead making a request based on the
+            provided endpoint.
+
+        Return:
+            UrlRequest: The request being made.
+
+        """
+        make_alertmessages_get(self.token, *args, **kwargs)
+
+    def get(self, *args, **kwargs):
+        """
+        Request that returns an AlertMessage for the provided alertmessage_uri. 
+
+        Args:
+            endpoint (str): URI for the alertmessage you want.
+
+        Kwargs:
+            expand (bool): Expand all objects in response output.
+            Defaults to True
+
+            quiet (object): If not None HTML layout will not render endpoint
+            description. Defaults to None.
+
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(PodiumEvent)
+            Defaults to None.
+
+            failure_callback (function): Callback for failures and errors. 
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
+
+            redirect_callback (function): Callback for redirect, 
+            Will have the signature:
+                on_redirect(result (dict), data (dict))
+            Defaults to None.
+
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
+
+        Return:
+            UrlRequest: The request being made.
+
+        """
+        make_alertmessage_get(self.token, *args, **kwargs)
+
+    def create(self, *args, **kwargs):
+        """
+        Request that creates a new PodiumAlertMessage.
+
+        The uri for the newly created alertmessage will be provided to the
+        redirect_callback if one is provided in the form of a PodiumRedirect.
+
+        Args:
+            message (str): message for the alertmessage
+
+            priority (int): priority of the alertmessage
+
+        Kwargs:
+            message(str): ID for the venue of event.
+            priority(int): priority for the message.
+
+            success_callback (function): Callback for a successful request,
+            will have the signature: 
+                on_success(result (dict), data (dict))
+            Defaults to None..
+
+            failure_callback (function): Callback for failures and errors. 
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
+
+            redirect_callback (function): Callback for redirect, 
+            Will have the signature:
+                on_redirect(redirect_object (PodiumRedirect))
+            Defaults to None.
+
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
+
+        Return:
+            UrlRequest: The request being made.
+
+        """
+        make_alertmessage_create(self.token, *args, **kwargs)
+
+class PodiumVenuesAPI(object):
+    """
+    Object that handles event requests and keeps track of the
+    authentication token necessary to do so. Usually accessed via
+    PodiumAPI object.
+
+    **Attributes:**
+        **token** (PodiumToken): The token for the logged in user.
+
+    """
+
+    def __init__(self, token):
+        self.token = token
+
+    def list(self, *args, **kwargs):
+        """
+        Request that returns a PodiumPagedRequest of events. 
+        By default a get request to 
+        'https://podium.live/api/v1/events' will be made.
+
+        Kwargs:
+            expand (bool): Expand all objects in response output. 
+            Defaults to True
+
+            quiet (object): If not None HTML layout will not render endpoint
+            description. Defaults to None.
+
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(PodiumPagedResponse)
+            Defaults to None.
+
+            failure_callback (function): Callback for failures and errors. 
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
+
+            redirect_callback (function): Callback for redirect, 
+            Will have the signature:
+                on_redirect(result (dict), data (dict))
+            Defaults to None.
+
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
+
+            start (int): Starting index for events list. 0 indexed.
+
+            per_page (int): Number per page of results, max of 100.
+
+            endpoint (str): If provided the start, per_page, expand, and quiet
+            params will not be used instead making a request based on the
+            provided endpoint.
+
+        Return:
+            UrlRequest: The request being made.
+
+        """
+        make_venues_get(self.token, *args, **kwargs)
+
+    def get(self, *args, **kwargs):
+        """
+        Request that returns an Venue for the provided endpoint. 
+
+        Args:
+            endpoint (str): URI for the venue you want.
+
+        Kwargs:
+            expand (bool): Expand all objects in response output.
+            Defaults to True
+
+            quiet (object): If not None HTML layout will not render endpoint
+            description. Defaults to None.
+
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(PodiumEvent)
+            Defaults to None.
+
+            failure_callback (function): Callback for failures and errors. 
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
+
+            redirect_callback (function): Callback for redirect, 
+            Will have the signature:
+                on_redirect(result (dict), data (dict))
+            Defaults to None.
+
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
+
+        Return:
+            UrlRequest: The request being made.
+
+        """
+        make_venue_get(self.token, *args, **kwargs)
+
