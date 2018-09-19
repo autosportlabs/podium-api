@@ -16,3 +16,9 @@ class NoEndpointOrEventIdProvided(Exception):
     without providing an endpoint or event id.
     """
     pass
+
+class NoEndpointOrIdsProvided(Exception):
+    """This exception is raised if a request is attempted
+    without providing an endpoint or required ids.
+    """
+    pass
