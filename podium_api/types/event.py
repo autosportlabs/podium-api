@@ -28,7 +28,7 @@ class PodiumEvent(object):
     """
 
     def __init__(self, event_id, uri, devices_uri, title, start_time,
-                 end_time, venue_uri, private, user_uri, user_avatar_url):
+                 end_time, venue_uri, venue_id, private, user_uri, user_avatar_url):
         self.event_id = event_id
         self.uri = uri
         self.devices_uri = devices_uri
@@ -36,6 +36,7 @@ class PodiumEvent(object):
         self.start_time = start_time
         self.end_time = end_time
         self.venue_uri = venue_uri
+        self.venue_id = venue_id
         self.private = private
         self.user_uri = user_uri
         self.user_avatar_url = user_avatar_url
@@ -54,5 +55,6 @@ def get_event_from_json(json):
     return PodiumEvent(json['id'], json['URI'], json.get('devices_uri', None),
                        json.get('title', None), json.get('start_time', None),
                        json.get('end_time', None),
-                       json.get('venue_uri', None), json.get('private', None),
+                       json.get('venue_uri', None), json.get('venue_id', None),
+                       json.get('private', None),
                        json.get('user_uri', None), json.get('user_avatar_url', None))
