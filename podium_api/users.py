@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from podium_api.async import make_request_custom_success, get_json_header_token
+from podium_api.asyncreq import make_request_custom_success, get_json_header_token
 from podium_api.types.user import get_user_from_json
+
 
 def make_user_get(token, endpoint,
                    expand=False, quiet=None, success_callback=None,

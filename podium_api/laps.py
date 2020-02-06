@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from podium_api.async import make_request_custom_success, get_json_header_token
+from podium_api.asyncreq import make_request_custom_success, get_json_header_token
 from podium_api.types.paged_response import get_paged_response_from_json
 from podium_api.types.lap import get_lap_from_json
 
@@ -156,6 +156,7 @@ def laps_success_handler(req, results, data):
     """
     if data['success_callback'] is not None:
         data['success_callback'](get_paged_response_from_json(results, "laps"))
+
 
 def lap_success_handler(req, results, data):
     """
