@@ -6,11 +6,12 @@ try:
     from urllib.parse import urlencode
 except:
     from urllib import urlencode
-from podium_api.async import make_request_custom_success, get_json_header_token
+from podium_api.asyncreq import make_request_custom_success, get_json_header_token
 from podium_api.types.paged_response import get_paged_response_from_json
 from podium_api.types.redirect import get_redirect_from_json
 from podium_api.types.exceptions import NoEndpointOrIdsProvided
 import podium_api
+
 
 def make_eventdevices_get(token, event_id=None,
                           endpoint=None,
@@ -96,7 +97,6 @@ def make_eventdevices_get(token, event_id=None,
                                        params=params, header=header)
 
 
-
 def make_livestreams_get(token,
                           endpoint=None,
                           start=None, per_page=None,
@@ -173,6 +173,7 @@ def make_livestreams_get(token,
                                        redirect_callback=redirect_callback,
                                        params=params, header=header)
 
+
 def make_eventdevice_update(token, eventdevice_uri, name=None,
                             success_callback=None, failure_callback=None,
                             progress_callback=None, redirect_callback=None):
@@ -234,7 +235,6 @@ def make_eventdevice_get(token, eventdevice_uri, expand=True,
                          redirect_callback=None,
                          failure_callback=None, progress_callback=None):
 
-
     """
     Request that returns a PodiumEventDevice for the provided eventdevice_uri
 
@@ -287,6 +287,7 @@ def make_eventdevice_get(token, eventdevice_uri, expand=True,
                                        progress_callback=progress_callback,
                                        redirect_callback=redirect_callback,
                                        params=params, header=header)
+
 
 def eventdevice_success_handler(req, results, data):
     """
@@ -359,6 +360,7 @@ def make_eventdevice_delete(token, eventdevice_uri,
         header=header,
         data={'deleted_uri': eventdevice_uri}
     )
+
 
 def eventdevice_delete_handler(req, results, data):
     """

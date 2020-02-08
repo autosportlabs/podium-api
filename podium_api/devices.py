@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from podium_api.async import make_request_custom_success, get_json_header_token
+from podium_api.asyncreq import make_request_custom_success, get_json_header_token
 from podium_api.types.device import get_device_from_json
 from podium_api.types.redirect import get_redirect_from_json
 from podium_api.types.paged_response import get_paged_response_from_json
 import podium_api
+
 
 def make_device_update(token, device_uri, name=None,
                        success_callback=None, failure_callback=None,
@@ -58,6 +59,7 @@ def make_device_update(token, device_uri, name=None,
         body=body, header=header,
         data={'updated_uri': device_uri}
         )
+
 
 def make_devices_get(token, endpoint,
                      start=None, per_page=None,
@@ -228,7 +230,6 @@ def make_device_delete(token, device_uri,
                                        data={'deleted_uri': device_uri})
 
 
-
 def make_device_get(token, device_uri, expand=True,
                     quiet=None, success_callback=None,
                     redirect_callback=None,
@@ -284,7 +285,6 @@ def make_device_get(token, device_uri, expand=True,
                                        progress_callback=progress_callback,
                                        redirect_callback=redirect_callback,
                                        params=params, header=header)
-
 
 
 def device_delete_handler(req, results, data):

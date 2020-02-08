@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from podium_api.async import make_request_custom_success, get_json_header_token
+from podium_api.asyncreq import make_request_custom_success, get_json_header_token
 from podium_api.types.paged_response import get_paged_response_from_json
 from podium_api.types.event import get_event_from_json
 from podium_api.types.redirect import get_redirect_from_json
 import podium_api
+
 
 def make_event_update(token, event_uri, title=None, start_time=None,
                       end_time=None, venue_id=None,
@@ -180,7 +181,6 @@ def make_event_delete(token, event_uri,
                                        redirect_callback=redirect_callback,
                                        header=header,
                                        data={'deleted_uri': event_uri})
-
 
 
 def make_event_get(token, event_uri, expand=True,
@@ -381,6 +381,7 @@ def events_success_handler(req, results, data):
     if data['success_callback'] is not None:
         data['success_callback'](get_paged_response_from_json(results,
                                                               'events'))
+
 
 def create_event_redirect_handler(req, results, data):
     """
