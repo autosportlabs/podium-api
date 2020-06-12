@@ -37,8 +37,8 @@ def register_podium_application(app_id, app_secret, podium_url=None):
         podium_url (String): Optional podium url. defaults to https://podium.live
     """
 
-    if 'PODIUM_APP' in globals():
-        raise PodiumApplicationAlreadyRegistered()
+#    if 'PODIUM_APP' in globals():
+ #       raise PodiumApplicationAlreadyRegistered()
 
     global PODIUM_APP
     PODIUM_APP = PodiumApplication(app_id, app_secret, podium_url=podium_url)
