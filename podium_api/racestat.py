@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 from podium_api.asyncreq import make_request_custom_success, get_json_header_token
 from podium_api.types.racestat import get_racestat_from_json
+from podium_api.types.redirect import get_redirect_from_json
 import podium_api
 
 
-def make_racestat_get(token, expand=False, quiet=None,
+def make_racestat_get(token, endpoint, expand=False, quiet=None,
                      success_callback=None,
                      failure_callback=None, progress_callback=None,
                      redirect_callback=None):
@@ -47,14 +48,6 @@ def make_racestat_get(token, expand=False, quiet=None,
         UrlRequest: The request being made.
 
     """
-    if endpoint is None:
-        if (event_id or device_id) is None:
-            raise NoEndpointOrIdsProvided()
-        endpoint = '{}/api/v1/events/{}/devices/{}/racestat'.format(
-            podium_api.PODIUM_APP.podium_url,
-            event_id,
-            device_id
-            )
 
     params = {'expand': expand}
     if quiet is not None:
@@ -112,7 +105,7 @@ def make_racestat_create(token, event_id, device_id, comp_number, comp_class, to
 
     endpoint = '{}/api/v1/events/{}/devices/{}/racestat'.format(podium_api.PODIUM_APP.podium_url, event_id, device_id)
     body = {'racestat[comp_number]': comp_number, 'racestat[comp_class]': comp_class,
-            'racestat[total_laps]': comp_class, 'racestat[last_lap_time]': last_lap_time,
+            'racestat[total_laps]': total_laps, 'racestat[last_lap_time]': last_lap_time,
             'racestat[position_overall]': position_overall, 'racestat[position_in_class]': position_in_class,
             'racestat[comp_number_ahead]': comp_number_ahead, 'racestat[comp_number_behind]': comp_number_behind,
             'racestat[gap_to_ahead]': gap_to_ahead, 'racestat[gap_to_behind]': gap_to_behind,
