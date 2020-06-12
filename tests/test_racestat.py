@@ -165,11 +165,18 @@ class TestRacestatGet(unittest.TestCase):
         self.result_json = {
             'id': '11',
             'URI': 'test/racestat_uri',
-            'send_time': '2018-09-18T10:35:25Z',
-            'ack_time': "2018-10-18T10:35:25Z",
-            'message': 'pit nao',
-            'priority': '1',
-            'sender_id': '12',
+            'comp_number': '1234',
+            'comp_class': 'P1',
+            'total_laps': 10,
+            'last_lap_time': 1.234,
+            'position_overall': 3,
+            'position_in_class': 2,
+            'comp_number_ahead': '456',
+            'comp_number_behind': '789',
+            'gap_to_ahead': 1.234,
+            'gap_to_behind': 4.56,
+            'laps_to_ahead': 10,
+            'laps_to_behind': 33,
             'eventdevice_uri': 'test/eventdevice_uri',
             'device_uri': 'test/device_uri',
             'user_uri':'test/user_uri'
@@ -178,7 +185,7 @@ class TestRacestatGet(unittest.TestCase):
         self.paged_event_json = {'total': 1, 'racestats': [self.result_json]}
         self.field_names = {'id': 'racestat_id', 'URI': 'uri'}
 
-    def check_results_racestat(self):
+    def check_results(self):
         for key in self.result_json:
             if key in self.field_names:
                 rkey = self.field_names[key]

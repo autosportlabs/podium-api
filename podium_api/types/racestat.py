@@ -40,11 +40,12 @@ class Racestat(object):
         **user_uri** (str): URI of the user this racestat belongs to        
     """
 
-    def __init__(self, racestat_id, comp_number, comp_class, total_laps, last_lap_time,
+    def __init__(self, racestat_id, uri, comp_number, comp_class, total_laps, last_lap_time,
                  position_overall, position_in_class, comp_number_ahead, comp_number_behind,
                  gap_to_ahead, gap_to_behind, laps_to_ahead, laps_to_behind,
                  eventdevice_uri, device_uri, user_uri):
         self.racestat_id = racestat_id
+        self.uri = uri
         self.comp_number = comp_number
         self.comp_class = comp_class
         self.total_laps = total_laps
@@ -72,7 +73,7 @@ def get_racestat_from_json(json):
     Return:
         Racestat: The Racestat object for the data.
     """
-    return Racestat(json['id'], json['comp_number'], json['comp_class'],
+    return Racestat(json['id'], json['URI'], json['comp_number'], json['comp_class'],
                          json['total_laps'], json['last_lap_time'],
                          json['position_overall'], json['position_in_class'],
                          json['comp_number_ahead'], json['comp_number_behind'],

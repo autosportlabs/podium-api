@@ -40,7 +40,7 @@ class TestMakeRequestDefault(unittest.TestCase):
 
     @patch('podium_api.async.UrlRequest.run')
     def test_params_with_params(self, mock_request):
-        req = make_request_default('test/test?test3=test4', 
+        req = make_request_default('test/test?test3=test4',
             params={"test1": "test2"})
         self.assertEqual(
             req.url, 'test/test?test3=test4&' + urlencode({"test1": "test2"})
@@ -55,10 +55,10 @@ class TestMakeRequestDefault(unittest.TestCase):
     def test_success_callback(self, mock_request):
         success_cb = Mock()
         req = make_request_default('test/test', success_callback=success_cb)
-        #simulate calling the requests on_success
+        # simulate calling the requests on_success
         req.on_success()(req, {})
-        #assert our lambda called the mock correctly
-        success_cb.assert_called_with({}, 
+        # assert our lambda called the mock correctly
+        success_cb.assert_called_with({},
                                       {'success_callback': success_cb,
                                        'failure_callback': None,
                                        'progress_callback': None,
@@ -68,10 +68,10 @@ class TestMakeRequestDefault(unittest.TestCase):
     def test_error_callback(self, mock_request):
         error_cb = Mock()
         req = make_request_default('test/test', failure_callback=error_cb)
-        #simulate calling the requests on_success
+        # simulate calling the requests on_success
         req.on_error()(req, {})
-        #assert our lambda called the mock correctly
-        error_cb.assert_called_with('error', {}, 
+        # assert our lambda called the mock correctly
+        error_cb.assert_called_with('error', {},
                                     {'success_callback': None,
                                      'failure_callback': error_cb,
                                      'progress_callback': None,
@@ -81,10 +81,10 @@ class TestMakeRequestDefault(unittest.TestCase):
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
         req = make_request_default('test/test', failure_callback=error_cb)
-        #simulate calling the requests on_success
+        # simulate calling the requests on_success
         req.on_failure()(req, {})
-        #assert our lambda called the mock correctly
-        error_cb.assert_called_with('failure', {}, 
+        # assert our lambda called the mock correctly
+        error_cb.assert_called_with('failure', {},
                                     {'success_callback': None,
                                      'failure_callback': error_cb,
                                      'progress_callback': None,
@@ -94,10 +94,10 @@ class TestMakeRequestDefault(unittest.TestCase):
     def test_redirect_callback(self, mock_request):
         redir_cb = Mock()
         req = make_request_default('test/test', redirect_callback=redir_cb)
-        #simulate calling the requests on_success
+        # simulate calling the requests on_success
         req.on_redirect()(req, {})
-        #assert our lambda called the mock correctly
-        redir_cb.assert_called_with(req, None, 
+        # assert our lambda called the mock correctly
+        redir_cb.assert_called_with(req, None,
                                     {'success_callback': None,
                                      'failure_callback': None,
                                      'progress_callback': None,
@@ -107,31 +107,29 @@ class TestMakeRequestDefault(unittest.TestCase):
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_request_default('test/test', progress_callback=progress_cb)
-        #simulate calling the requests on_success
+        # simulate calling the requests on_success
         req.on_progress()(req, 0, 10)
-        #assert our lambda called the mock correctly
-        progress_cb.assert_called_with(0, 10, 
+        # assert our lambda called the mock correctly
+        progress_cb.assert_called_with(0, 10,
                                        {'success_callback': None,
                                         'failure_callback': None,
                                         'progress_callback': progress_cb,
                                         'redirect_callback': None})
-
 
     @patch('podium_api.async.UrlRequest.run')
     def test_custom_data(self, mock_request):
         success_cb = Mock()
         req = make_request_default('test/test', success_callback=success_cb,
                                    data={"custom": "test"})
-        #simulate calling the requests on_success
+        # simulate calling the requests on_success
         req.on_success()(req, {})
-        #assert our lambda called the mock correctly
-        success_cb.assert_called_with({}, 
+        # assert our lambda called the mock correctly
+        success_cb.assert_called_with({},
                                       {'success_callback': success_cb,
                                        'failure_callback': None,
                                        'progress_callback': None,
                                        'redirect_callback': None,
                                        'custom': 'test'})
-
 
 
 class TestMakeRequestCustomSuccess(unittest.TestCase):
@@ -171,10 +169,10 @@ class TestMakeRequestCustomSuccess(unittest.TestCase):
     def test_success_callback(self, mock_request):
         success_handler = Mock()
         req = make_request_custom_success('test/test', success_handler)
-        #simulate calling the requests on_success
+        # simulate calling the requests on_success
         req.on_success()(req, {})
-        #assert our lambda called the mock correctly
-        success_handler.assert_called_with(req, {}, 
+        # assert our lambda called the mock correctly
+        success_handler.assert_called_with(req, {},
                                            {'success_callback': None,
                                             'failure_callback': None,
                                             'progress_callback': None,
@@ -186,10 +184,10 @@ class TestMakeRequestCustomSuccess(unittest.TestCase):
         success_handler = Mock()
         req = make_request_custom_success('test/test', success_handler,
                                           failure_callback=error_cb)
-        #simulate calling the requests on_error
+        # simulate calling the requests on_error
         req.on_error()(req, {})
-        #assert our lambda called the mock correctly
-        error_cb.assert_called_with('error', {}, 
+        # assert our lambda called the mock correctly
+        error_cb.assert_called_with('error', {},
                                     {'success_callback': None,
                                      'failure_callback': error_cb,
                                      'progress_callback': None,
@@ -201,10 +199,10 @@ class TestMakeRequestCustomSuccess(unittest.TestCase):
         error_cb = Mock()
         req = make_request_custom_success('test/test', success_handler,
                                           failure_callback=error_cb)
-        #simulate calling the requests on_failure
+        # simulate calling the requests on_failure
         req.on_failure()(req, {})
-        #assert our lambda called the mock correctly
-        error_cb.assert_called_with('failure', {}, 
+        # assert our lambda called the mock correctly
+        error_cb.assert_called_with('failure', {},
                                     {'success_callback': None,
                                      'failure_callback': error_cb,
                                      'progress_callback': None,
@@ -216,10 +214,10 @@ class TestMakeRequestCustomSuccess(unittest.TestCase):
         redir_cb = Mock()
         req = make_request_custom_success('test/test', success_handler,
                                           redirect_callback=redir_cb)
-        #simulate calling the requests on_redirect
+        # simulate calling the requests on_redirect
         req.on_redirect()(req, {})
-        #assert our lambda called the mock correctly
-        redir_cb.assert_called_with(req, None, 
+        # assert our lambda called the mock correctly
+        redir_cb.assert_called_with(req, None,
                                     {'success_callback': None,
                                      'failure_callback': None,
                                      'progress_callback': None,
@@ -231,25 +229,24 @@ class TestMakeRequestCustomSuccess(unittest.TestCase):
         success_handler = Mock()
         req = make_request_custom_success('test/test', success_handler,
                                           progress_callback=progress_cb)
-        #simulate calling the requests on_progress
+        # simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
-        #assert our lambda called the mock correctly
-        progress_cb.assert_called_with(0, 10, 
+        # assert our lambda called the mock correctly
+        progress_cb.assert_called_with(0, 10,
                                        {'success_callback': None,
                                         'failure_callback': None,
                                         'progress_callback': progress_cb,
                                         'redirect_callback': None})
-
 
     @patch('podium_api.async.UrlRequest.run')
     def test_custom_data(self, mock_request):
         success_handler = Mock()
         req = make_request_custom_success('test/test', success_handler,
                                           data={"custom": "test"})
-        #simulate calling the requests on_success
+        # simulate calling the requests on_success
         req.on_success()(req, {})
-        #assert our lambda called the mock correctly
-        success_handler.assert_called_with(req, {}, 
+        # assert our lambda called the mock correctly
+        success_handler.assert_called_with(req, {},
                                            {'success_callback': None,
                                             'failure_callback': None,
                                             'progress_callback': None,
@@ -289,7 +286,6 @@ class TestMakeRequest(unittest.TestCase):
         self.assertEqual(req.req_body,
                          urlencode({"test": "test2"}))
 
-
     @patch('podium_api.async.UrlRequest.run')
     def test_make_request_callbacks(self, mock_request):
         success_cb = Mock()
@@ -303,11 +299,11 @@ class TestMakeRequest(unittest.TestCase):
                            on_progress=progress_cb,
                            on_failure=failure_cb,
                            on_error=error_cb)
-        #simulate calling the requests on_success
+        # simulate calling the requests on_success
         req.on_success()(req, {})
-        #assert our lambda called the mock correctly
+        # assert our lambda called the mock correctly
         success_cb.assert_called_with(req, {}, None)
-        #do the same for the rest of the callbacks
+        # do the same for the rest of the callbacks
         req.on_failure()(req, {})
         failure_cb.assert_called_with(req, {}, None)
         req.on_error()(req, {})
@@ -331,11 +327,11 @@ class TestMakeRequest(unittest.TestCase):
                            on_failure=failure_cb,
                            on_error=error_cb,
                            data={"test": "testdata"})
-        #simulate calling the requests on_success
+        # simulate calling the requests on_success
         req.on_success()(req, {})
-        #assert our lambda called the mock correctly
+        # assert our lambda called the mock correctly
         success_cb.assert_called_with(req, {}, {"test": "testdata"})
-        #do the same for the rest of the callbacks
+        # do the same for the rest of the callbacks
         req.on_failure()(req, {})
         failure_cb.assert_called_with(req, {}, {"test": "testdata"})
         req.on_error()(req, {})
@@ -356,8 +352,8 @@ class TestGetJsonHeader(unittest.TestCase):
         self.assertEqual(header['Authorization'], 'Basic test_id:test_secret')
         self.assertEqual(header['Accept'], "application/json")
 
-
     def test_get_header_no_register(self):
+        podium_api.unregister_podium_application()
         with self.assertRaises(PodiumApplicationNotRegistered):
             get_json_header()
 

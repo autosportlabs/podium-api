@@ -8,6 +8,7 @@ except:
     from urllib import urlencode
 from podium_api.types.exceptions import PodiumApplicationNotRegistered
 
+
 def get_json_header_token(token):
     """
     Returns a header prepared with the app_id and app_secret set to tell
@@ -42,6 +43,7 @@ def get_json_header():
                 podium_api.PODIUM_APP.app_id,
                 podium_api.PODIUM_APP.app_secret),
             "Accept": "application/json"}
+
 
 def make_request(endpoint, method="GET", on_success=None, on_failure=None,
                  on_error=None, on_redirect=None, on_progress=None,
@@ -117,6 +119,7 @@ def make_request(endpoint, method="GET", on_success=None, on_failure=None,
                   req, res, data)) if on_error is not None else None
         )
 
+
 def make_request_default(endpoint, method="GET", success_callback=None,
                          failure_callback=None, progress_callback=None,
                          redirect_callback=None,
@@ -176,6 +179,7 @@ def make_request_default(endpoint, method="GET", success_callback=None,
                         on_progress=default_progress,
                         body=body, header=header, data=data,
                         params=params)
+
 
 def make_request_custom_success(endpoint, success_handler, method="GET",
                                 success_callback=None, failure_callback=None,
@@ -268,6 +272,7 @@ def default_redirect(req, results, data):
         return
     data['redirect_callback'](req, req._resp_headers, data)
 
+
 def default_success(req, results, data):
     """
     Default handler for a success callback. Will call the 'failure_callback'
@@ -291,6 +296,7 @@ def default_success(req, results, data):
     if data['success_callback'] is None:
         return
     data['success_callback'](results, data)
+
 
 def default_failure(req, results, data):
     """
@@ -316,6 +322,7 @@ def default_failure(req, results, data):
         return
     data['failure_callback']('failure', results, data)
 
+
 def default_error(req, results, data):
     """
     Default handler for an error callback. Will call the 'failure_callback'
@@ -339,6 +346,7 @@ def default_error(req, results, data):
     if data['failure_callback'] is None:
         return
     data['failure_callback']('error', results, data)
+
 
 def default_progress(req, current_size, total_size, data):
     """
