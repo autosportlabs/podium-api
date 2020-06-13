@@ -175,6 +175,7 @@ def make_livestreams_get(token,
 
 
 def make_eventdevice_update(token, eventdevice_uri, name=None,
+                            comp_number=None, comp_class=None,
                             success_callback=None, failure_callback=None,
                             progress_callback=None, redirect_callback=None):
     """
@@ -385,6 +386,7 @@ def eventdevice_delete_handler(req, results, data):
 
 
 def make_eventdevice_create(token, event_id, device_id, name,
+                            comp_number=None, comp_class=None,
                             success_callback=None, failure_callback=None,
                             progress_callback=None, redirect_callback=None):
     """
@@ -433,7 +435,8 @@ def make_eventdevice_create(token, event_id, device_id, name,
         podium_api.PODIUM_APP.podium_url,
         event_id
         )
-    body = {'eventdevice[device_id]': device_id, 'eventdevice[name]': name}
+    body = {'eventdevice[device_id]': device_id, 'eventdevice[name]': name,
+            'eventdevice[comp_number]': comp_number, 'eventdevice[comp_class]': comp_class}
     header = get_json_header_token(token)
     return make_request_custom_success(
         endpoint, None, method='POST',

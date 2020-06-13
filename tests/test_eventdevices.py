@@ -47,6 +47,7 @@ class TestEventDeviceCreate(unittest.TestCase):
     def test_eventdevice_create(self, mock_request):
         req = make_eventdevice_create(self.token, 'test_event',
                                       'test_device', "test name",
+                                      '1234', 'P1',
                                       redirect_callback=self.success_cb)
         self.assertEqual(req._method, 'POST')
         self.assertEqual(req.url,
@@ -54,7 +55,9 @@ class TestEventDeviceCreate(unittest.TestCase):
         self.assertEqual(
             req.req_body,
             urlencode({'eventdevice[device_id]': 'test_device',
-                       'eventdevice[name]': 'test name'})
+                       'eventdevice[name]': 'test name',
+                       'eventdevice[comp_number]': '1234',
+                       'eventdevice[comp_class]': 'P1'})
         )
         self.assertEqual(req.req_headers['Content-Type'],
                          'application/x-www-form-urlencoded')
@@ -72,6 +75,7 @@ class TestEventDeviceCreate(unittest.TestCase):
         error_cb = Mock()
         req = make_eventdevice_create(self.token, 'test_event',
                                       'test_device', "test name",
+                                      '1234', 'P1',
                                       failure_callback=error_cb)
         # simulate calling the requests on_error
         req.on_error()(req, {})
@@ -90,6 +94,7 @@ class TestEventDeviceCreate(unittest.TestCase):
         error_cb = Mock()
         req = make_eventdevice_create(self.token, 'test_event',
                                       'test_device', "test name",
+                                      '1234', "P1",
                                       failure_callback=error_cb)
         # simulate calling the requests on_failure
         req.on_failure()(req, {})
@@ -108,6 +113,7 @@ class TestEventDeviceCreate(unittest.TestCase):
         success_cb = Mock()
         req = make_eventdevice_create(self.token, 'test_event',
                                       'test_device', "test name",
+                                      '1234', 'P1',
                                       success_callback=success_cb)
         # simulate calling the requests on_success
         self.assertEqual(req.on_success, None)
@@ -116,7 +122,8 @@ class TestEventDeviceCreate(unittest.TestCase):
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_eventdevice_create(self.token, 'test_event',
-                                      'test_device', "test name",
+                                      'test_device', 'test name',
+                                      '1234', 'P1',
                                       progress_callback=progress_cb)
         # simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
@@ -142,6 +149,8 @@ class TestEventDevicesGet(unittest.TestCase):
             'URI': 'https://podium.live/api/v1/events/'
                    'test_event/devices/test_device',
             'device_uri': 'https://podium.live/api/v1/devices/test_device',
+            'comp_number': '1234',
+            'comp_class': 'P1',
             'name': 'test name',
             'laps_uri': 'test/laps',
             'user_uri': 'test/user',
@@ -416,6 +425,8 @@ class TestEventDeviceGet(unittest.TestCase):
                    'test_event/devices/test_device',
             'device_uri': 'https://podium.live/api/v1/devices/test_device',
             'name': 'test name',
+            'comp_number': '1234',
+            'comp_class': 'P1',
             'laps_uri': 'test/laps',
             'channels': [],
         }
@@ -563,6 +574,8 @@ class TestEventDeviceUpdate(unittest.TestCase):
             self.token,
             'https://podium.live/api/v1/events/test_event/devices/test_device',
             name='new_name',
+            comp_number='1234',
+            comp_class='P1',
             failure_callback=error_cb)
         # simulate calling the requests on_error
         req.on_error()(req, {})
@@ -584,6 +597,8 @@ class TestEventDeviceUpdate(unittest.TestCase):
             self.token,
             'https://podium.live/api/v1/events/test_event/devices/test_device',
             name='new_name',
+            comp_number='1234',
+            comp_class='P1',
             failure_callback=error_cb)
         # simulate calling the requests on_failure
         req.on_failure()(req, {})
@@ -605,6 +620,8 @@ class TestEventDeviceUpdate(unittest.TestCase):
             self.token,
             'https://podium.live/api/v1/events/test_event/devices/test_device',
             name='new_name',
+            comp_number='1234',
+            comp_class='P1',
             redirect_callback=redir_cb)
         # simulate calling the requests on_redirect
         req.on_redirect()(req, {})
@@ -626,6 +643,8 @@ class TestEventDeviceUpdate(unittest.TestCase):
             self.token,
             'https://podium.live/api/v1/events/test_event/devices/test_device',
             name='new_name',
+            comp_number='1234',
+            comp_class='P1',
             progress_callback=progress_cb)
         # simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
