@@ -18,6 +18,7 @@ except:
 
 
 class TestEventDeviceCreate(unittest.TestCase):
+
     def setUp(self):
         podium_api.register_podium_application('test_id', 'test_secret')
         self.token = PodiumToken('test_token', 'test_type', 1)
@@ -141,6 +142,7 @@ class TestEventDeviceCreate(unittest.TestCase):
 
 
 class TestEventDevicesGet(unittest.TestCase):
+
     def setUp(self):
         podium_api.register_podium_application('test_id', 'test_secret')
         self.token = PodiumToken('test_token', 'test_type', 1)
@@ -156,6 +158,8 @@ class TestEventDevicesGet(unittest.TestCase):
             'user_uri': 'test/user',
             'event_uri': 'test/event',
             'channels': [],
+            'device_id': 111,
+            'event_id': 222
             }
         self.paged_event_json = {'total': 1, 'eventdevices': [self.result_json]}
         self.field_names = {'id': 'eventdevice_id', 'URI': 'uri'}
@@ -416,6 +420,7 @@ class TestEventDeviceDelete(unittest.TestCase):
 
 
 class TestEventDeviceGet(unittest.TestCase):
+
     def setUp(self):
         podium_api.register_podium_application('test_id', 'test_secret')
         self.token = PodiumToken('test_token', 'test_type', 1)
@@ -429,6 +434,8 @@ class TestEventDeviceGet(unittest.TestCase):
             'comp_class': 'P1',
             'laps_uri': 'test/laps',
             'channels': [],
+            'device_id': 111,
+            'event_id': 222
         }
         self.field_names = {'id': 'eventdevice_id', 'URI': 'uri'}
 
@@ -531,6 +538,7 @@ class TestEventDeviceGet(unittest.TestCase):
 
 
 class TestEventDeviceUpdate(unittest.TestCase):
+
     def setUp(self):
         podium_api.register_podium_application('test_id', 'test_secret')
         self.token = PodiumToken('test_token', 'test_type', 1)

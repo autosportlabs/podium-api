@@ -30,7 +30,8 @@ class PodiumEventDevice(object):
     def __init__(self, eventdevice_id, uri, channels, name, comp_number,
                  comp_class, device_uri,
                  laps_uri, user_uri, event_uri, avatar_url,
-                 user_avatar_url, event_title):
+                 user_avatar_url, event_title,
+                 device_id, event_id):
         self.eventdevice_id = eventdevice_id
         self.uri = uri
         self.channels = channels
@@ -44,7 +45,8 @@ class PodiumEventDevice(object):
         self.avatar_url = avatar_url
         self.user_avatar_url = user_avatar_url
         self.event_title = event_title
-
+        self.device_id = device_id
+        self.event_id = event_id
 
 
 def get_eventdevice_from_json(json):
@@ -69,4 +71,6 @@ def get_eventdevice_from_json(json):
                              json.get('event_uri', None),
                              json.get('avatar_url', None),
                              json.get('user_avatar_url', None),
-                             json.get('event_title', None))
+                             json.get('event_title', None),
+                             json.get('device_id', None),
+                             json.get('event_id', None))
