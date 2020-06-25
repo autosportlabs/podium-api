@@ -62,6 +62,46 @@ def make_racestat_get(token, endpoint, expand=False, quiet=None,
                                        params=params, header=header)
 
 
+def make_racestats_create(token, event_id, racestats, success_callback=None, failure_callback=None,
+                         progress_callback=None, redirect_callback=None):
+    """
+    add a collection of racestats to the specified event id
+    Args:
+        token (PodiumToken): The authentication token for this session
+        
+        event_id: The id of the event to apply racestats        
+    """
+    endpoint = '{}/api/v1/events/{}/racestats'.format(podium_api.PODIUM_APP.podium_url, event_id)
+        
+    index = 0
+    body = {}
+    for racestat in racestats:
+        body[f'racestat[{index}][device_id]'] = racestat['device_id']
+        body[f'racestat[{index}][comp_number]'] = racestat['comp_number']
+        body[f'racestat[{index}][comp_class]'] = racestat['comp_class']
+        body[f'racestat[{index}][total_laps]'] = racestat['total_laps']
+        body[f'racestat[{index}][last_lap_time]'] = racestat['last_lap_time']
+        body[f'racestat[{index}][position_overall]'] = racestat['position_overall']
+        body[f'racestat[{index}][position_in_class]'] = racestat['position_in_class']
+        body[f'racestat[{index}][comp_number_ahead]'] = racestat['comp_number_ahead']
+        body[f'racestat[{index}][comp_number_behind]'] = racestat['comp_number_behind']
+        body[f'racestat[{index}][gap_to_ahead]'] = racestat['gap_to_ahead']
+        body[f'racestat[{index}][gap_to_behind]'] = racestat['gap_to_behind']
+        body[f'racestat[{index}][laps_to_ahead]'] = racestat['laps_to_ahead']
+        body[f'racestat[{index}][laps_to_behind]'] = racestat['laps_to_behind']
+        index += 1
+
+    header = get_json_header_token(token)
+    return make_request_custom_success(
+        endpoint, None, method='POST',
+        success_callback=success_callback,
+        redirect_callback=create_racestat_redirect_handler,
+        failure_callback=failure_callback,
+        progress_callback=progress_callback,
+        body=body, header=header,
+        data={'_redirect_callback': redirect_callback}
+        )
+        
 def make_racestat_create(token, event_id, device_id, comp_number, comp_class, total_laps,
                          last_lap_time, position_overall, position_in_class,
                          comp_number_ahead, comp_number_behind, gap_to_ahead,
@@ -110,6 +150,7 @@ def make_racestat_create(token, event_id, device_id, comp_number, comp_class, to
             'racestat[comp_number_ahead]': comp_number_ahead, 'racestat[comp_number_behind]': comp_number_behind,
             'racestat[gap_to_ahead]': gap_to_ahead, 'racestat[gap_to_behind]': gap_to_behind,
             'racestat[laps_to_ahead]': laps_to_ahead, 'racestat[laps_to_behind]': laps_to_behind}
+
     header = get_json_header_token(token)
     return make_request_custom_success(
         endpoint, None, method='POST',
