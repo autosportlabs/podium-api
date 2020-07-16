@@ -33,6 +33,10 @@ class Racestat(object):
         
         **laps_to_behind** (int): laps to competitor behind
         
+        **fc_flag** (int): full course flag status
+        
+        **comp_flag** (int): competitor flag status
+        
         **eventdevice_uri:** (str): URI of the eventdevice this racestat belongs to
         
         **device_uri:** (str): URI of the device this racestat belongs to
@@ -43,6 +47,7 @@ class Racestat(object):
     def __init__(self, racestat_id, uri, comp_number, comp_class, total_laps, last_lap_time,
                  position_overall, position_in_class, comp_number_ahead, comp_number_behind,
                  gap_to_ahead, gap_to_behind, laps_to_ahead, laps_to_behind,
+                 fc_flag, comp_flag,
                  eventdevice_uri, device_uri, user_uri):
         self.racestat_id = racestat_id
         self.uri = uri
@@ -58,6 +63,8 @@ class Racestat(object):
         self.gap_to_behind = gap_to_behind
         self.laps_to_ahead = laps_to_ahead
         self.laps_to_behind = laps_to_behind
+        self.fc_flag = fc_flag
+        self.comp_flag = comp_flag
         self.eventdevice_uri = eventdevice_uri
         self.device_uri = device_uri
         self.user_uri = user_uri
@@ -79,4 +86,5 @@ def get_racestat_from_json(json):
                          json['comp_number_ahead'], json['comp_number_behind'],
                          json['gap_to_ahead'], json['gap_to_behind'],
                          json['laps_to_ahead'], json['laps_to_behind'],
+                         json['fc_flag'], json['comp_flag'],
                          json['eventdevice_uri'], json['device_uri'], json['user_uri'])

@@ -89,6 +89,8 @@ def make_racestats_create(token, event_id, racestats, success_callback=None, fai
         body[f'racestat[{index}][gap_to_behind]'] = racestat['gap_to_behind']
         body[f'racestat[{index}][laps_to_ahead]'] = racestat['laps_to_ahead']
         body[f'racestat[{index}][laps_to_behind]'] = racestat['laps_to_behind']
+        body[f'racestat[{index}][fc_flag]'] = racestat['fc_flag']
+        body[f'racestat[{index}][comp_flag]'] = racestat['comp_flag']
         index += 1
 
     header = get_json_header_token(token)
@@ -106,6 +108,7 @@ def make_racestat_create(token, event_id, device_id, comp_number, comp_class, to
                          last_lap_time, position_overall, position_in_class,
                          comp_number_ahead, comp_number_behind, gap_to_ahead,
                          gap_to_behind, laps_to_ahead, laps_to_behind,
+                         fc_flag, comp_flag,
                          success_callback=None, failure_callback=None,
                          progress_callback=None, redirect_callback=None):
     """
@@ -149,8 +152,8 @@ def make_racestat_create(token, event_id, device_id, comp_number, comp_class, to
             'racestat[position_overall]': position_overall, 'racestat[position_in_class]': position_in_class,
             'racestat[comp_number_ahead]': comp_number_ahead, 'racestat[comp_number_behind]': comp_number_behind,
             'racestat[gap_to_ahead]': gap_to_ahead, 'racestat[gap_to_behind]': gap_to_behind,
-            'racestat[laps_to_ahead]': laps_to_ahead, 'racestat[laps_to_behind]': laps_to_behind}
-
+            'racestat[laps_to_ahead]': laps_to_ahead, 'racestat[laps_to_behind]': laps_to_behind,
+            'racestat[fc_flag]': fc_flag, 'racestat[comp_flag]': comp_flag}
     header = get_json_header_token(token)
     return make_request_custom_success(
         endpoint, None, method='POST',
