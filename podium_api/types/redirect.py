@@ -26,4 +26,4 @@ def get_redirect_from_json(json, object_type):
     Return:
         PodiumRedirect: The PodiumRedirect object for this data.
     """
-    return PodiumRedirect(json['location'], object_type)
+    return PodiumRedirect(json['Location'], object_type)
