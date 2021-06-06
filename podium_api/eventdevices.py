@@ -22,8 +22,8 @@ def make_eventdevices_get(token, event_id=None,
                           failure_callback=None,
                           progress_callback=None):
     """
-    Request that returns a PodiumPagedRequest of event devices. 
-    By default a get request to 
+    Request that returns a PodiumPagedRequest of event devices.
+    By default a get request to
     'https://podium.live/api/v1/events/{event_id}/devices' will be made.
 
     Args:
@@ -40,12 +40,12 @@ def make_eventdevices_get(token, event_id=None,
             on_success(PodiumPagedResponse)
         Defaults to None.
 
-        failure_callback (function): Callback for failures and errors. 
+        failure_callback (function): Callback for failures and errors.
         Will have the signature:
             on_failure(failure_type (string), result (dict), data (dict))
         Values for failure type are: 'error', 'failure'. Defaults to None.
 
-        redirect_callback (function): Callback for redirect, 
+        redirect_callback (function): Callback for redirect,
         Will have the signature:
             on_redirect(result (dict), data (dict))
         Defaults to None.
@@ -106,8 +106,8 @@ def make_livestreams_get(token,
                           failure_callback=None,
                           progress_callback=None):
     """
-    Request that returns a PodiumPagedRequest of event devices for current livestreams. 
-    By default a get request to 
+    Request that returns a PodiumPagedRequest of event devices for current livestreams.
+    By default a get request to
     'https://podium.live/api/v1/livestreams' will be made.
 
     Args:
@@ -124,12 +124,12 @@ def make_livestreams_get(token,
             on_success(PodiumPagedResponse)
         Defaults to None.
 
-        failure_callback (function): Callback for failures and errors. 
+        failure_callback (function): Callback for failures and errors.
         Will have the signature:
             on_failure(failure_type (string), result (dict), data (dict))
         Values for failure type are: 'error', 'failure'. Defaults to None.
 
-        redirect_callback (function): Callback for redirect, 
+        redirect_callback (function): Callback for redirect,
         Will have the signature:
             on_redirect(result (dict), data (dict))
         Defaults to None.
@@ -175,7 +175,7 @@ def make_livestreams_get(token,
 
 
 def make_eventdevice_update(token, eventdevice_uri, name=None,
-                            comp_number=None, comp_class=None,
+                            comp_number=None,
                             success_callback=None, failure_callback=None,
                             progress_callback=None, redirect_callback=None):
     """
@@ -192,16 +192,16 @@ def make_eventdevice_update(token, eventdevice_uri, name=None,
         default to device name.
 
         success_callback (function): Callback for a successful request,
-        will have the signature: 
+        will have the signature:
             on_success(result (dict), updated_uri (str))
         Defaults to None..
 
-        failure_callback (function): Callback for failures and errors. 
+        failure_callback (function): Callback for failures and errors.
         Will have the signature:
             on_failure(failure_type (string), result (dict), data (dict))
         Values for failure type are: 'error', 'failure'. Defaults to None.
 
-        redirect_callback (function): Callback for redirect, 
+        redirect_callback (function): Callback for redirect,
         Will have the signature:
             on_redirect(redirect_object (PodiumRedirect))
         Defaults to None.
@@ -386,7 +386,7 @@ def eventdevice_delete_handler(req, results, data):
 
 
 def make_eventdevice_create(token, event_id, device_id, name,
-                            comp_number=None, comp_class=None,
+                            comp_number=None,
                             success_callback=None, failure_callback=None,
                             progress_callback=None, redirect_callback=None):
     """
@@ -408,16 +408,16 @@ def make_eventdevice_create(token, event_id, device_id, name,
 
     Kwargs:
         success_callback (function): Callback for a successful request,
-        will have the signature: 
+        will have the signature:
             on_success(result (dict), data (dict))
         Defaults to None..
 
-        failure_callback (function): Callback for failures and errors. 
+        failure_callback (function): Callback for failures and errors.
         Will have the signature:
             on_failure(failure_type (string), result (dict), data (dict))
         Values for failure type are: 'error', 'failure'. Defaults to None.
 
-        redirect_callback (function): Callback for redirect, 
+        redirect_callback (function): Callback for redirect,
         Will have the signature:
             on_redirect(redirect_object (PodiumRedirect))
         Defaults to None.
@@ -436,7 +436,7 @@ def make_eventdevice_create(token, event_id, device_id, name,
         event_id
         )
     body = {'eventdevice[device_id]': device_id, 'eventdevice[name]': name,
-            'eventdevice[comp_number]': comp_number, 'eventdevice[comp_class]': comp_class}
+            'eventdevice[comp_number]': comp_number, }
     header = get_json_header_token(token)
     return make_request_custom_success(
         endpoint, None, method='POST',
@@ -454,7 +454,7 @@ def create_eventdevice_redirect_handler(req, results, data):
     Handles the success redirect of a **make_event_device_create** call.
 
     Returns a PodiumRedirect with a uri for the newly created event to the
-    _redirect_callback found in data. 
+    _redirect_callback found in data.
 
     Automatically called by **make_event_device_create**, will call the
     redirect_callback passed in to **make_event_device_create** if there is on.
@@ -465,7 +465,7 @@ def create_eventdevice_redirect_handler(req, results, data):
         results (dict): Dict returned by the request.
 
         data (dict): Wildcard dict for containing data that needs to be passed
-        to the various callbacks of a request. Will contain at least a 
+        to the various callbacks of a request. Will contain at least a
         'success_callback' key.
 
     Return:
@@ -490,7 +490,7 @@ def eventdevice_update_success_handler(req, results, data):
         results (dict): Dict returned by the request.
 
         data (dict): Wildcard dict for containing data that needs to be passed
-        to the various callbacks of a request. Will contain at least a 
+        to the various callbacks of a request. Will contain at least a
         'success_callback' key.
 
     Return:
@@ -515,7 +515,7 @@ def eventdevices_success_handler(req, results, data):
         results (dict): Dict returned by the request.
 
         data (dict): Wildcard dict for containing data that needs to be passed
-        to the various callbacks of a request. Will contain at least a 
+        to the various callbacks of a request. Will contain at least a
         'success_callback' key.
 
     Return:

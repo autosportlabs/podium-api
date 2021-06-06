@@ -60,8 +60,10 @@ def make_preset_update(token, preset_uri,
         body['preset[name]'] = name
     if notes is not None:
         body['preset[notes]'] = notes
-    if mapping_type_id is not None:
+    if preset is not None:
         body['preset[preset]'] = preset
+    if mapping_type_id is not None:
+        body['preset[mapping_type_id]'] = mapping_type_id
     header = get_json_header_token(token)
     return make_request_custom_success(
         preset_uri, preset_update_success_handler,

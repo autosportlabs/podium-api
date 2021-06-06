@@ -21,7 +21,7 @@ class TestDeviceCreate(unittest.TestCase):
     def setUp(self):
         podium_api.register_podium_application('test_id', 'test_secret')
         self.token = PodiumToken('test_token', 'test_type', 1)
-        self.result_json = {'location': 'test/devices/test1',
+        self.result_json = {'Location': 'test/devices/test1',
                             'object_type': 'device'}
         self.field_names = {}
 
@@ -36,13 +36,13 @@ class TestDeviceCreate(unittest.TestCase):
     def test_get_redirect_from_json(self):
         self.result = get_redirect_from_json(self.result_json, 'device')
         self.check_results()
-        
+
     def success_cb(self, result):
         self.result = result
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_device_create(self, mock_request):
-        req = make_device_create(self.token, 'test', 
+        req = make_device_create(self.token, 'test',
                                  redirect_callback=self.success_cb)
         self.assertEqual(req._method, 'POST')
         self.assertEqual(req.url, 'https://podium.live/api/v1/devices')
@@ -62,16 +62,16 @@ class TestDeviceCreate(unittest.TestCase):
         self.check_results()
 
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
-        req = make_device_create(self.token, 'test', 
+        req = make_device_create(self.token, 'test',
                                  failure_callback=error_cb)
         #simulate calling the requests on_error
         req.on_error()(req, {})
         #assert our lambda called the mock correctly
         error_cb.assert_called_with(
-            'error', {}, 
+            'error', {},
             {'success_callback': None,
              'failure_callback': error_cb,
              'progress_callback': None,
@@ -79,16 +79,16 @@ class TestDeviceCreate(unittest.TestCase):
              '_redirect_callback': None}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
-        req = make_device_create(self.token, 'test', 
+        req = make_device_create(self.token, 'test',
                                  failure_callback=error_cb)
         #simulate calling the requests on_failure
         req.on_failure()(req, {})
         #assert our lambda called the mock correctly
         error_cb.assert_called_with(
-            'failure', {}, 
+            'failure', {},
             {'success_callback': None,
              'failure_callback': error_cb,
              'progress_callback': None,
@@ -96,25 +96,25 @@ class TestDeviceCreate(unittest.TestCase):
              '_redirect_callback': None}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_success_callback(self, mock_request):
         success_cb = Mock()
-        req = make_device_create(self.token, 'test', 
+        req = make_device_create(self.token, 'test',
                                  success_callback=success_cb)
         #simulate calling the requests on_success
         self.assertEqual(req.on_success, None)
 
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
-        req = make_device_create(self.token, 'test', 
+        req = make_device_create(self.token, 'test',
                                  progress_callback=progress_cb)
         #simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
         #assert our lambda called the mock correctly
         progress_cb.assert_called_with(
-            0, 10, 
+            0, 10,
            {'success_callback': None,
             'failure_callback': None,
             'progress_callback': progress_cb,
@@ -138,13 +138,13 @@ class TestDeviceDelete(unittest.TestCase):
     def success_cb(self, result):
         self.result = result
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_device_delete(self, mock_request):
         req = make_device_delete(self.token,
                                  'https://podium.live/api/v1/devices/test',
                                  success_callback=self.success_cb)
         self.assertEqual(req._method, 'DELETE')
-        self.assertEqual(req.url, 
+        self.assertEqual(req.url,
                          'https://podium.live/api/v1/devices/test')
         self.assertEqual(req.req_headers['Content-Type'],
                          'application/x-www-form-urlencoded')
@@ -155,7 +155,7 @@ class TestDeviceDelete(unittest.TestCase):
         req.on_success()(req, {})
         self.check_results()
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
         req = make_device_delete(self.token,
@@ -165,7 +165,7 @@ class TestDeviceDelete(unittest.TestCase):
         req.on_error()(req, {})
         #assert our lambda called the mock correctly
         error_cb.assert_called_with(
-            'error', {},     
+            'error', {},
             {'success_callback': None,
              'failure_callback': error_cb,
              'progress_callback': None,
@@ -173,7 +173,7 @@ class TestDeviceDelete(unittest.TestCase):
              'deleted_uri': 'https://podium.live/api/v1/devices/test'}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
         req = make_device_delete(self.token,
@@ -183,7 +183,7 @@ class TestDeviceDelete(unittest.TestCase):
         req.on_failure()(req, {})
         #assert our lambda called the mock correctly
         error_cb.assert_called_with(
-            'failure', {}, 
+            'failure', {},
             {'success_callback': None,
              'failure_callback': error_cb,
              'progress_callback': None,
@@ -191,7 +191,7 @@ class TestDeviceDelete(unittest.TestCase):
              'deleted_uri': 'https://podium.live/api/v1/devices/test'}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
         redir_cb = Mock()
         req = make_device_delete(self.token,
@@ -201,7 +201,7 @@ class TestDeviceDelete(unittest.TestCase):
         req.on_redirect()(req, {})
         #assert our lambda called the mock correctly
         redir_cb.assert_called_with(
-            req, None, 
+            req, None,
             {'success_callback': None,
              'failure_callback': None,
              'progress_callback': None,
@@ -209,7 +209,7 @@ class TestDeviceDelete(unittest.TestCase):
              'deleted_uri': 'https://podium.live/api/v1/devices/test'}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_device_delete(self.token,
@@ -219,7 +219,7 @@ class TestDeviceDelete(unittest.TestCase):
         req.on_progress()(req, 0, 10)
         #assert our lambda called the mock correctly
         progress_cb.assert_called_with(
-            0, 10, 
+            0, 10,
            {'success_callback': None,
             'failure_callback': None,
             'progress_callback': progress_cb,
@@ -255,17 +255,17 @@ class TestDeviceGet(unittest.TestCase):
     def test_get_account_from_json(self):
         self.result = get_device_from_json(self.result_json)
         self.check_results()
-        
+
     def success_cb(self, result):
         self.result = result
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_device_get(self, mock_request):
         req = make_device_get(self.token,
                               'https://podium.live/api/v1/devices/test',
                               success_callback=self.success_cb)
         self.assertEqual(req._method, 'GET')
-        self.assertEqual(req.url, 
+        self.assertEqual(req.url,
                          'https://podium.live/api/v1/devices/test?expand=True')
         self.assertEqual(req.req_headers['Content-Type'],
                          'application/x-www-form-urlencoded')
@@ -276,7 +276,7 @@ class TestDeviceGet(unittest.TestCase):
         req.on_success()(req, {'device': self.result_json})
         self.check_results()
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
         req = make_device_get(self.token,
@@ -285,13 +285,13 @@ class TestDeviceGet(unittest.TestCase):
         #simulate calling the requests on_error
         req.on_error()(req, {})
         #assert our lambda called the mock correctly
-        error_cb.assert_called_with('error', {}, 
+        error_cb.assert_called_with('error', {},
                                     {'success_callback': None,
                                      'failure_callback': error_cb,
                                      'progress_callback': None,
                                      'redirect_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
         req = make_device_get(self.token,
@@ -300,13 +300,13 @@ class TestDeviceGet(unittest.TestCase):
         #simulate calling the requests on_failure
         req.on_failure()(req, {})
         #assert our lambda called the mock correctly
-        error_cb.assert_called_with('failure', {}, 
+        error_cb.assert_called_with('failure', {},
                                     {'success_callback': None,
                                      'failure_callback': error_cb,
                                      'progress_callback': None,
                                      'redirect_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
         redir_cb = Mock()
         req = make_device_get(self.token,
@@ -315,13 +315,13 @@ class TestDeviceGet(unittest.TestCase):
         #simulate calling the requests on_redirect
         req.on_redirect()(req, {})
         #assert our lambda called the mock correctly
-        redir_cb.assert_called_with(req, None, 
+        redir_cb.assert_called_with(req, None,
                                     {'success_callback': None,
                                      'failure_callback': None,
                                      'progress_callback': None,
                                      'redirect_callback': redir_cb})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_device_get(self.token,
@@ -330,7 +330,7 @@ class TestDeviceGet(unittest.TestCase):
         #simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
         #assert our lambda called the mock correctly
-        progress_cb.assert_called_with(0, 10, 
+        progress_cb.assert_called_with(0, 10,
                                        {'success_callback': None,
                                         'failure_callback': None,
                                         'progress_callback': progress_cb,
@@ -347,13 +347,13 @@ class TestDeviceUpdate(unittest.TestCase):
         self.token = PodiumToken('test_token', 'test_type', 1)
 
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_no_params(self, mock_request):
         req = make_device_update(self.token,
                                  'https://podium.live/api/v1/devices/test')
         self.assertEqual(req.req_body, urlencode({}))
         self.assertEqual(req.url, 'https://podium.live/api/v1/devices/test')
-        
+
     def success_cb(self, result, uri):
         self.result = result
         self.uri = uri
@@ -362,7 +362,7 @@ class TestDeviceUpdate(unittest.TestCase):
         self.assertEqual(self.result, {'message': 'Update success'})
         self.assertEqual(self.uri, 'https://podium.live/api/v1/devices/test')
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_device_update(self, mock_request):
         req = make_device_update(self.token,
                                  'https://podium.live/api/v1/devices/test',
@@ -371,7 +371,7 @@ class TestDeviceUpdate(unittest.TestCase):
         self.assertEqual(req._method, 'PUT')
         self.assertEqual(req.req_body,
                          urlencode({'device[name]': 'new_title'}))
-        self.assertEqual(req.url, 
+        self.assertEqual(req.url,
                          'https://podium.live/api/v1/devices/test')
         self.assertEqual(req.req_headers['Content-Type'],
                          'application/x-www-form-urlencoded')
@@ -382,7 +382,7 @@ class TestDeviceUpdate(unittest.TestCase):
         req.on_success()(req, {'message': 'Update success'})
         self.check_results()
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
         req = make_device_update(self.token,
@@ -393,7 +393,7 @@ class TestDeviceUpdate(unittest.TestCase):
         req.on_error()(req, {})
         #assert our lambda called the mock correctly
         error_cb.assert_called_with(
-            'error', {}, 
+            'error', {},
             {'success_callback': None,
              'failure_callback': error_cb,
              'progress_callback': None,
@@ -401,7 +401,7 @@ class TestDeviceUpdate(unittest.TestCase):
              'updated_uri': 'https://podium.live/api/v1/devices/test'}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
         req = make_device_update(self.token,
@@ -412,7 +412,7 @@ class TestDeviceUpdate(unittest.TestCase):
         req.on_failure()(req, {})
         #assert our lambda called the mock correctly
         error_cb.assert_called_with(
-            'failure', {}, 
+            'failure', {},
             {'success_callback': None,
              'failure_callback': error_cb,
              'progress_callback': None,
@@ -420,7 +420,7 @@ class TestDeviceUpdate(unittest.TestCase):
              'updated_uri': 'https://podium.live/api/v1/devices/test'}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
         redir_cb = Mock()
         req = make_device_update(self.token,
@@ -431,7 +431,7 @@ class TestDeviceUpdate(unittest.TestCase):
         req.on_redirect()(req, {})
         #assert our lambda called the mock correctly
         redir_cb.assert_called_with(
-            req, None, 
+            req, None,
             {'success_callback': None,
              'failure_callback': None,
              'progress_callback': None,
@@ -439,7 +439,7 @@ class TestDeviceUpdate(unittest.TestCase):
              'updated_uri': 'https://podium.live/api/v1/devices/test'}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_device_update(self.token,
@@ -450,7 +450,7 @@ class TestDeviceUpdate(unittest.TestCase):
         req.on_progress()(req, 0, 10)
         #assert our lambda called the mock correctly
         progress_cb.assert_called_with(
-            0, 10, 
+            0, 10,
            {'success_callback': None,
             'failure_callback': None,
             'progress_callback': progress_cb,

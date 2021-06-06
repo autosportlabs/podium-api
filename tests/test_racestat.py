@@ -21,11 +21,12 @@ class TestRacestatCreate(unittest.TestCase):
     def setUp(self):
         podium_api.register_podium_application('test_id', 'test_secret')
         self.token = PodiumToken('test_token', 'test_type', 1)
-        self.result_json = {'location': 'test/racestat/1',
+        self.result_json = {'Location': 'test/racestat/1',
                             'object_type': 'racestat'}
         self.field_names = {}
 
     def check_results(self):
+        print(f"results {self.result}")
         for key in self.result_json:
             if key in self.field_names:
                 rkey = self.field_names[key]
@@ -40,7 +41,7 @@ class TestRacestatCreate(unittest.TestCase):
     def success_cb(self, result):
         self.result = result
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_racestat_create(self, mock_request):
         req = make_racestat_create(token=self.token, event_id=1, device_id=2, comp_number='1234',
                                    comp_class='P1', total_laps=10, last_lap_time=1.234,
@@ -48,9 +49,11 @@ class TestRacestatCreate(unittest.TestCase):
                                    comp_number_ahead='456', comp_number_behind='789',
                                    gap_to_ahead=11.11, gap_to_behind=22.22,
                                    laps_to_ahead=11, laps_to_behind=22,
-                                     redirect_callback=self.success_cb)
+                                   fc_flag=1, comp_flag=3,
+                                   redirect_callback=self.success_cb)
         self.assertEqual(req._method, 'POST')
         self.assertEqual(req.url, 'https://podium.live/api/v1/events/1/devices/2/racestat')
+        self.maxDiff = None
         self.assertEqual(
             req.req_body,
             urlencode({'racestat[comp_number]': '1234', 'racestat[comp_class]': 'P1',
@@ -59,6 +62,7 @@ class TestRacestatCreate(unittest.TestCase):
                        'racestat[comp_number_ahead]': '456', 'racestat[comp_number_behind]': '789',
                        'racestat[gap_to_ahead]': 11.11, 'racestat[gap_to_behind]': 22.22,
                        'racestat[laps_to_ahead]': 11, 'racestat[laps_to_behind]': 22,
+                       'racestat[fc_flag]': 1, 'racestat[comp_flag]': 3
                         })
             )
         self.assertEqual(req.req_headers['Content-Type'],
@@ -72,16 +76,17 @@ class TestRacestatCreate(unittest.TestCase):
         req.on_redirect()(req, {})
         self.check_results()
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
-        req = make_racestat_create(token=self.token, event_id=1, device_id=2, comp_number='1234',
+        req = make_racestat_create(self.token, event_id=1, device_id=2, comp_number='1234',
                                    comp_class='P1', total_laps=10, last_lap_time=1.234,
                                    position_overall=3, position_in_class=2,
                                    comp_number_ahead='456', comp_number_behind='789',
                                    gap_to_ahead=11.11, gap_to_behind=22.22,
                                    laps_to_ahead=11, laps_to_behind=22,
-                                     failure_callback=error_cb)
+                                   fc_flag=1, comp_flag=3,
+                                   failure_callback=error_cb)
 
         # simulate calling the requests on_error
         req.on_error()(req, {})
@@ -95,7 +100,7 @@ class TestRacestatCreate(unittest.TestCase):
              '_redirect_callback': None}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
         req = make_racestat_create(token=self.token, event_id=1, device_id=2, comp_number='1234',
@@ -104,7 +109,8 @@ class TestRacestatCreate(unittest.TestCase):
                                    comp_number_ahead='456', comp_number_behind='789',
                                    gap_to_ahead=11.11, gap_to_behind=22.22,
                                    laps_to_ahead=11, laps_to_behind=22,
-                                     failure_callback=error_cb)
+                                   fc_flag=1, comp_flag=3,
+                                   failure_callback=error_cb)
         # simulate calling the requests on_failure
         req.on_failure()(req, {})
         # assert our lambda called the mock correctly
@@ -117,7 +123,7 @@ class TestRacestatCreate(unittest.TestCase):
              '_redirect_callback': None}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_success_callback(self, mock_request):
         success_cb = Mock()
         req = make_racestat_create(token=self.token, event_id=1, device_id=2, comp_number='1234',
@@ -126,11 +132,12 @@ class TestRacestatCreate(unittest.TestCase):
                                    comp_number_ahead='456', comp_number_behind='789',
                                    gap_to_ahead=11.11, gap_to_behind=22.22,
                                    laps_to_ahead=11, laps_to_behind=22,
-                                     success_callback=success_cb)
+                                   fc_flag=1, comp_flag=3,
+                                   success_callback=success_cb)
         # simulate calling the requests on_success
         self.assertEqual(req.on_success, None)
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_racestat_create(token=self.token, event_id=1, device_id=2, comp_number='1234',
@@ -139,7 +146,8 @@ class TestRacestatCreate(unittest.TestCase):
                                    comp_number_ahead='456', comp_number_behind='789',
                                    gap_to_ahead=11.11, gap_to_behind=22.22,
                                    laps_to_ahead=11, laps_to_behind=22,
-                                     progress_callback=progress_cb)
+                                   fc_flag=1, comp_flag=3,
+                                   progress_callback=progress_cb)
 
         # simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
@@ -177,6 +185,8 @@ class TestRacestatGet(unittest.TestCase):
             'gap_to_behind': 4.56,
             'laps_to_ahead': 10,
             'laps_to_behind': 33,
+            'fc_flag': 1,
+            'comp_flag': 33,
             'eventdevice_uri': 'test/eventdevice_uri',
             'device_uri': 'test/device_uri',
             'user_uri':'test/user_uri'
@@ -206,7 +216,7 @@ class TestRacestatGet(unittest.TestCase):
     def success_cb(self, result):
         self.result = result
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_racestat_get(self, mock_request):
         req = make_racestat_get(
             self.token,
@@ -225,7 +235,7 @@ class TestRacestatGet(unittest.TestCase):
         req.on_success()(req, {'racestat': self.result_json})
         self.check_results()
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
         req = make_racestat_get(
@@ -242,7 +252,7 @@ class TestRacestatGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
         req = make_racestat_get(
@@ -259,7 +269,7 @@ class TestRacestatGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
         redir_cb = Mock()
         req = make_racestat_get(
@@ -276,7 +286,7 @@ class TestRacestatGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': redir_cb})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_racestat_get(

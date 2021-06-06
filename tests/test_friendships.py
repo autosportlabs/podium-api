@@ -21,7 +21,7 @@ class TestFriendshipCreate(unittest.TestCase):
     def setUp(self):
         podium_api.register_podium_application('test_id', 'test_secret')
         self.token = PodiumToken('test_token', 'test_type', 1)
-        self.result_json = {'location': 'test/friendships/1',
+        self.result_json = {'Location': 'test/friendships/1',
                             'object_type': 'friendship'}
         self.field_names = {}
 
@@ -40,7 +40,7 @@ class TestFriendshipCreate(unittest.TestCase):
     def success_cb(self, result):
         self.result = result
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_friendship_create(self, mock_request):
         req = make_friendship_create(self.token, 1,
                                      redirect_callback=self.success_cb)
@@ -61,7 +61,7 @@ class TestFriendshipCreate(unittest.TestCase):
         req.on_redirect()(req, {})
         self.check_results()
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
         req = make_friendship_create(self.token, 1,
@@ -78,7 +78,7 @@ class TestFriendshipCreate(unittest.TestCase):
              '_redirect_callback': None}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
         req = make_friendship_create(self.token, 1,
@@ -95,7 +95,7 @@ class TestFriendshipCreate(unittest.TestCase):
              '_redirect_callback': None}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_success_callback(self, mock_request):
         success_cb = Mock()
         req = make_friendship_create(self.token, 1,
@@ -104,7 +104,7 @@ class TestFriendshipCreate(unittest.TestCase):
         self.assertEqual(req.on_success, None)
 
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_friendship_create(self.token, 1,
@@ -137,7 +137,7 @@ class TestFriendshipDelete(unittest.TestCase):
     def success_cb(self, result):
         self.result = result
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_friendship_delete(self, mock_request):
         req = make_friendship_delete(self.token,
                                 'https://podium.live/api/v1/friendships/1',
@@ -154,7 +154,7 @@ class TestFriendshipDelete(unittest.TestCase):
         req.on_success()(req, {})
         self.check_results()
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
         req = make_friendship_delete(
@@ -173,7 +173,7 @@ class TestFriendshipDelete(unittest.TestCase):
              'deleted_uri': 'https://podium.live/api/v1/friendships/1'}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
         req = make_friendship_delete(
@@ -192,7 +192,7 @@ class TestFriendshipDelete(unittest.TestCase):
              'deleted_uri': 'https://podium.live/api/v1/friendships/1'}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
         redir_cb = Mock()
         req = make_friendship_delete(
@@ -211,7 +211,7 @@ class TestFriendshipDelete(unittest.TestCase):
              'deleted_uri': 'https://podium.live/api/v1/friendships/1'}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_friendship_delete(
@@ -277,7 +277,7 @@ class TestFriendshipsGet(unittest.TestCase):
     def success_cb(self, result):
         self.result = result
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_friendships_get(self, mock_request):
         req = make_friendships_get(
             self.token,
@@ -298,7 +298,7 @@ class TestFriendshipsGet(unittest.TestCase):
         req.on_success()(req, self.paged_event_json)
         self.check_results_paged_response()
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
         req = make_friendships_get(
@@ -315,7 +315,7 @@ class TestFriendshipsGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
         req = make_friendships_get(
@@ -332,7 +332,7 @@ class TestFriendshipsGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
         redir_cb = Mock()
         req = make_friendships_get(
@@ -349,7 +349,7 @@ class TestFriendshipsGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': redir_cb})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_friendships_get(
@@ -398,7 +398,7 @@ class TestFriendshipGet(unittest.TestCase):
     def success_cb(self, result):
         self.result = result
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_friendship_get(self, mock_request):
         req = make_friendship_get(
             self.token,
@@ -417,7 +417,7 @@ class TestFriendshipGet(unittest.TestCase):
         req.on_success()(req, {'friendship': self.result_json})
         self.check_results()
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
         req = make_friendship_get(
@@ -434,7 +434,7 @@ class TestFriendshipGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
         req = make_friendship_get(
@@ -451,7 +451,7 @@ class TestFriendshipGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
         redir_cb = Mock()
         req = make_friendship_get(
@@ -468,7 +468,7 @@ class TestFriendshipGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': redir_cb})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_friendship_get(

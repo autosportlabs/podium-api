@@ -52,7 +52,7 @@ class TestPresetsGet(unittest.TestCase):
             self.result = preset
             self.check_results_preset()
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_no_params(self, mock_request):
         req = make_presets_get(
             self.token,
@@ -65,7 +65,7 @@ class TestPresetsGet(unittest.TestCase):
     def success_cb(self, result):
         self.result = result
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_presets_get(self, mock_request):
         req = make_presets_get(self.token, start=0, per_page=100,
                               success_callback=self.success_cb)
@@ -84,7 +84,7 @@ class TestPresetsGet(unittest.TestCase):
         self.check_results_paged_response()
 
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
         req = make_presets_get(self.token, start=0, per_page=100,
@@ -98,7 +98,7 @@ class TestPresetsGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
         req = make_presets_get(self.token, start=0, per_page=100,
@@ -112,7 +112,7 @@ class TestPresetsGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
         redir_cb = Mock()
         req = make_presets_get(self.token, start=0, per_page=100,
@@ -126,7 +126,7 @@ class TestPresetsGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': redir_cb})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_presets_get(self.token, start=0, per_page=100,
@@ -149,7 +149,7 @@ class TestPresetCreate(unittest.TestCase):
     def setUp(self):
         podium_api.register_podium_application('test_id', 'test_secret')
         self.token = PodiumToken('test_token', 'test_type', 1)
-        self.result_json = {'location': 'test/presets/test1',
+        self.result_json = {'Location': 'test/presets/test1',
                             'object_type': 'preset'}
         self.field_names = {}
 
@@ -168,7 +168,7 @@ class TestPresetCreate(unittest.TestCase):
     def success_cb(self, result):
         self.result = result
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_preset_create(self, mock_request):
         req = make_preset_create(self.token, 'name',
                                 'notes',
@@ -195,7 +195,7 @@ class TestPresetCreate(unittest.TestCase):
         self.check_results()
 
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
         req = make_preset_create(self.token, 'name',
@@ -215,9 +215,9 @@ class TestPresetCreate(unittest.TestCase):
              '_redirect_callback': None}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
-        preset_cb = Mock()
+        error_cb = Mock()
         req = make_preset_create(self.token, 'name',
                                 'notes',
                                 'preset',
@@ -231,11 +231,11 @@ class TestPresetCreate(unittest.TestCase):
             {'success_callback': None,
              'failure_callback': error_cb,
              'progress_callback': None,
-             'redirect_callback': create_failure_redirect_handler,
+             'redirect_callback': create_preset_redirect_handler,
              '_redirect_callback': None}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_success_callback(self, mock_request):
         success_cb = Mock()
         req = make_preset_create(self.token, 'name',
@@ -246,7 +246,7 @@ class TestPresetCreate(unittest.TestCase):
         #simulate calling the requests on_success
         self.assertEqual(req.on_success, None)
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_preset_create(self.token, 'name',
@@ -281,7 +281,7 @@ class TestPresetDelete(unittest.TestCase):
     def success_cb(self, result):
         self.result = result
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_preset_delete(self, mock_request):
         req = make_preset_delete(self.token,
                                 'https://podium.live/api/v1/presets/test',
@@ -298,7 +298,7 @@ class TestPresetDelete(unittest.TestCase):
         req.on_success()(req, {})
         self.check_results()
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
         req = make_preset_delete(self.token,
@@ -316,7 +316,7 @@ class TestPresetDelete(unittest.TestCase):
              'deleted_uri': 'https://podium.live/api/v1/presets/test'}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
         req = make_preset_delete(self.token,
@@ -334,7 +334,7 @@ class TestPresetDelete(unittest.TestCase):
              'deleted_uri': 'https://podium.live/api/v1/presets/test'}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
         redir_cb = Mock()
         req = make_preset_delete(self.token,
@@ -352,7 +352,7 @@ class TestPresetDelete(unittest.TestCase):
              'deleted_uri': 'https://podium.live/api/v1/presets/test'}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_preset_delete(self.token,
@@ -396,7 +396,7 @@ class TestPresetGet(unittest.TestCase):
                 rkey = key
             self.assertEqual(getattr(self.result, rkey), self.result_json[key])
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_no_params(self, mock_request):
         req = make_preset_get(self.token,
                              'https://podium.live/api/v1/presets/test',
@@ -406,7 +406,7 @@ class TestPresetGet(unittest.TestCase):
     def success_cb(self, result):
         self.result = result
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_preset_get(self, mock_request):
         req = make_preset_get(self.token,
                              'https://podium.live/api/v1/presets/test',
@@ -423,7 +423,7 @@ class TestPresetGet(unittest.TestCase):
         req.on_success()(req, {'preset': self.result_json})
         self.check_results()
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
         req = make_preset_get(self.token,
@@ -438,7 +438,7 @@ class TestPresetGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
         req = make_preset_get(self.token,
@@ -453,7 +453,7 @@ class TestPresetGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
         redir_cb = Mock()
         req = make_preset_get(self.token,
@@ -468,7 +468,7 @@ class TestPresetGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': redir_cb})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_preset_get(self.token,
@@ -494,7 +494,7 @@ class TestPresetUpdate(unittest.TestCase):
         self.token = PodiumToken('test_token', 'test_type', 1)
 
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_no_params(self, mock_request):
         req = make_preset_update(self.token,
                                 'https://podium.live/api/v1/presets/test')
@@ -509,7 +509,7 @@ class TestPresetUpdate(unittest.TestCase):
         self.assertEqual(self.result, {'message': 'Update success'})
         self.assertEqual(self.uri, 'https://podium.live/api/v1/presets/test')
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_preset_update(self, mock_request):
         req = make_preset_update(self.token,
                                 'https://podium.live/api/v1/presets/test',
@@ -535,7 +535,7 @@ class TestPresetUpdate(unittest.TestCase):
         req.on_success()(req, {'message': 'Update success'})
         self.check_results()
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
         req = make_preset_update(self.token,
@@ -557,7 +557,7 @@ class TestPresetUpdate(unittest.TestCase):
              'updated_uri': 'https://podium.live/api/v1/presets/test'}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
         req = make_preset_update(self.token,
@@ -579,7 +579,7 @@ class TestPresetUpdate(unittest.TestCase):
              'updated_uri': 'https://podium.live/api/v1/presets/test'}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
         redir_cb = Mock()
         req = make_preset_update(self.token,
@@ -601,7 +601,7 @@ class TestPresetUpdate(unittest.TestCase):
              'updated_uri': 'https://podium.live/api/v1/presets/test'}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_preset_update(self.token,
