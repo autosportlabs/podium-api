@@ -21,7 +21,7 @@ class TestDeviceCreate(unittest.TestCase):
     def setUp(self):
         podium_api.register_podium_application('test_id', 'test_secret')
         self.token = PodiumToken('test_token', 'test_type', 1)
-        self.result_json = {'Location': 'test/devices/test1',
+        self.result_json = {'location': 'test/devices/test1',
                             'object_type': 'device'}
         self.field_names = {}
 

@@ -25,8 +25,10 @@ class TestPresetsGet(unittest.TestCase):
                             'URI': 'test/presets/test',
                             'name': 'test name',
                             'notes': 'test notes',
-                            'preset': 'test preset data',
+                            'preset_data': 'test preset data',
                             'mapping_type_id': 1234,
+                            'private': True,
+                            'rating': 4.5,
                             'mapping_type': 'test_mapping_type',
                             'created': '2018-03-02T16:23:00Z',
                             'updated': '2018-03-02T16:23:00Z'
@@ -149,7 +151,7 @@ class TestPresetCreate(unittest.TestCase):
     def setUp(self):
         podium_api.register_podium_application('test_id', 'test_secret')
         self.token = PodiumToken('test_token', 'test_type', 1)
-        self.result_json = {'Location': 'test/presets/test1',
+        self.result_json = {'location': 'test/presets/test1',
                             'object_type': 'preset'}
         self.field_names = {}
 
@@ -172,8 +174,9 @@ class TestPresetCreate(unittest.TestCase):
     def test_preset_create(self, mock_request):
         req = make_preset_create(self.token, 'name',
                                 'notes',
-                                'preset',
+                                'preset_data',
                                 1234,
+                                True,
                                 redirect_callback=self.success_cb)
         self.assertEqual(req._method, 'POST')
         self.assertEqual(req.url, 'https://podium.live/api/v1/presets')
@@ -181,8 +184,10 @@ class TestPresetCreate(unittest.TestCase):
             req.req_body,
             urlencode({'preset[name]': 'name',
                        'preset[notes]': 'notes',
-                       'preset[preset]': 'preset',
-                       'preset[mapping_type_id]': 1234}))
+                       'preset[preset_data]': 'preset_data',
+                       'preset[mapping_type_id]': 1234,
+                       'preset[private]': True
+                       }))
         self.assertEqual(req.req_headers['Content-Type'],
                          'application/x-www-form-urlencoded')
         self.assertEqual(req.req_headers['Authorization'],
@@ -202,6 +207,7 @@ class TestPresetCreate(unittest.TestCase):
                                  'notes',
                                  'preset',
                                  1234,
+                                 True,
                                 failure_callback=error_cb)
         #simulate calling the requests on_error
         req.on_error()(req, {})
@@ -222,6 +228,7 @@ class TestPresetCreate(unittest.TestCase):
                                 'notes',
                                 'preset',
                                 1234,
+                                True,
                                 failure_callback=error_cb)
         #simulate calling the requests on_failure
         req.on_failure()(req, {})
@@ -242,6 +249,7 @@ class TestPresetCreate(unittest.TestCase):
                                 'notes',
                                 'preset',
                                 1234,
+                                True,
                                 success_callback=success_cb)
         #simulate calling the requests on_success
         self.assertEqual(req.on_success, None)
@@ -253,6 +261,7 @@ class TestPresetCreate(unittest.TestCase):
                                 'notes',
                                 'preset',
                                 1234,
+                                True,
                                 progress_callback=progress_cb)
         # simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
@@ -383,8 +392,10 @@ class TestPresetGet(unittest.TestCase):
                             'URI': 'https://podium.live/api/v1/presets/test',
                             'name': 'name',
                             'notes': 'notes',
-                            'preset': 'preset',
-                            'mapping_type_id': 1234
+                            'preset_data': 'preset_data',
+                            'mapping_type_id': 1234,
+                            'private': True,
+                            'rating': 3.5
                             }
         self.field_names = {'id': 'preset_id', 'URI': 'uri'}
 
@@ -515,15 +526,17 @@ class TestPresetUpdate(unittest.TestCase):
                                 'https://podium.live/api/v1/presets/test',
                                 name='new name',
                                 notes='new notes',
-                                preset='new preset',
+                                preset_data='new preset',
                                 mapping_type_id=5678,
+                                private=True,
                                 success_callback=self.success_cb)
         self.assertEqual(req._method, 'PUT')
         self.assertEqual(req.req_body,
                          urlencode({'preset[name]': 'new name',
                                     'preset[notes]': 'new notes',
-                                    'preset[preset]': 'new preset',
-                                    'preset[mapping_type_id]': 5678}))
+                                    'preset[preset_data]': 'new preset',
+                                    'preset[mapping_type_id]': 5678,
+                                    'preset[private]': True}))
         self.assertEqual(req.url,
                          'https://podium.live/api/v1/presets/test')
         self.assertEqual(req.req_headers['Content-Type'],
@@ -542,8 +555,9 @@ class TestPresetUpdate(unittest.TestCase):
                                 'https://podium.live/api/v1/presets/test',
                                 name='new name',
                                 notes='new notes',
-                                preset='new preset',
+                                preset_data='new preset',
                                 mapping_type_id = 5678,
+                                private=True,
                                 failure_callback=error_cb)
         #simulate calling the requests on_error
         req.on_error()(req, {})
@@ -564,8 +578,9 @@ class TestPresetUpdate(unittest.TestCase):
                                 'https://podium.live/api/v1/presets/test',
                                 name='new name',
                                 notes='new notes',
-                                preset='new preset',
+                                preset_data='new preset',
                                 mapping_type_id = 5678,
+                                private=True,
                                 failure_callback=error_cb)
         #simulate calling the requests on_failure
         req.on_failure()(req, {})
@@ -586,8 +601,9 @@ class TestPresetUpdate(unittest.TestCase):
                                 'https://podium.live/api/v1/presets/test',
                                 name='new name',
                                 notes='new notes',
-                                preset='new preset',
+                                preset_data='new preset',
                                 mapping_type_id = 5678,
+                                private=True,
                                 redirect_callback=redir_cb)
         #simulate calling the requests on_redirect
         req.on_redirect()(req, {})
@@ -608,8 +624,9 @@ class TestPresetUpdate(unittest.TestCase):
                                 'https://podium.live/api/v1/presets/test',
                                 name='new name',
                                 notes='new notes',
-                                preset='new preset',
+                                preset_data='new preset',
                                 mapping_type_id = 5678,
+                                private=True,
                                 progress_callback=progress_cb)
         #simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)

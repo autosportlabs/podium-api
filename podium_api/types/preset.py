@@ -24,14 +24,16 @@ class PodiumPreset(object):
         **created** (str): Date preset was created. ISO 8601 format.
     """
 
-    def __init__(self, preset_id, uri, name, notes, preset, mapping_type_id, mapping_type, updated, created):
+    def __init__(self, preset_id, uri, name, notes, preset_data, mapping_type_id, mapping_type, private, rating, updated, created):
         self.preset_id = preset_id
         self.uri = uri
         self.name = name
         self.notes = notes
-        self.preset = preset
+        self.preset_data = preset_data
         self.mapping_type_id = mapping_type_id
         self.mapping_type = mapping_type
+        self.private = private
+        self.rating = rating
         self.updated = updated
         self.created = created
 
@@ -49,8 +51,10 @@ def get_preset_from_json(json):
                         json['URI'],
                        json.get('name', None),
                        json.get('notes', None),
-                       json.get('preset', None),
+                       json.get('preset_data', None),
                        json.get('mapping_type_id', None),
                        json.get('mapping_type', None),
+                       json.get('private', None),
+                       json.get('rating', None),
                        json.get('created', None),
                        json.get('updated', None))

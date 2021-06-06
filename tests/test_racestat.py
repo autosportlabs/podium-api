@@ -21,12 +21,11 @@ class TestRacestatCreate(unittest.TestCase):
     def setUp(self):
         podium_api.register_podium_application('test_id', 'test_secret')
         self.token = PodiumToken('test_token', 'test_type', 1)
-        self.result_json = {'Location': 'test/racestat/1',
+        self.result_json = {'location': 'test/racestat/1',
                             'object_type': 'racestat'}
         self.field_names = {}
 
     def check_results(self):
-        print(f"results {self.result}")
         for key in self.result_json:
             if key in self.field_names:
                 rkey = self.field_names[key]

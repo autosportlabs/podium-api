@@ -23,7 +23,7 @@ class TestEventDeviceCreate(unittest.TestCase):
         podium_api.register_podium_application('test_id', 'test_secret')
         self.token = PodiumToken('test_token', 'test_type', 1)
         self.result_json = {
-            'Location': 'https://podium.live/api/v1/events/'
+            'location': 'https://podium.live/api/v1/events/'
                         'test_event/devices/test_device',
             'object_type': 'eventdevice'
         }

@@ -21,7 +21,7 @@ class TestAlertmessageCreate(unittest.TestCase):
     def setUp(self):
         podium_api.register_podium_application('test_id', 'test_secret')
         self.token = PodiumToken('test_token', 'test_type', 1)
-        self.result_json = {'Location': 'test/alertmessages/1',
+        self.result_json = {'location': 'test/alertmessages/1',
                             'object_type': 'alertmessage'}
         self.field_names = {}
 

@@ -21,7 +21,7 @@ class TestFriendshipCreate(unittest.TestCase):
     def setUp(self):
         podium_api.register_podium_application('test_id', 'test_secret')
         self.token = PodiumToken('test_token', 'test_type', 1)
-        self.result_json = {'Location': 'test/friendships/1',
+        self.result_json = {'location': 'test/friendships/1',
                             'object_type': 'friendship'}
         self.field_names = {}
 

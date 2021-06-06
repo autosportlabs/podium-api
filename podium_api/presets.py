@@ -10,8 +10,9 @@ import podium_api
 def make_preset_update(token, preset_uri,
                        name=None,
                        notes=None,
-                       preset=None,
+                       preset_data=None,
                        mapping_type_id=None,
+                       private=None,
                        success_callback=None, failure_callback=None,
                        progress_callback=None, redirect_callback=None):
     """
@@ -27,7 +28,7 @@ def make_preset_update(token, preset_uri,
 
         notes (str): Notes for the preset.
 
-        preset (str): JSON data of the preset.
+        preset_data (str): JSON data of the preset.
 
         mapping_type_id (int): ID of the mapping type
 
@@ -60,10 +61,12 @@ def make_preset_update(token, preset_uri,
         body['preset[name]'] = name
     if notes is not None:
         body['preset[notes]'] = notes
-    if preset is not None:
-        body['preset[preset]'] = preset
+    if preset_data is not None:
+        body['preset[preset_data]'] = preset_data
     if mapping_type_id is not None:
         body['preset[mapping_type_id]'] = mapping_type_id
+    if private is not None:
+        body['preset[private]'] = int(private)
     header = get_json_header_token(token)
     return make_request_custom_success(
         preset_uri, preset_update_success_handler,
@@ -77,7 +80,7 @@ def make_preset_update(token, preset_uri,
         )
 
 
-def make_preset_create(token, name, notes, preset, mapping_type_id,
+def make_preset_create(token, name, notes, preset, mapping_type_id, private,
                       success_callback=None, failure_callback=None,
                       progress_callback=None, redirect_callback=None):
     """
@@ -93,7 +96,7 @@ def make_preset_create(token, name, notes, preset, mapping_type_id,
 
         notes (str): Notes for the preset
 
-        preset (str): JSON data of the preset
+        preset_data (str): JSON data of the preset
 
         mapping_type_id (int): The Id representing the mapping type
 
@@ -124,8 +127,9 @@ def make_preset_create(token, name, notes, preset, mapping_type_id,
     """
     endpoint = '{}/api/v1/presets'.format(podium_api.PODIUM_APP.podium_url)
     body = {'preset[name]': name, 'preset[notes]': notes,
-            'preset[preset]': preset,
-            'preset[mapping_type_id]': mapping_type_id}
+            'preset[preset_data]': preset,
+            'preset[mapping_type_id]': mapping_type_id,
+            'preset[private]': int(private)}
     header = get_json_header_token(token)
     return make_request_custom_success(
         endpoint, None, method='POST',
