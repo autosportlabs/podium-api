@@ -23,6 +23,17 @@ def make_preset_update(token, preset_uri,
 
         preset_uri (str): URI for the preset you are updating.
 
+        name (str): Name for the preset
+
+        notes (str): Notes for the preset
+
+        preset_data (str): JSON data of the preset
+
+        mapping_type_id (int): The Id representing the mapping type
+
+        private(int): 1 if the preset is private to the creating user
+
+
     Kwargs:
         name(str): Name of the preset.
 
@@ -99,6 +110,8 @@ def make_preset_create(token, name, notes, preset, mapping_type_id, private,
         preset_data (str): JSON data of the preset
 
         mapping_type_id (int): The Id representing the mapping type
+
+        private(int): 1 if the preset is private to the creating user
 
     Kwargs:
         success_callback (function): Callback for a successful request,

@@ -25,6 +25,10 @@ from podium_api.presets import (
     make_preset_update
     )
 
+from podium_api.ratings import (
+    make_rating_create
+    )
+
 from podium_api.venues import (
     make_venues_get, make_venue_get
     )
@@ -78,6 +82,7 @@ class PodiumAPI(object):
         self.laps = PodiumLapsAPI(token)
         self.alertmessages = PodiumAlertMessagesAPI(token)
         self.presets = PodiumPresetsAPI(token)
+        self.ratings = PodiumRatingsAPI(token)
 
 
 class PodiumLapsAPI(object):
@@ -1492,11 +1497,15 @@ class PodiumPresetsAPI(object):
         redirect_callback if one is provided in the form of a PodiumRedirect.
 
         Args:
-            title (str): title for the vent.
+            name (str): Name for the preset
 
-            start_time (str): Starting time, use ISO 8601 format.
+            notes (str): Notes for the preset
 
-            end_time (str): Ending time, use ISO 8601 format.
+            preset_data (str): JSON data of the preset
+
+            mapping_type_id (int): The Id representing the mapping type
+
+            private(int): 1 if the preset is private to the creating user
 
         Kwargs:
             venue_id(str): ID for the venue of preset.
@@ -1537,6 +1546,16 @@ class PodiumPresetsAPI(object):
         Args:
             preset_uri (str): URI for the preset you are updating.
 
+            name (str): Name for the preset
+
+            notes (str): Notes for the preset
+
+            preset_data (str): JSON data of the preset
+
+            mapping_type_id (int): The Id representing the mapping type
+
+            private(int): 1 if the preset is private to the creating user
+
         Kwargs:
             venue_id(str): ID for the venue of preset.
 
@@ -1571,3 +1590,60 @@ class PodiumPresetsAPI(object):
 
         """
         make_preset_update(self.token, *args, **kwargs)
+
+
+class PodiumRatingsAPI(object):
+    """
+    Object that handles ratings requests and keeps track of the
+    authentication token necessary to do so. Usually accessed via
+    PodiumAPI object.
+
+    **Attributes:**
+        **token** (PodiumToken): The token for the logged in user.
+
+    """
+
+    def __init__(self, token):
+        self.token = token
+
+
+    def create(self, *args, **kwargs):
+        """
+        Request that creates or updates a PodiumRating.
+
+        The uri for the newly created rating will be provided to the
+        redirect_callback if one is provided in the form of a PodiumRedirect.
+
+        Args:
+            rateable_type (string): type of rateable object. e.g. preset
+
+            rateable_id (int): ID of the object to rate
+
+            rating (float): Rating value
+
+        Kwargs:
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(result (dict), data (dict))
+            Defaults to None.
+
+            failure_callback (function): Callback for failures and errors.
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
+
+            redirect_callback (function): Callback for redirect,
+            Will have the signature:
+                on_redirect(redirect_object (PodiumRedirect))
+            Defaults to None.
+
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
+
+        Return:
+            UrlRequest: The request being made.
+
+        """
+        make_rating_create(self.token, *args, **kwargs)
