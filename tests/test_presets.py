@@ -27,8 +27,9 @@ class TestPresetsGet(unittest.TestCase):
                             'notes': 'test notes',
                             'preset_data': 'test preset data',
                             'mapping_type_id': 1234,
-                            'private': True,
+                            'private': 1,
                             'rating': 4.5,
+                            'rating_count': 10,
                             'mapping_type': 'test_mapping_type',
                             'created': '2018-03-02T16:23:00Z',
                             'updated': '2018-03-02T16:23:00Z'
@@ -176,7 +177,7 @@ class TestPresetCreate(unittest.TestCase):
                                 'notes',
                                 'preset_data',
                                 1234,
-                                True,
+                                1,
                                 redirect_callback=self.success_cb)
         self.assertEqual(req._method, 'POST')
         self.assertEqual(req.url, 'https://podium.live/api/v1/presets')
@@ -186,7 +187,7 @@ class TestPresetCreate(unittest.TestCase):
                        'preset[notes]': 'notes',
                        'preset[preset_data]': 'preset_data',
                        'preset[mapping_type_id]': 1234,
-                       'preset[private]': True
+                       'preset[private]': 1
                        }))
         self.assertEqual(req.req_headers['Content-Type'],
                          'application/x-www-form-urlencoded')
@@ -207,7 +208,7 @@ class TestPresetCreate(unittest.TestCase):
                                  'notes',
                                  'preset',
                                  1234,
-                                 True,
+                                 1,
                                 failure_callback=error_cb)
         #simulate calling the requests on_error
         req.on_error()(req, {})
@@ -228,7 +229,7 @@ class TestPresetCreate(unittest.TestCase):
                                 'notes',
                                 'preset',
                                 1234,
-                                True,
+                                1,
                                 failure_callback=error_cb)
         #simulate calling the requests on_failure
         req.on_failure()(req, {})
@@ -249,7 +250,7 @@ class TestPresetCreate(unittest.TestCase):
                                 'notes',
                                 'preset',
                                 1234,
-                                True,
+                                1,
                                 success_callback=success_cb)
         #simulate calling the requests on_success
         self.assertEqual(req.on_success, None)
@@ -261,7 +262,7 @@ class TestPresetCreate(unittest.TestCase):
                                 'notes',
                                 'preset',
                                 1234,
-                                True,
+                                1,
                                 progress_callback=progress_cb)
         # simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
@@ -394,8 +395,9 @@ class TestPresetGet(unittest.TestCase):
                             'notes': 'notes',
                             'preset_data': 'preset_data',
                             'mapping_type_id': 1234,
-                            'private': True,
-                            'rating': 3.5
+                            'private': 1,
+                            'rating': 3.5,
+                            'rating_count': 10
                             }
         self.field_names = {'id': 'preset_id', 'URI': 'uri'}
 
@@ -528,7 +530,7 @@ class TestPresetUpdate(unittest.TestCase):
                                 notes='new notes',
                                 preset_data='new preset',
                                 mapping_type_id=5678,
-                                private=True,
+                                private=1,
                                 success_callback=self.success_cb)
         self.assertEqual(req._method, 'PUT')
         self.assertEqual(req.req_body,
@@ -536,7 +538,7 @@ class TestPresetUpdate(unittest.TestCase):
                                     'preset[notes]': 'new notes',
                                     'preset[preset_data]': 'new preset',
                                     'preset[mapping_type_id]': 5678,
-                                    'preset[private]': True}))
+                                    'preset[private]': 1}))
         self.assertEqual(req.url,
                          'https://podium.live/api/v1/presets/test')
         self.assertEqual(req.req_headers['Content-Type'],
@@ -557,7 +559,7 @@ class TestPresetUpdate(unittest.TestCase):
                                 notes='new notes',
                                 preset_data='new preset',
                                 mapping_type_id = 5678,
-                                private=True,
+                                private=1,
                                 failure_callback=error_cb)
         #simulate calling the requests on_error
         req.on_error()(req, {})
@@ -580,7 +582,7 @@ class TestPresetUpdate(unittest.TestCase):
                                 notes='new notes',
                                 preset_data='new preset',
                                 mapping_type_id = 5678,
-                                private=True,
+                                private=1,
                                 failure_callback=error_cb)
         #simulate calling the requests on_failure
         req.on_failure()(req, {})
@@ -603,7 +605,7 @@ class TestPresetUpdate(unittest.TestCase):
                                 notes='new notes',
                                 preset_data='new preset',
                                 mapping_type_id = 5678,
-                                private=True,
+                                private=1,
                                 redirect_callback=redir_cb)
         #simulate calling the requests on_redirect
         req.on_redirect()(req, {})
@@ -626,7 +628,7 @@ class TestPresetUpdate(unittest.TestCase):
                                 notes='new notes',
                                 preset_data='new preset',
                                 mapping_type_id = 5678,
-                                private=True,
+                                private=1,
                                 progress_callback=progress_cb)
         #simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
