@@ -34,6 +34,7 @@ from podium_api.venues import (
     )
 from podium_api.laps import make_laps_get, make_lap_get
 
+import podium_api
 
 class PodiumAPI(object):
     """
@@ -239,7 +240,7 @@ class PodiumEventDevicesAPI(object):
 
             endpoint (str): If provided this endpoint will be used instead
             of the default:
-            'https://podium.live/api/v1/events/{event_id}/devices'
+            'https://podium.live/api/v1/presets'
 
             event_id (int): If an endpoint is not provided you should
             provide the id of the event for which you want to look up
@@ -1414,6 +1415,54 @@ class PodiumPresetsAPI(object):
 
         """
         make_presets_get(self.token, *args, **kwargs)
+
+
+    def list_my(self, *args, **kwargs):
+        """
+        Request that returns a PodiumPagedRequest of presets for the logged in user.
+        By default a get request to
+        'https://podium.live/api/v1/user/my/presets' will be made.
+
+        Kwargs:
+            expand (bool): Expand all objects in response output.
+            Defaults to True
+
+            quiet (object): If not None HTML layout will not render endpoint
+            description. Defaults to None.
+
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(PodiumPagedResponse)
+            Defaults to None.
+
+            failure_callback (function): Callback for failures and errors.
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
+
+            redirect_callback (function): Callback for redirect,
+            Will have the signature:
+                on_redirect(result (dict), data (dict))
+            Defaults to None.
+
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
+
+            start (int): Starting index for presets list. 0 indexed.
+
+            per_page (int): Number per page of results, max of 100.
+
+            endpoint (str): If provided the start, per_page, expand, and quiet
+            params will not be used instead making a request based on the
+            provided endpoint.
+
+        Return:
+            UrlRequest: The request being made.
+        """
+        endpoint = '{}/api/v1/users/me/presets'.format(podium_api.PODIUM_APP.podium_url)
+        make_presets_get(self.token, endpoint=endpoint, *args, **kwargs)
 
     def get(self, *args, **kwargs):
         """
