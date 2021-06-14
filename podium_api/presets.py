@@ -11,7 +11,6 @@ def make_preset_update(token, preset_uri,
                        name=None,
                        notes=None,
                        preset_data=None,
-                       mapping_type_id=None,
                        private=None,
                        success_callback=None, failure_callback=None,
                        progress_callback=None, redirect_callback=None):
@@ -29,8 +28,6 @@ def make_preset_update(token, preset_uri,
 
         preset_data (str): JSON data of the preset
 
-        mapping_type_id (int): The Id representing the mapping type
-
         private(int): 1 if the preset is private to the creating user
 
 
@@ -40,8 +37,6 @@ def make_preset_update(token, preset_uri,
         notes (str): Notes for the preset.
 
         preset_data (str): JSON data of the preset.
-
-        mapping_type_id (int): ID of the mapping type
 
         success_callback (function): Callback for a successful request,
         will have the signature:
@@ -74,8 +69,6 @@ def make_preset_update(token, preset_uri,
         body['preset[notes]'] = notes
     if preset_data is not None:
         body['preset[preset_data]'] = preset_data
-    if mapping_type_id is not None:
-        body['preset[mapping_type_id]'] = mapping_type_id
     if private is not None:
         body['preset[private]'] = int(private)
     header = get_json_header_token(token)
@@ -91,7 +84,7 @@ def make_preset_update(token, preset_uri,
         )
 
 
-def make_preset_create(token, name, notes, preset, mapping_type_id, private,
+def make_preset_create(token, name, notes, preset, mapping_type_key, private,
                       success_callback=None, failure_callback=None,
                       progress_callback=None, redirect_callback=None):
     """
@@ -109,7 +102,7 @@ def make_preset_create(token, name, notes, preset, mapping_type_id, private,
 
         preset_data (str): JSON data of the preset
 
-        mapping_type_id (int): The Id representing the mapping type
+        mapping_type_key (str): Key of the mapping type
 
         private(int): 1 if the preset is private to the creating user
 
@@ -141,7 +134,7 @@ def make_preset_create(token, name, notes, preset, mapping_type_id, private,
     endpoint = '{}/api/v1/presets'.format(podium_api.PODIUM_APP.podium_url)
     body = {'preset[name]': name, 'preset[notes]': notes,
             'preset[preset_data]': preset,
-            'preset[mapping_type_id]': mapping_type_id,
+            'preset[mapping_type_key]': mapping_type_key,
             'preset[private]': int(private)}
     header = get_json_header_token(token)
     return make_request_custom_success(

@@ -1557,8 +1557,6 @@ class PodiumPresetsAPI(object):
             private(int): 1 if the preset is private to the creating user
 
         Kwargs:
-            venue_id(str): ID for the venue of preset.
-
             success_callback (function): Callback for a successful request,
             will have the signature:
                 on_success(result (dict), data (dict))
@@ -1606,14 +1604,6 @@ class PodiumPresetsAPI(object):
             private(int): 1 if the preset is private to the creating user
 
         Kwargs:
-            venue_id(str): ID for the venue of preset.
-
-            title (str): title for the vent.
-
-            start_time (str): Starting time, use ISO 8601 format.
-
-            end_time (str): Ending time, use ISO 8601 format.
-
             success_callback (function): Callback for a successful request,
             will have the signature:
                 on_success(result (dict), updated_uri (str))

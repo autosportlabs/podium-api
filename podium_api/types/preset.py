@@ -15,7 +15,7 @@ class PodiumPreset(object):
 
         **preset** (str): JSON data for preset
 
-        **mapping_type_id** (int): ID of the mapping type
+        **mapping_type_key** (int): mapping type key
 
         **mapping_type** (str): string key representation of the mapping type
 
@@ -23,18 +23,28 @@ class PodiumPreset(object):
 
         **created** (str): Date preset was created. ISO 8601 format.
     """
+    MAPPING_TYPE_ANALOG = "analog"
+    MAPPING_TYPE_CAN = "can"
+    MAPPING_TYPE_OBDII = "obd2"
+    MAPPING_TYPE_PODIUM_DASH = "podium_dash"
+    MAPPING_TYPE_PODIUM_CONNECT = "PC"
+    MAPPING_TYPE_RACECAPTURE_ANALYSIS = "rc_analysis"
+    MAPPING_TYPE_RACECAPTURE_PRO = "RCP"
+    MAPPING_TYPE_RACECAPTURE_TRACK = "RCT"
+    MAPPING_TYPE_RACECAPTURE_DASH = "rc_dash"
+    MAPPING_TYPE_SCRIPTING = "Script"
 
-    def __init__(self, preset_id, uri, name, notes, preset_data, mapping_type_id, mapping_type, private, rating, rating_count, updated, created):
+    def __init__(self, preset_id, uri, name, notes, preset_data, mapping_type_key, private, rating, rating_count, user_uri, updated, created):
         self.preset_id = preset_id
         self.uri = uri
         self.name = name
         self.notes = notes
         self.preset_data = preset_data
-        self.mapping_type_id = mapping_type_id
-        self.mapping_type = mapping_type
+        self.mapping_type_key = mapping_type_key
         self.private = private
         self.rating = rating
         self.rating_count = rating_count
+        self.user_uri = user_uri
         self.updated = updated
         self.created = created
 
@@ -53,10 +63,10 @@ def get_preset_from_json(json):
                        json.get('name', None),
                        json.get('notes', None),
                        json.get('preset_data', None),
-                       json.get('mapping_type_id', None),
-                       json.get('mapping_type', None),
+                       json.get('mapping_type_key', None),
                        json.get('private', None),
                        json.get('rating', None),
                        json.get('rating_count', None),
+                       json.get('user_uri', None),
                        json.get('created', None),
                        json.get('updated', None))
