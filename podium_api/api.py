@@ -1,3 +1,7 @@
+from typing import Callable
+
+from kivy.logger import Logger
+
 from podium_api.account import make_account_get
 from podium_api.events import (
     make_events_get, make_event_create, make_event_get, make_event_delete,
@@ -33,6 +37,8 @@ from podium_api.venues import (
     make_venues_get, make_venue_get
     )
 from podium_api.laps import make_laps_get, make_lap_get
+from podium_api.types.account import PodiumAccount
+from podium_api.types.user import PodiumUser
 
 import podium_api
 
@@ -85,6 +91,36 @@ class PodiumAPI(object):
         self.presets = PodiumPresetsAPI(token)
         self.ratings = PodiumRatingsAPI(token)
 
+        self.podium_account = None
+        self.podium_user = None
+
+    def init_connection(self, success_callback: Callable[[PodiumAccount, PodiumUser], None], failure_callback: Callable[[str,str,str], None]) -> None:
+        self._load_account(success_callback, failure_callback)
+
+    def _load_account(self, success_callback : Callable[[PodiumAccount], None], failure_callback: Callable[[str,str,str], None]) -> None:
+        def success(account: PodiumAccount):
+            Logger.info("PodiumAPI: Loaded Account %s", account.username)
+            self.podium_account = account
+            self._load_user(account, success_callback, failure_callback)
+
+        def failure(error_type: str, results: str, data: str) -> None:
+            Logger.error("PodiumAPI: Failed to load account: %s: %s", error_type, results)
+            failure_callback(error_type, results, data)
+
+        self.account.get(success_callback=success,
+                         failure_callback=failure)
+
+    def _load_user(self, account: PodiumAccount, success_callback: Callable[[PodiumAccount, PodiumUser], None], failure_callback: Callable[[str, str, str],None]) ->None:
+        def success(user):
+            Logger.info("PodiumAPI: Loaded User %s", user.username)
+            self.podium_user = user
+            success_callback(account, user)
+
+        def failure(error_type: str, results: str, data: str):
+            Logger.error("PodiumAPI: Failed to load user: %s: %s", error_type, results)
+            failure_callback(error_type, results, data)
+
+        self.users.get(account.user_uri, success_callback=success, failure_callback=failure)
 
 class PodiumLapsAPI(object):
     """
