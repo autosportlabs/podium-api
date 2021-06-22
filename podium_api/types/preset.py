@@ -34,17 +34,18 @@ class PodiumPreset(object):
     MAPPING_TYPE_RACECAPTURE_DASH = "rc_dash"
     MAPPING_TYPE_SCRIPTING = "Script"
 
-    def __init__(self, preset_id, uri, name, notes, preset_data, mapping_type_key, private, rating, rating_count, user_uri, updated, created):
+    def __init__(self, preset_id, uri, name, notes, preset_data, type, private, rating, rating_count, user_uri, preview_image_url, updated, created):
         self.preset_id = preset_id
         self.uri = uri
         self.name = name
         self.notes = notes
         self.preset_data = preset_data
-        self.mapping_type_key = mapping_type_key
+        self.type = type
         self.private = private
         self.rating = rating
         self.rating_count = rating_count
         self.user_uri = user_uri
+        self.preview_image_url = preview_image_url
         self.updated = updated
         self.created = created
 
@@ -68,5 +69,6 @@ def get_preset_from_json(json):
                        json.get('rating', None),
                        json.get('rating_count', None),
                        json.get('user_uri', None),
+                       json.get('preview_image_url', None),
                        json.get('created', None),
                        json.get('updated', None))

@@ -12,6 +12,8 @@ def make_preset_update(token, preset_uri,
                        notes=None,
                        preset_data=None,
                        private=None,
+                       preview_image_name=None,
+                       preview_image_data=None,
                        success_callback=None, failure_callback=None,
                        progress_callback=None, redirect_callback=None):
     """
@@ -22,6 +24,9 @@ def make_preset_update(token, preset_uri,
 
         preset_uri (str): URI for the preset you are updating.
 
+
+
+    Kwargs:
         name (str): Name for the preset
 
         notes (str): Notes for the preset
@@ -30,13 +35,9 @@ def make_preset_update(token, preset_uri,
 
         private(int): 1 if the preset is private to the creating user
 
+        preview_image_name(str): Name of the preview image file
 
-    Kwargs:
-        name(str): Name of the preset.
-
-        notes (str): Notes for the preset.
-
-        preset_data (str): JSON data of the preset.
+        preview_image_data(str): Base 64 encoded preview image data
 
         success_callback (function): Callback for a successful request,
         will have the signature:
@@ -71,6 +72,10 @@ def make_preset_update(token, preset_uri,
         body['preset[preset_data]'] = preset_data
     if private is not None:
         body['preset[private]'] = int(private)
+    if preview_image_name is not None:
+        body['preset[preview_image_name]'] = preview_image_name
+    if preview_image_data is not None:
+        body['preset[preview_image_data]'] = preview_image_data
     header = get_json_header_token(token)
     return make_request_custom_success(
         preset_uri, preset_update_success_handler,
@@ -83,8 +88,7 @@ def make_preset_update(token, preset_uri,
         data={'updated_uri': preset_uri}
         )
 
-
-def make_preset_create(token, name, notes, preset, mapping_type_key, private,
+def make_preset_create(token, name, notes, preset, type, private, preview_image_name, preview_image_data,
                       success_callback=None, failure_callback=None,
                       progress_callback=None, redirect_callback=None):
     """
@@ -102,9 +106,13 @@ def make_preset_create(token, name, notes, preset, mapping_type_key, private,
 
         preset_data (str): JSON data of the preset
 
-        mapping_type_key (str): Key of the mapping type
+        type (str): Key of the mapping type
 
         private(int): 1 if the preset is private to the creating user
+
+        preview_image_name(str): Name of the preview image file
+
+        preview_image_data(str): Base 64 encoded preview image data
 
     Kwargs:
         success_callback (function): Callback for a successful request,
@@ -132,10 +140,13 @@ def make_preset_create(token, name, notes, preset, mapping_type_key, private,
 
     """
     endpoint = '{}/api/v1/presets'.format(podium_api.PODIUM_APP.podium_url)
-    body = {'preset[name]': name, 'preset[notes]': notes,
+    body = {'preset[name]': name,
+            'preset[notes]': notes,
             'preset[preset_data]': preset,
-            'preset[mapping_type_key]': mapping_type_key,
-            'preset[private]': int(private)}
+            'preset[type]': type,
+            'preset[private]': int(private),
+            'preset[preview_image_name]': preview_image_name,
+            'preset[preview_image_data]': preview_image_data}
     header = get_json_header_token(token)
     return make_request_custom_success(
         endpoint, None, method='POST',
@@ -252,7 +263,7 @@ def make_preset_get(token, preset_uri, expand=True,
                                        params=params, header=header)
 
 
-def make_presets_get(token, start=None, per_page=None,
+def make_presets_get(token, type, start=None, per_page=None,
                     endpoint=None, expand=True,
                     quiet=None, success_callback=None,
                     redirect_callback=None,
@@ -264,6 +275,8 @@ def make_presets_get(token, start=None, per_page=None,
 
     Args:
         token (PodiumToken): The authentication token for this session.
+
+        type (str): The type key to query.
 
     Kwargs:
         expand (bool): Expand all objects in response output. Defaults to True
@@ -304,7 +317,7 @@ def make_presets_get(token, start=None, per_page=None,
     """
     if endpoint is None:
         endpoint = '{}/api/v1/presets'.format(podium_api.PODIUM_APP.podium_url)
-    params = {}
+    params = {"type": type}
     if expand is not None:
         params['expand'] = expand
     if quiet is not None:
@@ -323,7 +336,6 @@ def make_presets_get(token, start=None, per_page=None,
                                        progress_callback=progress_callback,
                                        redirect_callback=redirect_callback,
                                        params=params, header=header)
-
 
 def preset_delete_handler(req, results, data):
     """

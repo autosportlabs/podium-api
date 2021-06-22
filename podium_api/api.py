@@ -1411,6 +1411,9 @@ class PodiumPresetsAPI(object):
         By default a get request to
         'https://podium.live/api/v1/presets' will be made.
 
+        Args:
+            type (str): Type key for the presets you want.
+
         Kwargs:
             expand (bool): Expand all objects in response output.
             Defaults to True
@@ -1458,6 +1461,9 @@ class PodiumPresetsAPI(object):
         Request that returns a PodiumPagedRequest of presets for the logged in user.
         By default a get request to
         'https://podium.live/api/v1/user/my/presets' will be made.
+
+        Args:
+            type (str): Type key for the presets you want.
 
         Kwargs:
             expand (bool): Expand all objects in response output.
