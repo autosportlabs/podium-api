@@ -26,11 +26,11 @@ class TestPresetsGet(unittest.TestCase):
                             'name': 'test name',
                             'notes': 'test notes',
                             'preset_data': 'test preset data',
-                            'mapping_type_id': 1234,
+                            'type': 1234,
                             'private': 1,
                             'rating': 4.5,
                             'rating_count': 10,
-                            'mapping_type': 'test_mapping_type',
+                            'preview_image_url': 'image.jpg',
                             'created': '2018-03-02T16:23:00Z',
                             'updated': '2018-03-02T16:23:00Z'
                             }
@@ -59,18 +59,19 @@ class TestPresetsGet(unittest.TestCase):
     def test_no_params(self, mock_request):
         req = make_presets_get(
             self.token,
+            'type',
             endpoint='https://podium.live/api/v1/presets?start=20&per_page=20',
             expand=None,
             success_callback=self.success_cb)
         self.assertEqual(
-            req.url, 'https://podium.live/api/v1/presets?start=20&per_page=20')
+            req.url, 'https://podium.live/api/v1/presets?start=20&per_page=20&type=type')
 
     def success_cb(self, result):
         self.result = result
 
     @patch('podium_api.asyncreq.UrlRequest.run')
     def test_presets_get(self, mock_request):
-        req = make_presets_get(self.token, start=0, per_page=100,
+        req = make_presets_get(self.token, 'type', start=0, per_page=100,
                               success_callback=self.success_cb)
         self.assertEqual(req._method, 'GET')
         self.assertTrue('https://podium.live/api/v1/presets?' in req.url)
@@ -90,7 +91,7 @@ class TestPresetsGet(unittest.TestCase):
     @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
-        req = make_presets_get(self.token, start=0, per_page=100,
+        req = make_presets_get(self.token, 'type', start=0, per_page=100,
                               failure_callback=error_cb)
         #simulate calling the requests on_error
         req.on_error()(req, {})
@@ -104,7 +105,7 @@ class TestPresetsGet(unittest.TestCase):
     @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
-        req = make_presets_get(self.token, start=0, per_page=100,
+        req = make_presets_get(self.token, 'type', start=0, per_page=100,
                               failure_callback=error_cb)
         #simulate calling the requests on_failure
         req.on_failure()(req, {})
@@ -118,7 +119,7 @@ class TestPresetsGet(unittest.TestCase):
     @patch('podium_api.asyncreq.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
         redir_cb = Mock()
-        req = make_presets_get(self.token, start=0, per_page=100,
+        req = make_presets_get(self.token, 'type', start=0, per_page=100,
                               redirect_callback=redir_cb)
         #simulate calling the requests on_redirect
         req.on_redirect()(req, {})
@@ -132,7 +133,7 @@ class TestPresetsGet(unittest.TestCase):
     @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
-        req = make_presets_get(self.token, start=0, per_page=100,
+        req = make_presets_get(self.token, 'type', start=0, per_page=100,
                               progress_callback=progress_cb)
         #simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
@@ -178,6 +179,8 @@ class TestPresetCreate(unittest.TestCase):
                                 'preset_data',
                                 1234,
                                 1,
+                                'image.jpg',
+                                'data',
                                 redirect_callback=self.success_cb)
         self.assertEqual(req._method, 'POST')
         self.assertEqual(req.url, 'https://podium.live/api/v1/presets')
@@ -186,8 +189,10 @@ class TestPresetCreate(unittest.TestCase):
             urlencode({'preset[name]': 'name',
                        'preset[notes]': 'notes',
                        'preset[preset_data]': 'preset_data',
-                       'preset[mapping_type_id]': 1234,
-                       'preset[private]': 1
+                       'preset[type]': 1234,
+                       'preset[private]': 1,
+                       'preset[preview_image_name]': 'image.jpg',
+                       'preset[preview_image_data]': 'data'
                        }))
         self.assertEqual(req.req_headers['Content-Type'],
                          'application/x-www-form-urlencoded')
@@ -209,6 +214,8 @@ class TestPresetCreate(unittest.TestCase):
                                  'preset',
                                  1234,
                                  1,
+                                 'image.jpg',
+                                 'data',
                                 failure_callback=error_cb)
         #simulate calling the requests on_error
         req.on_error()(req, {})
@@ -230,6 +237,8 @@ class TestPresetCreate(unittest.TestCase):
                                 'preset',
                                 1234,
                                 1,
+                                'image.jpg',
+                                'data',
                                 failure_callback=error_cb)
         #simulate calling the requests on_failure
         req.on_failure()(req, {})
@@ -251,6 +260,8 @@ class TestPresetCreate(unittest.TestCase):
                                 'preset',
                                 1234,
                                 1,
+                                'image.jpg',
+                                'data',
                                 success_callback=success_cb)
         #simulate calling the requests on_success
         self.assertEqual(req.on_success, None)
@@ -263,6 +274,8 @@ class TestPresetCreate(unittest.TestCase):
                                 'preset',
                                 1234,
                                 1,
+                                'image.jpg',
+                                'data',
                                 progress_callback=progress_cb)
         # simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
@@ -394,10 +407,11 @@ class TestPresetGet(unittest.TestCase):
                             'name': 'name',
                             'notes': 'notes',
                             'preset_data': 'preset_data',
-                            'mapping_type_id': 1234,
+                            'type': 1234,
                             'private': 1,
                             'rating': 3.5,
-                            'rating_count': 10
+                            'rating_count': 10,
+                            'preview_image_url': 'image.jpg',
                             }
         self.field_names = {'id': 'preset_id', 'URI': 'uri'}
 
@@ -529,16 +543,18 @@ class TestPresetUpdate(unittest.TestCase):
                                 name='new name',
                                 notes='new notes',
                                 preset_data='new preset',
-                                mapping_type_id=5678,
                                 private=1,
+                                preview_image_name='image.jpg',
+                                preview_image_data='data',
                                 success_callback=self.success_cb)
         self.assertEqual(req._method, 'PUT')
         self.assertEqual(req.req_body,
                          urlencode({'preset[name]': 'new name',
                                     'preset[notes]': 'new notes',
                                     'preset[preset_data]': 'new preset',
-                                    'preset[mapping_type_id]': 5678,
-                                    'preset[private]': 1}))
+                                    'preset[private]': 1,
+                                    'preset[preview_image_name]': 'image.jpg',
+                                    'preset[preview_image_data]': 'data'}))
         self.assertEqual(req.url,
                          'https://podium.live/api/v1/presets/test')
         self.assertEqual(req.req_headers['Content-Type'],
@@ -558,8 +574,9 @@ class TestPresetUpdate(unittest.TestCase):
                                 name='new name',
                                 notes='new notes',
                                 preset_data='new preset',
-                                mapping_type_id = 5678,
                                 private=1,
+                                preview_image_name='image.jpg',
+                                preview_image_data='data',
                                 failure_callback=error_cb)
         #simulate calling the requests on_error
         req.on_error()(req, {})
@@ -581,8 +598,9 @@ class TestPresetUpdate(unittest.TestCase):
                                 name='new name',
                                 notes='new notes',
                                 preset_data='new preset',
-                                mapping_type_id = 5678,
                                 private=1,
+                                preview_image_name='image.jpg',
+                                preview_image_data='data',
                                 failure_callback=error_cb)
         #simulate calling the requests on_failure
         req.on_failure()(req, {})
@@ -604,8 +622,9 @@ class TestPresetUpdate(unittest.TestCase):
                                 name='new name',
                                 notes='new notes',
                                 preset_data='new preset',
-                                mapping_type_id = 5678,
                                 private=1,
+                                preview_image_name='image.jpg',
+                                preview_image_data='data',
                                 redirect_callback=redir_cb)
         #simulate calling the requests on_redirect
         req.on_redirect()(req, {})
@@ -627,8 +646,9 @@ class TestPresetUpdate(unittest.TestCase):
                                 name='new name',
                                 notes='new notes',
                                 preset_data='new preset',
-                                mapping_type_id = 5678,
                                 private=1,
+                                preview_image_name='image.jpg',
+                                preview_image_data='data',
                                 progress_callback=progress_cb)
         #simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)

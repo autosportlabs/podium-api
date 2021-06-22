@@ -15,7 +15,7 @@ class PodiumPreset(object):
 
         **preset** (str): JSON data for preset
 
-        **mapping_type_key** (int): mapping type key
+        **type** (int): mapping type key
 
         **mapping_type** (str): string key representation of the mapping type
 
@@ -64,7 +64,7 @@ def get_preset_from_json(json):
                        json.get('name', None),
                        json.get('notes', None),
                        json.get('preset_data', None),
-                       json.get('mapping_type_key', None),
+                       json.get('type', None),
                        json.get('private', None),
                        json.get('rating', None),
                        json.get('rating_count', None),

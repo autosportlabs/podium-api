@@ -52,7 +52,6 @@ class TestRacestatCreate(unittest.TestCase):
                                    redirect_callback=self.success_cb)
         self.assertEqual(req._method, 'POST')
         self.assertEqual(req.url, 'https://podium.live/api/v1/events/1/devices/2/racestat')
-        self.maxDiff = None
         self.assertEqual(
             req.req_body,
             urlencode({'racestat[comp_number]': '1234', 'racestat[comp_class]': 'P1',
