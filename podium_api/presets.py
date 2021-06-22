@@ -263,7 +263,7 @@ def make_preset_get(token, preset_uri, expand=True,
                                        params=params, header=header)
 
 
-def make_presets_get(token, type, start=None, per_page=None,
+def make_presets_get(token, type, search=None, start=None, per_page=None,
                     endpoint=None, expand=True,
                     quiet=None, success_callback=None,
                     redirect_callback=None,
@@ -279,6 +279,8 @@ def make_presets_get(token, type, start=None, per_page=None,
         type (str): The type key to query.
 
     Kwargs:
+        search (string): search string on name or notes
+
         expand (bool): Expand all objects in response output. Defaults to True
 
         quiet (object): If not None HTML layout will not render endpoint
@@ -318,6 +320,8 @@ def make_presets_get(token, type, start=None, per_page=None,
     if endpoint is None:
         endpoint = '{}/api/v1/presets'.format(podium_api.PODIUM_APP.podium_url)
     params = {"type": type}
+    if search is not None:
+        params['search'] = search
     if expand is not None:
         params['expand'] = expand
     if quiet is not None:

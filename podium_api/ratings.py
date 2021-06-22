@@ -8,7 +8,7 @@ import podium_api
 
 
 def make_rating_create(token, rateable_type, rateable_id, rating,
-                      success_callback=None, failure_callback=None,
+                      report=None, success_callback=None, failure_callback=None,
                       progress_callback=None, redirect_callback=None):
     """
     Request that creates or updates a rating for a rateable object.
@@ -26,6 +26,8 @@ def make_rating_create(token, rateable_type, rateable_id, rating,
         rating (float): Rating value
 
     Kwargs:
+        report (int): non zero if the rateable item is to be reported. rating must also be 0
+
         success_callback (function): Callback for a successful request,
         will have the signature:
             on_success(result (dict), data (dict))
@@ -53,6 +55,8 @@ def make_rating_create(token, rateable_type, rateable_id, rating,
     endpoint = '{}/api/v1/{}/{}/ratings'.format(podium_api.PODIUM_APP.podium_url, rateable_type.lower(), rateable_id)
 
     body = {'rating[rating]': rating}
+    if report is not None:
+        body["rating[report]"] = report
     header = get_json_header_token(token)
     return make_request_custom_success(
         endpoint, None, method='POST',
