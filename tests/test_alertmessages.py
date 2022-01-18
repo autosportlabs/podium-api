@@ -40,7 +40,7 @@ class TestAlertmessageCreate(unittest.TestCase):
     def success_cb(self, result):
         self.result = result
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_alertmessage_create(self, mock_request):
         req = make_alertmessage_create(token=self.token, event_id=1, device_id=2, message='pit now', priority=1,
                                      redirect_callback=self.success_cb)
@@ -61,7 +61,7 @@ class TestAlertmessageCreate(unittest.TestCase):
         req.on_redirect()(req, {})
         self.check_results()
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
         req = make_alertmessage_create(token=self.token, event_id=1, device_id=2, message='pit now', priority=1,
@@ -78,7 +78,7 @@ class TestAlertmessageCreate(unittest.TestCase):
              '_redirect_callback': None}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
         req = make_alertmessage_create(token=self.token, event_id=1, device_id=2, message='pit now', priority=1,
@@ -95,7 +95,7 @@ class TestAlertmessageCreate(unittest.TestCase):
              '_redirect_callback': None}
         )
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_success_callback(self, mock_request):
         success_cb = Mock()
         req = make_alertmessage_create(token=self.token, event_id=1, device_id=2, message='pit now', priority=1,
@@ -104,7 +104,7 @@ class TestAlertmessageCreate(unittest.TestCase):
         self.assertEqual(req.on_success, None)
 
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_alertmessage_create(token=self.token, event_id=1, device_id=2, message='pit now', priority=1,
@@ -164,7 +164,7 @@ class TestAlertmessagesGet(unittest.TestCase):
     def success_cb(self, result):
         self.result = result
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_alertmessages_get(self, mock_request):
         req = make_alertmessages_get(
             token=self.token,
@@ -185,7 +185,7 @@ class TestAlertmessagesGet(unittest.TestCase):
         req.on_success()(req, self.paged_event_json)
         self.check_results_paged_response()
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
         req = make_alertmessages_get(
@@ -202,7 +202,7 @@ class TestAlertmessagesGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
         req = make_alertmessages_get(
@@ -219,7 +219,7 @@ class TestAlertmessagesGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
         redir_cb = Mock()
         req = make_alertmessages_get(
@@ -236,7 +236,7 @@ class TestAlertmessagesGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': redir_cb})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_alertmessages_get(
@@ -292,7 +292,7 @@ class TestAlertmessageGet(unittest.TestCase):
     def success_cb(self, result):
         self.result = result
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_alertmessage_get(self, mock_request):
         req = make_alertmessage_get(
             self.token,
@@ -311,7 +311,7 @@ class TestAlertmessageGet(unittest.TestCase):
         req.on_success()(req, {'alertmessage': self.result_json})
         self.check_results()
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
         req = make_alertmessage_get(
@@ -328,7 +328,7 @@ class TestAlertmessageGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
         req = make_alertmessage_get(
@@ -345,7 +345,7 @@ class TestAlertmessageGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
         redir_cb = Mock()
         req = make_alertmessage_get(
@@ -362,7 +362,7 @@ class TestAlertmessageGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': redir_cb})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_alertmessage_get(

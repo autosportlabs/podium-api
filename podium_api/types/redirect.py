@@ -26,4 +26,11 @@ def get_redirect_from_json(json, object_type):
     Return:
         PodiumRedirect: The PodiumRedirect object for this data.
     """
-    return PodiumRedirect(json['location'], object_type)
+
+    # between development and production Location may be lower case location.
+    # So, account for both
+    try:
+        location = json['location']
+    except KeyError:
+        location = json['Location']
+    return PodiumRedirect(location, object_type)

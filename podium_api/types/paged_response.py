@@ -8,6 +8,7 @@ from podium_api.types.device import get_device_from_json
 from podium_api.types.lap import get_lap_from_json
 from podium_api.types.venue import get_venue_from_json
 from podium_api.types.alertmessage import get_alertmessage_from_json
+from podium_api.types.preset import get_preset_from_json
 
 class PodiumPagedResponse(object):
     """
@@ -50,6 +51,7 @@ PAYLOAD_NAME_TO_OBJECT = {
     'laps': get_lap_from_json,
     'venues': get_venue_from_json,
     'alertmessages': get_alertmessage_from_json,
+    'presets': get_preset_from_json,
 }
 
 

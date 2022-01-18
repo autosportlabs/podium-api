@@ -1,3 +1,7 @@
+from typing import Callable
+
+from kivy.logger import Logger
+
 from podium_api.account import make_account_get
 from podium_api.events import (
     make_events_get, make_event_create, make_event_get, make_event_delete,
@@ -20,11 +24,23 @@ from podium_api.alertmessages import (
     make_alertmessages_get, make_alertmessage_get, make_alertmessage_create
     )
 
+from podium_api.presets import (
+    make_presets_get, make_preset_create, make_preset_get, make_preset_delete,
+    make_preset_update
+    )
+
+from podium_api.ratings import (
+    make_rating_create
+    )
+
 from podium_api.venues import (
     make_venues_get, make_venue_get
     )
 from podium_api.laps import make_laps_get, make_lap_get
+from podium_api.types.account import PodiumAccount
+from podium_api.types.user import PodiumUser
 
+import podium_api
 
 class PodiumAPI(object):
     """
@@ -57,7 +73,7 @@ class PodiumAPI(object):
         requests.
 
         **laps** (PodiumLapsAPI): API object for lap requests.
-        
+
         **alertmessages** (AlertMessagesAPI: API object for alertmessage requests.
 
     """
@@ -72,7 +88,39 @@ class PodiumAPI(object):
         self.eventdevices = PodiumEventDevicesAPI(token)
         self.laps = PodiumLapsAPI(token)
         self.alertmessages = PodiumAlertMessagesAPI(token)
+        self.presets = PodiumPresetsAPI(token)
+        self.ratings = PodiumRatingsAPI(token)
 
+        self.podium_account = None
+        self.podium_user = None
+
+    def init_connection(self, success_callback: Callable[[PodiumAccount, PodiumUser], None], failure_callback: Callable[[str,str,str], None]) -> None:
+        self._load_account(success_callback, failure_callback)
+
+    def _load_account(self, success_callback : Callable[[PodiumAccount], None], failure_callback: Callable[[str,str,str], None]) -> None:
+        def success(account: PodiumAccount):
+            Logger.info("PodiumAPI: Loaded Account %s", account.username)
+            self.podium_account = account
+            self._load_user(account, success_callback, failure_callback)
+
+        def failure(error_type: str, results: str, data: str) -> None:
+            Logger.error("PodiumAPI: Failed to load account: %s: %s", error_type, results)
+            failure_callback(error_type, results, data)
+
+        self.account.get(success_callback=success,
+                         failure_callback=failure)
+
+    def _load_user(self, account: PodiumAccount, success_callback: Callable[[PodiumAccount, PodiumUser], None], failure_callback: Callable[[str, str, str],None]) ->None:
+        def success(user):
+            Logger.info("PodiumAPI: Loaded User %s", user.username)
+            self.podium_user = user
+            success_callback(account, user)
+
+        def failure(error_type: str, results: str, data: str):
+            Logger.error("PodiumAPI: Failed to load user: %s: %s", error_type, results)
+            failure_callback(error_type, results, data)
+
+        self.users.get(account.user_uri, success_callback=success, failure_callback=failure)
 
 class PodiumLapsAPI(object):
     """
@@ -228,7 +276,7 @@ class PodiumEventDevicesAPI(object):
 
             endpoint (str): If provided this endpoint will be used instead
             of the default:
-            'https://podium.live/api/v1/events/{event_id}/devices'
+            'https://podium.live/api/v1/presets'
 
             event_id (int): If an endpoint is not provided you should
             provide the id of the event for which you want to look up
@@ -653,7 +701,7 @@ class PodiumAccountAPI(object):
             failure_callback (function): Callback for redirects, failures, and
             errors. Will have the signature:
                 on_failure(failure_type (string), result (dict), data (dict))
-            Values for failure type are: 'error', 'redirect', 'failure'. 
+            Values for failure type are: 'error', 'redirect', 'failure'.
             Defaults to None.
 
             progress_callback (function): Callback for progress updates,
@@ -693,16 +741,16 @@ class PodiumDevicesAPI(object):
 
         Kwargs:
             success_callback (function): Callback for a successful request,
-            will have the signature: 
+            will have the signature:
                 on_success(result (dict), data (dict))
             Defaults to None..
 
-            failure_callback (function): Callback for failures and errors. 
+            failure_callback (function): Callback for failures and errors.
             Will have the signature:
                 on_failure(failure_type (string), result (dict), data (dict))
             Values for failure type are: 'error', 'failure'. Defaults to None.
 
-            redirect_callback (function): Callback for redirect, 
+            redirect_callback (function): Callback for redirect,
             Will have the signature:
                 on_redirect(redirect_object (PodiumRedirect))
             Defaults to None.
@@ -729,16 +777,16 @@ class PodiumDevicesAPI(object):
             name(str): Name of the device.
 
             success_callback (function): Callback for a successful request,
-            will have the signature: 
+            will have the signature:
                 on_success(result (dict), updated_uri (str))
             Defaults to None..
 
-            failure_callback (function): Callback for failures and errors. 
+            failure_callback (function): Callback for failures and errors.
             Will have the signature:
                 on_failure(failure_type (string), result (dict), data (dict))
             Values for failure type are: 'error', 'failure'. Defaults to None.
 
-            redirect_callback (function): Callback for redirect, 
+            redirect_callback (function): Callback for redirect,
             Will have the signature:
                 on_redirect(redirect_object (PodiumRedirect))
             Defaults to None.
@@ -773,12 +821,12 @@ class PodiumDevicesAPI(object):
                 on_success(PodiumEvent)
             Defaults to None.
 
-            failure_callback (function): Callback for failures and errors. 
+            failure_callback (function): Callback for failures and errors.
             Will have the signature:
                 on_failure(failure_type (string), result (dict), data (dict))
             Values for failure type are: 'error', 'failure'. Defaults to None.
 
-            redirect_callback (function): Callback for redirect, 
+            redirect_callback (function): Callback for redirect,
             Will have the signature:
                 on_redirect(result (dict), data (dict))
             Defaults to None.
@@ -807,12 +855,12 @@ class PodiumDevicesAPI(object):
                 on_success(deleted_uri (str))
             Defaults to None.
 
-            failure_callback (function): Callback for failures and errors. 
+            failure_callback (function): Callback for failures and errors.
             Will have the signature:
                 on_failure(failure_type (string), result (dict), data (dict))
             Values for failure type are: 'error', 'failure'. Defaults to None.
 
-            redirect_callback (function): Callback for redirect, 
+            redirect_callback (function): Callback for redirect,
             Will have the signature:
                 on_redirect(result (dict), data (dict))
             Defaults to None.
@@ -892,12 +940,12 @@ class PodiumEventsAPI(object):
 
     def list(self, *args, **kwargs):
         """
-        Request that returns a PodiumPagedRequest of events. 
-        By default a get request to 
+        Request that returns a PodiumPagedRequest of events.
+        By default a get request to
         'https://podium.live/api/v1/events' will be made.
 
         Kwargs:
-            expand (bool): Expand all objects in response output. 
+            expand (bool): Expand all objects in response output.
             Defaults to True
 
             quiet (object): If not None HTML layout will not render endpoint
@@ -908,12 +956,12 @@ class PodiumEventsAPI(object):
                 on_success(PodiumPagedResponse)
             Defaults to None.
 
-            failure_callback (function): Callback for failures and errors. 
+            failure_callback (function): Callback for failures and errors.
             Will have the signature:
                 on_failure(failure_type (string), result (dict), data (dict))
             Values for failure type are: 'error', 'failure'. Defaults to None.
 
-            redirect_callback (function): Callback for redirect, 
+            redirect_callback (function): Callback for redirect,
             Will have the signature:
                 on_redirect(result (dict), data (dict))
             Defaults to None.
@@ -939,7 +987,7 @@ class PodiumEventsAPI(object):
 
     def get(self, *args, **kwargs):
         """
-        Request that returns a PodiumEvent for the provided event_uri. 
+        Request that returns a PodiumEvent for the provided event_uri.
 
         Args:
             event_uri (str): URI for the event you want.
@@ -956,12 +1004,12 @@ class PodiumEventsAPI(object):
                 on_success(PodiumEvent)
             Defaults to None.
 
-            failure_callback (function): Callback for failures and errors. 
+            failure_callback (function): Callback for failures and errors.
             Will have the signature:
                 on_failure(failure_type (string), result (dict), data (dict))
             Values for failure type are: 'error', 'failure'. Defaults to None.
 
-            redirect_callback (function): Callback for redirect, 
+            redirect_callback (function): Callback for redirect,
             Will have the signature:
                 on_redirect(result (dict), data (dict))
             Defaults to None.
@@ -990,12 +1038,12 @@ class PodiumEventsAPI(object):
                 on_success(deleted_uri (str))
             Defaults to None.
 
-            failure_callback (function): Callback for failures and errors. 
+            failure_callback (function): Callback for failures and errors.
             Will have the signature:
                 on_failure(failure_type (string), result (dict), data (dict))
             Values for failure type are: 'error', 'failure'. Defaults to None.
 
-            redirect_callback (function): Callback for redirect, 
+            redirect_callback (function): Callback for redirect,
             Will have the signature:
                 on_redirect(result (dict), data (dict))
             Defaults to None.
@@ -1029,16 +1077,16 @@ class PodiumEventsAPI(object):
             venue_id(str): ID for the venue of event.
 
             success_callback (function): Callback for a successful request,
-            will have the signature: 
+            will have the signature:
                 on_success(result (dict), data (dict))
             Defaults to None..
 
-            failure_callback (function): Callback for failures and errors. 
+            failure_callback (function): Callback for failures and errors.
             Will have the signature:
                 on_failure(failure_type (string), result (dict), data (dict))
             Values for failure type are: 'error', 'failure'. Defaults to None.
 
-            redirect_callback (function): Callback for redirect, 
+            redirect_callback (function): Callback for redirect,
             Will have the signature:
                 on_redirect(redirect_object (PodiumRedirect))
             Defaults to None.
@@ -1074,16 +1122,16 @@ class PodiumEventsAPI(object):
             end_time (str): Ending time, use ISO 8601 format.
 
             success_callback (function): Callback for a successful request,
-            will have the signature: 
+            will have the signature:
                 on_success(result (dict), updated_uri (str))
             Defaults to None..
 
-            failure_callback (function): Callback for failures and errors. 
+            failure_callback (function): Callback for failures and errors.
             Will have the signature:
                 on_failure(failure_type (string), result (dict), data (dict))
             Values for failure type are: 'error', 'failure'. Defaults to None.
 
-            redirect_callback (function): Callback for redirect, 
+            redirect_callback (function): Callback for redirect,
             Will have the signature:
                 on_redirect(redirect_object (PodiumRedirect))
             Defaults to None.
@@ -1115,12 +1163,12 @@ class PodiumAlertMessagesAPI(object):
 
     def list(self, *args, **kwargs):
         """
-        Request that returns a PodiumPagedRequest of events. 
-        By default a get request to 
+        Request that returns a PodiumPagedRequest of events.
+        By default a get request to
         'https://podium.live/api/v1/events' will be made.
 
         Kwargs:
-            expand (bool): Expand all objects in response output. 
+            expand (bool): Expand all objects in response output.
             Defaults to True
 
             quiet (object): If not None HTML layout will not render endpoint
@@ -1131,12 +1179,12 @@ class PodiumAlertMessagesAPI(object):
                 on_success(PodiumPagedResponse)
             Defaults to None.
 
-            failure_callback (function): Callback for failures and errors. 
+            failure_callback (function): Callback for failures and errors.
             Will have the signature:
                 on_failure(failure_type (string), result (dict), data (dict))
             Values for failure type are: 'error', 'failure'. Defaults to None.
 
-            redirect_callback (function): Callback for redirect, 
+            redirect_callback (function): Callback for redirect,
             Will have the signature:
                 on_redirect(result (dict), data (dict))
             Defaults to None.
@@ -1162,7 +1210,7 @@ class PodiumAlertMessagesAPI(object):
 
     def get(self, *args, **kwargs):
         """
-        Request that returns an AlertMessage for the provided alertmessage_uri. 
+        Request that returns an AlertMessage for the provided alertmessage_uri.
 
         Args:
             endpoint (str): URI for the alertmessage you want.
@@ -1179,12 +1227,12 @@ class PodiumAlertMessagesAPI(object):
                 on_success(PodiumEvent)
             Defaults to None.
 
-            failure_callback (function): Callback for failures and errors. 
+            failure_callback (function): Callback for failures and errors.
             Will have the signature:
                 on_failure(failure_type (string), result (dict), data (dict))
             Values for failure type are: 'error', 'failure'. Defaults to None.
 
-            redirect_callback (function): Callback for redirect, 
+            redirect_callback (function): Callback for redirect,
             Will have the signature:
                 on_redirect(result (dict), data (dict))
             Defaults to None.
@@ -1217,16 +1265,16 @@ class PodiumAlertMessagesAPI(object):
             priority(int): priority for the message.
 
             success_callback (function): Callback for a successful request,
-            will have the signature: 
+            will have the signature:
                 on_success(result (dict), data (dict))
             Defaults to None..
 
-            failure_callback (function): Callback for failures and errors. 
+            failure_callback (function): Callback for failures and errors.
             Will have the signature:
                 on_failure(failure_type (string), result (dict), data (dict))
             Values for failure type are: 'error', 'failure'. Defaults to None.
 
-            redirect_callback (function): Callback for redirect, 
+            redirect_callback (function): Callback for redirect,
             Will have the signature:
                 on_redirect(redirect_object (PodiumRedirect))
             Defaults to None.
@@ -1258,12 +1306,12 @@ class PodiumVenuesAPI(object):
 
     def list(self, *args, **kwargs):
         """
-        Request that returns a PodiumPagedRequest of events. 
-        By default a get request to 
+        Request that returns a PodiumPagedRequest of events.
+        By default a get request to
         'https://podium.live/api/v1/events' will be made.
 
         Kwargs:
-            expand (bool): Expand all objects in response output. 
+            expand (bool): Expand all objects in response output.
             Defaults to True
 
             quiet (object): If not None HTML layout will not render endpoint
@@ -1274,12 +1322,12 @@ class PodiumVenuesAPI(object):
                 on_success(PodiumPagedResponse)
             Defaults to None.
 
-            failure_callback (function): Callback for failures and errors. 
+            failure_callback (function): Callback for failures and errors.
             Will have the signature:
                 on_failure(failure_type (string), result (dict), data (dict))
             Values for failure type are: 'error', 'failure'. Defaults to None.
 
-            redirect_callback (function): Callback for redirect, 
+            redirect_callback (function): Callback for redirect,
             Will have the signature:
                 on_redirect(result (dict), data (dict))
             Defaults to None.
@@ -1305,7 +1353,7 @@ class PodiumVenuesAPI(object):
 
     def get(self, *args, **kwargs):
         """
-        Request that returns an Venue for the provided endpoint. 
+        Request that returns an Venue for the provided endpoint.
 
         Args:
             endpoint (str): URI for the venue you want.
@@ -1322,12 +1370,12 @@ class PodiumVenuesAPI(object):
                 on_success(PodiumEvent)
             Defaults to None.
 
-            failure_callback (function): Callback for failures and errors. 
+            failure_callback (function): Callback for failures and errors.
             Will have the signature:
                 on_failure(failure_type (string), result (dict), data (dict))
             Values for failure type are: 'error', 'failure'. Defaults to None.
 
-            redirect_callback (function): Callback for redirect, 
+            redirect_callback (function): Callback for redirect,
             Will have the signature:
                 on_redirect(result (dict), data (dict))
             Defaults to None.
@@ -1343,3 +1391,340 @@ class PodiumVenuesAPI(object):
         """
         make_venue_get(self.token, *args, **kwargs)
 
+class PodiumPresetsAPI(object):
+    """
+    Object that handles preset requests and keeps track of the
+    authentication token necessary to do so. Usually accessed via
+    PodiumAPI object.
+
+    **Attributes:**
+        **token** (PodiumToken): The token for the logged in user.
+
+    """
+
+    def __init__(self, token):
+        self.token = token
+
+    def list(self, *args, **kwargs):
+        """
+        Request that returns a PodiumPagedRequest of presets.
+        By default a get request to
+        'https://podium.live/api/v1/presets' will be made.
+
+        Args:
+            type (str): Type key for the presets you want.
+
+        Kwargs:
+            expand (bool): Expand all objects in response output.
+            Defaults to True
+
+            quiet (object): If not None HTML layout will not render endpoint
+            description. Defaults to None.
+
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(PodiumPagedResponse)
+            Defaults to None.
+
+            failure_callback (function): Callback for failures and errors.
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
+
+            redirect_callback (function): Callback for redirect,
+            Will have the signature:
+                on_redirect(result (dict), data (dict))
+            Defaults to None.
+
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
+
+            start (int): Starting index for presets list. 0 indexed.
+
+            per_page (int): Number per page of results, max of 100.
+
+            endpoint (str): If provided the start, per_page, expand, and quiet
+            params will not be used instead making a request based on the
+            provided endpoint.
+
+        Return:
+            UrlRequest: The request being made.
+
+        """
+        make_presets_get(self.token, *args, **kwargs)
+
+
+    def list_my(self, *args, **kwargs):
+        """
+        Request that returns a PodiumPagedRequest of presets for the logged in user.
+        By default a get request to
+        'https://podium.live/api/v1/user/my/presets' will be made.
+
+        Args:
+            type (str): Type key for the presets you want.
+
+        Kwargs:
+            expand (bool): Expand all objects in response output.
+            Defaults to True
+
+            quiet (object): If not None HTML layout will not render endpoint
+            description. Defaults to None.
+
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(PodiumPagedResponse)
+            Defaults to None.
+
+            failure_callback (function): Callback for failures and errors.
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
+
+            redirect_callback (function): Callback for redirect,
+            Will have the signature:
+                on_redirect(result (dict), data (dict))
+            Defaults to None.
+
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
+
+            start (int): Starting index for presets list. 0 indexed.
+
+            per_page (int): Number per page of results, max of 100.
+
+            endpoint (str): If provided the start, per_page, expand, and quiet
+            params will not be used instead making a request based on the
+            provided endpoint.
+
+        Return:
+            UrlRequest: The request being made.
+        """
+        endpoint = '{}/api/v1/users/me/presets'.format(podium_api.PODIUM_APP.podium_url)
+        make_presets_get(self.token, endpoint=endpoint, *args, **kwargs)
+
+    def get(self, *args, **kwargs):
+        """
+        Request that returns a PodiumPreset for the provided preset_uri.
+
+        Args:
+            preset_uri (str): URI for the preset you want.
+
+        Kwargs:
+            expand (bool): Expand all objects in response output.
+            Defaults to True
+
+            quiet (object): If not None HTML layout will not render endpoint
+            description. Defaults to None.
+
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(PodiumPreset)
+            Defaults to None.
+
+            failure_callback (function): Callback for failures and errors.
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
+
+            redirect_callback (function): Callback for redirect,
+            Will have the signature:
+                on_redirect(result (dict), data (dict))
+            Defaults to None.
+
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
+
+        Return:
+            UrlRequest: The request being made.
+
+        """
+        make_preset_get(self.token, *args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        """
+        Deletes the preset for the provided URI.
+
+        Args:
+            preset_uri (str): URI for the preset you want.
+
+        Kwargs:
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(deleted_uri (str))
+            Defaults to None.
+
+            failure_callback (function): Callback for failures and errors.
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
+
+            redirect_callback (function): Callback for redirect,
+            Will have the signature:
+                on_redirect(result (dict), data (dict))
+            Defaults to None.
+
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
+
+        Return:
+            UrlRequest: The request being made.
+
+        """
+        make_preset_delete(self.token, *args, **kwargs)
+
+    def create(self, *args, **kwargs):
+        """
+        Request that creates a new PodiumPreset.
+
+        The uri for the newly created preset will be provided to the
+        redirect_callback if one is provided in the form of a PodiumRedirect.
+
+        Args:
+            name (str): Name for the preset
+
+            notes (str): Notes for the preset
+
+            preset_data (str): JSON data of the preset
+
+            mapping_type_id (int): The Id representing the mapping type
+
+            private(int): 1 if the preset is private to the creating user
+
+        Kwargs:
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(result (dict), data (dict))
+            Defaults to None.
+
+            failure_callback (function): Callback for failures and errors.
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
+
+            redirect_callback (function): Callback for redirect,
+            Will have the signature:
+                on_redirect(redirect_object (PodiumRedirect))
+            Defaults to None.
+
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
+
+        Return:
+            UrlRequest: The request being made.
+
+        """
+        make_preset_create(self.token, *args, **kwargs)
+
+    def update(self, *args, **kwargs):
+        """
+        Request that updates a PodiumPreset.
+
+        The uri for the newly created preset will be provided to the
+        redirect_callback if one is provided in the form of a PodiumRedirect.
+
+        Args:
+            preset_uri (str): URI for the preset you are updating.
+
+            name (str): Name for the preset
+
+            notes (str): Notes for the preset
+
+            preset_data (str): JSON data of the preset
+
+            mapping_type_id (int): The Id representing the mapping type
+
+            private(int): 1 if the preset is private to the creating user
+
+        Kwargs:
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(result (dict), updated_uri (str))
+            Defaults to None..
+
+            failure_callback (function): Callback for failures and errors.
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
+
+            redirect_callback (function): Callback for redirect,
+            Will have the signature:
+                on_redirect(redirect_object (PodiumRedirect))
+            Defaults to None.
+
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
+
+        Return:
+            UrlRequest: The request being made.
+
+        """
+        make_preset_update(self.token, *args, **kwargs)
+
+
+class PodiumRatingsAPI(object):
+    """
+    Object that handles ratings requests and keeps track of the
+    authentication token necessary to do so. Usually accessed via
+    PodiumAPI object.
+
+    **Attributes:**
+        **token** (PodiumToken): The token for the logged in user.
+
+    """
+
+    def __init__(self, token):
+        self.token = token
+
+
+    def create(self, *args, **kwargs):
+        """
+        Request that creates or updates a PodiumRating.
+
+        The uri for the newly created rating will be provided to the
+        redirect_callback if one is provided in the form of a PodiumRedirect.
+
+        Args:
+            rateable_type (string): type of rateable object. e.g. preset
+
+            rateable_id (int): ID of the object to rate
+
+            rating (float): Rating value
+
+        Kwargs:
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(result (dict), data (dict))
+            Defaults to None.
+
+            failure_callback (function): Callback for failures and errors.
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
+
+            redirect_callback (function): Callback for redirect,
+            Will have the signature:
+                on_redirect(redirect_object (PodiumRedirect))
+            Defaults to None.
+
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
+
+        Return:
+            UrlRequest: The request being made.
+
+        """
+        make_rating_create(self.token, *args, **kwargs)

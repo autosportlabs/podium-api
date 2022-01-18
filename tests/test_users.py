@@ -42,7 +42,7 @@ class TestUserGet(unittest.TestCase):
         self.result = get_user_from_json(self.result_json)
         self.check_results()
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_params(self, mock_request):
         req = make_user_get(self.token,
                              'https://podium.live/api/v1/users/test',
@@ -56,7 +56,7 @@ class TestUserGet(unittest.TestCase):
     def success_cb(self, result):
         self.result = result
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_account(self, mock_request):
         req = make_user_get(self.token,
                              'https://podium.live/api/v1/users/test',
@@ -74,7 +74,7 @@ class TestUserGet(unittest.TestCase):
         self.check_results()
 
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
         req = make_user_get(self.token,
@@ -89,7 +89,7 @@ class TestUserGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
         req = make_user_get(self.token,
@@ -104,7 +104,7 @@ class TestUserGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
         redir_cb = Mock()
         req = make_user_get(self.token,
@@ -119,7 +119,7 @@ class TestUserGet(unittest.TestCase):
                                      'progress_callback': None,
                                      'redirect_callback': redir_cb})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_user_get(self.token,

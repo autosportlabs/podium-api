@@ -10,7 +10,7 @@ try:
     from urllib.parse import urlencode
 except:
     from urllib import urlencode
-    
+
 class TestAccountRequest(unittest.TestCase):
 
     def setUp(self):
@@ -40,7 +40,7 @@ class TestAccountRequest(unittest.TestCase):
     def success_cb(self, result):
         self.result = result
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_params(self, mock_request):
         req = make_account_get(self.token,
                                expand=True,
@@ -49,7 +49,7 @@ class TestAccountRequest(unittest.TestCase):
         self.assertEqual(req.url,
                          "https://podium.live/api/v1/account?expand=True")
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_account(self, mock_request):
         req = make_account_get(self.token,
                                success_callback=self.success_cb)
@@ -66,7 +66,7 @@ class TestAccountRequest(unittest.TestCase):
         self.check_results()
 
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_error_callback(self, mock_request):
         error_cb = Mock()
         req = make_account_get(self.token,
@@ -74,13 +74,13 @@ class TestAccountRequest(unittest.TestCase):
         #simulate calling the requests on_error
         req.on_error()(req, {})
         #assert our lambda called the mock correctly
-        error_cb.assert_called_with('error', {}, 
+        error_cb.assert_called_with('error', {},
                                     {'success_callback': None,
                                      'failure_callback': error_cb,
                                      'progress_callback': None,
                                      'redirect_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
         req = make_account_get(self.token,
@@ -88,13 +88,13 @@ class TestAccountRequest(unittest.TestCase):
         #simulate calling the requests on_failure
         req.on_failure()(req, {})
         #assert our lambda called the mock correctly
-        error_cb.assert_called_with('failure', {}, 
+        error_cb.assert_called_with('failure', {},
                                     {'success_callback': None,
                                      'failure_callback': error_cb,
                                      'progress_callback': None,
                                      'redirect_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_redirect_callback(self, mock_request):
         redir_cb = Mock()
         req = make_account_get(self.token,
@@ -102,13 +102,13 @@ class TestAccountRequest(unittest.TestCase):
         #simulate calling the requests on_redirect
         req.on_redirect()(req, {})
         #assert our lambda called the mock correctly
-        redir_cb.assert_called_with(req, None, 
+        redir_cb.assert_called_with(req, None,
                                     {'success_callback': None,
                                      'redirect_callback': redir_cb,
                                      'progress_callback': None,
                                      'failure_callback': None})
 
-    @patch('podium_api.async.UrlRequest.run')
+    @patch('podium_api.asyncreq.UrlRequest.run')
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
         req = make_account_get(self.token,
@@ -116,7 +116,7 @@ class TestAccountRequest(unittest.TestCase):
         #simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
         #assert our lambda called the mock correctly
-        progress_cb.assert_called_with(0, 10, 
+        progress_cb.assert_called_with(0, 10,
                                        {'success_callback': None,
                                         'failure_callback': None,
                                         'progress_callback': progress_cb,
