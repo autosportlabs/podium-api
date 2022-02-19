@@ -189,6 +189,7 @@ class TestEventCreate(unittest.TestCase):
         req = make_event_create(self.token, 'test',
                                 '2016-06-28T00:00:00Z',
                                 '2016-06-29T00:00:00Z',
+                                private=True,
                                 redirect_callback=self.success_cb)
         self.assertEqual(req._method, 'POST')
         self.assertEqual(req.url, 'https://podium.live/api/v1/events')
@@ -196,7 +197,8 @@ class TestEventCreate(unittest.TestCase):
             req.req_body,
             urlencode({'event[title]': 'test',
                        'event[start_time]': '2016-06-28T00:00:00Z',
-                       'event[end_time]': '2016-06-29T00:00:00Z'}))
+                       'event[end_time]': '2016-06-29T00:00:00Z',
+                       'event[private]': True}))
         self.assertEqual(req.req_headers['Content-Type'],
                          'application/x-www-form-urlencoded')
         self.assertEqual(req.req_headers['Authorization'],
