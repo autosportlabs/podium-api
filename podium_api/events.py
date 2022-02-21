@@ -8,7 +8,7 @@ import podium_api
 
 
 def make_event_update(token, event_uri, title=None, start_time=None,
-                      end_time=None, venue_id=None,
+                      end_time=None, venue_id=None, private=None,
                       success_callback=None, failure_callback=None,
                       progress_callback=None, redirect_callback=None):
     """
@@ -27,6 +27,8 @@ def make_event_update(token, event_uri, title=None, start_time=None,
         start_time (str): Starting time, use ISO 8601 format.
 
         end_time (str): Ending time, use ISO 8601 format.
+        
+        private (bool): True if it is a private event
 
         success_callback (function): Callback for a successful request,
         will have the signature: 
@@ -61,6 +63,8 @@ def make_event_update(token, event_uri, title=None, start_time=None,
         body['event[end_time]'] = end_time
     if venue_id is not None:
         body['event[venue_id]'] = venue_id
+    if private is not None:
+        body['event[private]'] = str(private).lower()
     header = get_json_header_token(token)
     return make_request_custom_success(
         event_uri, event_update_success_handler,
@@ -75,6 +79,7 @@ def make_event_update(token, event_uri, title=None, start_time=None,
 
 
 def make_event_create(token, title, start_time, end_time, venue_id=None,
+                      private=None,
                       success_callback=None, failure_callback=None,
                       progress_callback=None, redirect_callback=None):
     """
@@ -91,6 +96,8 @@ def make_event_create(token, title, start_time, end_time, venue_id=None,
         start_time (str): Starting time, use ISO 8601 format.
 
         end_time (str): Ending time, use ISO 8601 format.
+        
+        private (bool): True if it is a private event
 
     Kwargs:
         venue_id(str): ID for the venue of event.
@@ -124,6 +131,8 @@ def make_event_create(token, title, start_time, end_time, venue_id=None,
             'event[end_time]': end_time}
     if venue_id is not None:
         body['event[venue_id]'] = venue_id
+    if private is not None:
+        body['event[private]'] = str(private).lower()
     header = get_json_header_token(token)
     return make_request_custom_success(
         endpoint, None, method='POST',
