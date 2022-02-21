@@ -64,7 +64,7 @@ def make_event_update(token, event_uri, title=None, start_time=None,
     if venue_id is not None:
         body['event[venue_id]'] = venue_id
     if private is not None:
-        body['event[private]'] = private
+        body['event[private]'] = str(private).lower()
     header = get_json_header_token(token)
     return make_request_custom_success(
         event_uri, event_update_success_handler,
@@ -132,7 +132,7 @@ def make_event_create(token, title, start_time, end_time, venue_id=None,
     if venue_id is not None:
         body['event[venue_id]'] = venue_id
     if private is not None:
-        body['event[private]'] = private
+        body['event[private]'] = str(private).lower()
     header = get_json_header_token(token)
     return make_request_custom_success(
         endpoint, None, method='POST',
