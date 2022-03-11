@@ -41,9 +41,9 @@ mypy: check-env ## Static type checking with mypy
 	python -m mypy . --disallow-untyped-defs --ignore-missing-imports
 
 .PHONY: test
-test: check-env flake8 mypy ## Run fitness functions and automated tests
+test: check-env ## Run fitness functions and automated tests
 	. ${PYENV_VIRTUAL_ENV}/bin/activate
-	# run tests
+	python runtests.py
 
 .PHONY: tidy
 tidy: black isort ## Tidy code
