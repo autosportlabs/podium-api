@@ -218,6 +218,8 @@ def make_eventdevice_update(token, eventdevice_uri, name=None,
     body = {}
     if name is not None:
         body['eventdevice[name]'] = name
+    if comp_number is not None:
+        body['eventdevice[comp_number]'] = comp_number
     header = get_json_header_token(token)
     return make_request_custom_success(
         eventdevice_uri, eventdevice_update_success_handler,

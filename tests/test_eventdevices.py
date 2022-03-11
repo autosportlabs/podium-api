@@ -551,16 +551,18 @@ class TestEventDeviceUpdate(unittest.TestCase):
                                    'test_event/devices/test_device')
 
     @patch('podium_api.asyncreq.UrlRequest.run')
-    def test_event_update(self, mock_request):
+    def test_eventdevice_update(self, mock_request):
         req = make_eventdevice_update(
             self.token,
             'https://podium.live/api/v1/events/test_event/devices/test_device',
             name='new_name',
+            comp_number="1234abc",
             success_callback=self.success_cb
         )
         self.assertEqual(req._method, 'PUT')
         self.assertEqual(req.req_body,
-                         urlencode({'eventdevice[name]': 'new_name'}))
+                         urlencode({'eventdevice[name]': 'new_name','eventdevice[comp_number]': '1234abc'}))
+
         self.assertEqual(req.url,
                          'https://podium.live/api/v1/events/'
                          'test_event/devices/test_device')
