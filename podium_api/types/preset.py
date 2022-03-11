@@ -23,6 +23,7 @@ class PodiumPreset(object):
 
         **created** (str): Date preset was created. ISO 8601 format.
     """
+
     MAPPING_TYPE_ANALOG = "analog"
     MAPPING_TYPE_CAN = "can"
     MAPPING_TYPE_OBDII = "obd2"
@@ -34,7 +35,22 @@ class PodiumPreset(object):
     MAPPING_TYPE_RACECAPTURE_DASH = "rc_dash"
     MAPPING_TYPE_SCRIPTING = "Script"
 
-    def __init__(self, preset_id, uri, name, notes, preset_data, type, private, rating, rating_count, user_uri, preview_image_url, updated, created):
+    def __init__(
+        self,
+        preset_id,
+        uri,
+        name,
+        notes,
+        preset_data,
+        type,
+        private,
+        rating,
+        rating_count,
+        user_uri,
+        preview_image_url,
+        updated,
+        created,
+    ):
         self.preset_id = preset_id
         self.uri = uri
         self.name = name
@@ -49,6 +65,7 @@ class PodiumPreset(object):
         self.updated = updated
         self.created = created
 
+
 def get_preset_from_json(json):
     """
     Returns a PodiumEvent object from the json dict received from podium api.
@@ -59,16 +76,18 @@ def get_preset_from_json(json):
     Return:
         PodiumEvent: The PodiumEvent object for this data.
     """
-    return PodiumPreset(json['id'],
-                        json['URI'],
-                       json.get('name', None),
-                       json.get('notes', None),
-                       json.get('preset_data', None),
-                       json.get('type', None),
-                       json.get('private', None),
-                       json.get('rating', None),
-                       json.get('rating_count', None),
-                       json.get('user_uri', None),
-                       json.get('preview_image_url', None),
-                       json.get('created', None),
-                       json.get('updated', None))
+    return PodiumPreset(
+        json["id"],
+        json["URI"],
+        json.get("name", None),
+        json.get("notes", None),
+        json.get("preset_data", None),
+        json.get("type", None),
+        json.get("private", None),
+        json.get("rating", None),
+        json.get("rating_count", None),
+        json.get("user_uri", None),
+        json.get("preview_image_url", None),
+        json.get("created", None),
+        json.get("updated", None),
+    )

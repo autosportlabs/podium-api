@@ -2,45 +2,54 @@ from typing import Callable
 
 from kivy.logger import Logger
 
+import podium_api
 from podium_api.account import make_account_get
-from podium_api.events import (
-    make_events_get, make_event_create, make_event_get, make_event_delete,
-    make_event_update
-    )
-from podium_api.devices import (
-    make_device_get, make_device_create, make_device_update,
-    make_device_delete, make_devices_get
-    )
-from podium_api.friendships import (
-    make_friendship_get, make_friendships_get, make_friendship_create,
-    make_friendship_delete
-    )
-from podium_api.users import make_user_get
-from podium_api.eventdevices import (
-    make_eventdevices_get, make_eventdevice_create, make_eventdevice_update,
-    make_eventdevice_get, make_eventdevice_delete
-)
 from podium_api.alertmessages import (
-    make_alertmessages_get, make_alertmessage_get, make_alertmessage_create
-    )
-
+    make_alertmessage_create,
+    make_alertmessage_get,
+    make_alertmessages_get,
+)
+from podium_api.devices import (
+    make_device_create,
+    make_device_delete,
+    make_device_get,
+    make_device_update,
+    make_devices_get,
+)
+from podium_api.eventdevices import (
+    make_eventdevice_create,
+    make_eventdevice_delete,
+    make_eventdevice_get,
+    make_eventdevice_update,
+    make_eventdevices_get,
+)
+from podium_api.events import (
+    make_event_create,
+    make_event_delete,
+    make_event_get,
+    make_event_update,
+    make_events_get,
+)
+from podium_api.friendships import (
+    make_friendship_create,
+    make_friendship_delete,
+    make_friendship_get,
+    make_friendships_get,
+)
+from podium_api.laps import make_lap_get, make_laps_get
 from podium_api.presets import (
-    make_presets_get, make_preset_create, make_preset_get, make_preset_delete,
-    make_preset_update
-    )
-
-from podium_api.ratings import (
-    make_rating_create
-    )
-
-from podium_api.venues import (
-    make_venues_get, make_venue_get
-    )
-from podium_api.laps import make_laps_get, make_lap_get
+    make_preset_create,
+    make_preset_delete,
+    make_preset_get,
+    make_preset_update,
+    make_presets_get,
+)
+from podium_api.ratings import make_rating_create
 from podium_api.types.account import PodiumAccount
 from podium_api.types.user import PodiumUser
+from podium_api.users import make_user_get
+from podium_api.venues import make_venue_get, make_venues_get
 
-import podium_api
 
 class PodiumAPI(object):
     """
@@ -94,10 +103,16 @@ class PodiumAPI(object):
         self.podium_account = None
         self.podium_user = None
 
-    def init_connection(self, success_callback: Callable[[PodiumAccount, PodiumUser], None], failure_callback: Callable[[str,str,str], None]) -> None:
+    def init_connection(
+        self,
+        success_callback: Callable[[PodiumAccount, PodiumUser], None],
+        failure_callback: Callable[[str, str, str], None],
+    ) -> None:
         self._load_account(success_callback, failure_callback)
 
-    def _load_account(self, success_callback : Callable[[PodiumAccount], None], failure_callback: Callable[[str,str,str], None]) -> None:
+    def _load_account(
+        self, success_callback: Callable[[PodiumAccount], None], failure_callback: Callable[[str, str, str], None]
+    ) -> None:
         def success(account: PodiumAccount):
             Logger.info("PodiumAPI: Loaded Account %s", account.username)
             self.podium_account = account
@@ -107,10 +122,14 @@ class PodiumAPI(object):
             Logger.error("PodiumAPI: Failed to load account: %s: %s", error_type, results)
             failure_callback(error_type, results, data)
 
-        self.account.get(success_callback=success,
-                         failure_callback=failure)
+        self.account.get(success_callback=success, failure_callback=failure)
 
-    def _load_user(self, account: PodiumAccount, success_callback: Callable[[PodiumAccount, PodiumUser], None], failure_callback: Callable[[str, str, str],None]) ->None:
+    def _load_user(
+        self,
+        account: PodiumAccount,
+        success_callback: Callable[[PodiumAccount, PodiumUser], None],
+        failure_callback: Callable[[str, str, str], None],
+    ) -> None:
         def success(user):
             Logger.info("PodiumAPI: Loaded User %s", user.username)
             self.podium_user = user
@@ -122,6 +141,7 @@ class PodiumAPI(object):
 
         self.users.get(account.user_uri, success_callback=success, failure_callback=failure)
 
+
 class PodiumLapsAPI(object):
     """
     Object that handles lap requests and keeps track of the
@@ -132,6 +152,7 @@ class PodiumLapsAPI(object):
         **token** (PodiumToken): The token for the logged in user.
 
     """
+
     def __init__(self, token):
         self.token = token
 
@@ -181,43 +202,43 @@ class PodiumLapsAPI(object):
 
     def get(self, *args, **kwargs):
         """
-       Request that returns a PodiumLap that represents a specific
-       lap found at the URI.
+        Request that returns a PodiumLap that represents a specific
+        lap found at the URI.
 
-       Args:
-           endpoint (str): The URI for the lap.
+        Args:
+            endpoint (str): The URI for the lap.
 
-       Kwargs:
-           expand (bool): Expand all objects in response output.
-           Defaults to True
+        Kwargs:
+            expand (bool): Expand all objects in response output.
+            Defaults to True
 
-           quiet (object): If not None HTML layout will not render endpoint
-           description. Defaults to None.
+            quiet (object): If not None HTML layout will not render endpoint
+            description. Defaults to None.
 
-           success_callback (function): Callback for a successful request,
-           will have the signature:
-               on_success(PodiumLap)
-           Defaults to None.
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(PodiumLap)
+            Defaults to None.
 
-           failure_callback (function): Callback for failures and errors.
-           Will have the signature:
-               on_failure(failure_type (string), result (dict), data (dict))
-           Values for failure type are: 'error', 'failure'. Defaults to None.
+            failure_callback (function): Callback for failures and errors.
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
 
-           redirect_callback (function): Callback for redirect,
-           Will have the signature:
-               on_redirect(result (dict), data (dict))
-           Defaults to None.
+            redirect_callback (function): Callback for redirect,
+            Will have the signature:
+                on_redirect(result (dict), data (dict))
+            Defaults to None.
 
-           progress_callback (function): Callback for progress updates,
-           will have the signature:
-               on_progress(current_size (int), total_size (int), data (dict))
-           Defaults to None.
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
 
-       Return:
-           UrlRequest: The request being made.
+        Return:
+            UrlRequest: The request being made.
 
-       """
+        """
         make_lap_get(self.token, *args, **kwargs)
 
 
@@ -231,6 +252,7 @@ class PodiumEventDevicesAPI(object):
         **token** (PodiumToken): The token for the logged in user.
 
     """
+
     def __init__(self, token):
         self.token = token
 
@@ -726,6 +748,7 @@ class PodiumDevicesAPI(object):
         **token** (PodiumToken): The token for the logged in user.
 
     """
+
     def __init__(self, token):
         self.token = token
 
@@ -878,49 +901,49 @@ class PodiumDevicesAPI(object):
 
     def list(self, *args, **kwargs):
         """
-            Request that returns a PodiumPagedRequest of PodiumDevice.
+        Request that returns a PodiumPagedRequest of PodiumDevice.
 
-            Args:
-                endpoint (str): the endpoint to make the request to.
+        Args:
+            endpoint (str): the endpoint to make the request to.
 
-            Kwargs:
-                expand (bool): Expand all objects in response output.
-                Defaults to True
+        Kwargs:
+            expand (bool): Expand all objects in response output.
+            Defaults to True
 
-                quiet (object): If not None HTML layout will not render endpoint
-                description. Defaults to None.
+            quiet (object): If not None HTML layout will not render endpoint
+            description. Defaults to None.
 
-                success_callback (function): Callback for a successful request,
-                will have the signature:
-                    on_success(PodiumPagedResponse)
-                Defaults to None.
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(PodiumPagedResponse)
+            Defaults to None.
 
-                failure_callback (function): Callback for failures and errors.
-                Will have the signature:
-                    on_failure(failure_type (string), result (dict),
-                               data (dict))
-                Values for failure type are: 'error', 'failure'.
-                Defaults to None.
+            failure_callback (function): Callback for failures and errors.
+            Will have the signature:
+                on_failure(failure_type (string), result (dict),
+                           data (dict))
+            Values for failure type are: 'error', 'failure'.
+            Defaults to None.
 
-                redirect_callback (function): Callback for redirect,
-                Will have the signature:
-                    on_redirect(result (dict), data (dict))
-                Defaults to None.
+            redirect_callback (function): Callback for redirect,
+            Will have the signature:
+                on_redirect(result (dict), data (dict))
+            Defaults to None.
 
-                progress_callback (function): Callback for progress updates,
-                will have the signature:
-                    on_progress(current_size (int), total_size (int),
-                                data (dict))
-                Defaults to None.
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int),
+                            data (dict))
+            Defaults to None.
 
-                start (int): Starting index for events list. 0 indexed.
+            start (int): Starting index for events list. 0 indexed.
 
-                per_page (int): Number per page of results, max of 100.
+            per_page (int): Number per page of results, max of 100.
 
-            Return:
-                UrlRequest: The request being made.
+        Return:
+            UrlRequest: The request being made.
 
-            """
+        """
         make_devices_get(self.token, *args, **kwargs)
 
 
@@ -1147,6 +1170,7 @@ class PodiumEventsAPI(object):
         """
         make_event_update(self.token, *args, **kwargs)
 
+
 class PodiumAlertMessagesAPI(object):
     """
     Object that handles event requests and keeps track of the
@@ -1290,6 +1314,7 @@ class PodiumAlertMessagesAPI(object):
         """
         make_alertmessage_create(self.token, *args, **kwargs)
 
+
 class PodiumVenuesAPI(object):
     """
     Object that handles event requests and keeps track of the
@@ -1391,6 +1416,7 @@ class PodiumVenuesAPI(object):
         """
         make_venue_get(self.token, *args, **kwargs)
 
+
 class PodiumPresetsAPI(object):
     """
     Object that handles preset requests and keeps track of the
@@ -1455,7 +1481,6 @@ class PodiumPresetsAPI(object):
         """
         make_presets_get(self.token, *args, **kwargs)
 
-
     def list_my(self, *args, **kwargs):
         """
         Request that returns a PodiumPagedRequest of presets for the logged in user.
@@ -1503,7 +1528,7 @@ class PodiumPresetsAPI(object):
         Return:
             UrlRequest: The request being made.
         """
-        endpoint = '{}/api/v1/users/me/presets'.format(podium_api.PODIUM_APP.podium_url)
+        endpoint = "{}/api/v1/users/me/presets".format(podium_api.PODIUM_APP.podium_url)
         make_presets_get(self.token, endpoint=endpoint, *args, **kwargs)
 
     def get(self, *args, **kwargs):
@@ -1686,7 +1711,6 @@ class PodiumRatingsAPI(object):
 
     def __init__(self, token):
         self.token = token
-
 
     def create(self, *args, **kwargs):
         """

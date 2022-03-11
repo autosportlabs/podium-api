@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+
 class PodiumToken(object):
     """
     A PodiumToken holds the OAuth2 Token for a logged in user.
@@ -18,6 +19,7 @@ class PodiumToken(object):
         self.token_type = token_type
         self.created = created
 
+
 def get_token_from_json(json):
     """
     Returns a PodiumToken object from the json dict received from podium api.
@@ -28,5 +30,4 @@ def get_token_from_json(json):
     Return:
         PodiumToken: The PodiumToken object for the data.
     """
-    return PodiumToken(json['access_token'], json['token_type'],
-                       json['created_at'])
+    return PodiumToken(json["access_token"], json["token_type"], json["created_at"])

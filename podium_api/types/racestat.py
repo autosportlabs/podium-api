@@ -22,33 +22,50 @@ class Racestat(object):
         **position_in_class** (int): Position in class
 
         **comp_number_ahead** (str): competitor number of competitor ahead
-        
+
         **comp_number_behind** (str): competitor number of competitor behind
-        
+
         **gap_to_ahead** (float): time gap to competitor ahead
-        
+
         **gap_to_behind** (float): time gap to competitor behind
-        
+
         **laps_to_ahead** (int): laps to competitor ahead
-        
+
         **laps_to_behind** (int): laps to competitor behind
-        
+
         **fc_flag** (int): full course flag status
-        
+
         **comp_flag** (int): competitor flag status
-        
+
         **eventdevice_uri:** (str): URI of the eventdevice this racestat belongs to
-        
+
         **device_uri:** (str): URI of the device this racestat belongs to
-        
-        **user_uri** (str): URI of the user this racestat belongs to        
+
+        **user_uri** (str): URI of the user this racestat belongs to
     """
 
-    def __init__(self, racestat_id, uri, comp_number, comp_class, total_laps, last_lap_time,
-                 position_overall, position_in_class, comp_number_ahead, comp_number_behind,
-                 gap_to_ahead, gap_to_behind, laps_to_ahead, laps_to_behind,
-                 fc_flag, comp_flag,
-                 eventdevice_uri, device_uri, user_uri):
+    def __init__(
+        self,
+        racestat_id,
+        uri,
+        comp_number,
+        comp_class,
+        total_laps,
+        last_lap_time,
+        position_overall,
+        position_in_class,
+        comp_number_ahead,
+        comp_number_behind,
+        gap_to_ahead,
+        gap_to_behind,
+        laps_to_ahead,
+        laps_to_behind,
+        fc_flag,
+        comp_flag,
+        eventdevice_uri,
+        device_uri,
+        user_uri,
+    ):
         self.racestat_id = racestat_id
         self.uri = uri
         self.comp_number = comp_number
@@ -80,11 +97,24 @@ def get_racestat_from_json(json):
     Return:
         Racestat: The Racestat object for the data.
     """
-    return Racestat(json['id'], json['URI'], json['comp_number'], json['comp_class'],
-                         json['total_laps'], json['last_lap_time'],
-                         json['position_overall'], json['position_in_class'],
-                         json['comp_number_ahead'], json['comp_number_behind'],
-                         json['gap_to_ahead'], json['gap_to_behind'],
-                         json['laps_to_ahead'], json['laps_to_behind'],
-                         json['fc_flag'], json['comp_flag'],
-                         json['eventdevice_uri'], json['device_uri'], json['user_uri'])
+    return Racestat(
+        json["id"],
+        json["URI"],
+        json["comp_number"],
+        json["comp_class"],
+        json["total_laps"],
+        json["last_lap_time"],
+        json["position_overall"],
+        json["position_in_class"],
+        json["comp_number_ahead"],
+        json["comp_number_behind"],
+        json["gap_to_ahead"],
+        json["gap_to_behind"],
+        json["laps_to_ahead"],
+        json["laps_to_behind"],
+        json["fc_flag"],
+        json["comp_flag"],
+        json["eventdevice_uri"],
+        json["device_uri"],
+        json["user_uri"],
+    )

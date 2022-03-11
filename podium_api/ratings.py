@@ -1,15 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from podium_api.asyncreq import make_request_custom_success, get_json_header_token
+import podium_api
+from podium_api.asyncreq import get_json_header_token, make_request_custom_success
 from podium_api.types.paged_response import get_paged_response_from_json
 from podium_api.types.rating import get_rating_from_json
 from podium_api.types.redirect import get_redirect_from_json
-import podium_api
 
 
-def make_rating_create(token, rateable_type, rateable_id, rating,
-                      report=None, success_callback=None, failure_callback=None,
-                      progress_callback=None, redirect_callback=None):
+def make_rating_create(
+    token,
+    rateable_type,
+    rateable_id,
+    rating,
+    report=None,
+    success_callback=None,
+    failure_callback=None,
+    progress_callback=None,
+    redirect_callback=None,
+):
     """
     Request that creates or updates a rating for a rateable object.
 
@@ -52,21 +60,25 @@ def make_rating_create(token, rateable_type, rateable_id, rating,
         UrlRequest: The request being made.
 
     """
-    endpoint = '{}/api/v1/{}/{}/ratings'.format(podium_api.PODIUM_APP.podium_url, rateable_type.lower(), rateable_id)
+    endpoint = "{}/api/v1/{}/{}/ratings".format(podium_api.PODIUM_APP.podium_url, rateable_type.lower(), rateable_id)
 
-    body = {'rating[rating]': rating}
+    body = {"rating[rating]": rating}
     if report is not None:
         body["rating[report]"] = report
     header = get_json_header_token(token)
     return make_request_custom_success(
-        endpoint, None, method='POST',
+        endpoint,
+        None,
+        method="POST",
         success_callback=success_callback,
         redirect_callback=create_rating_redirect_handler,
         failure_callback=failure_callback,
         progress_callback=progress_callback,
-        body=body, header=header,
-        data={'_redirect_callback': redirect_callback}
-        )
+        body=body,
+        header=header,
+        data={"_redirect_callback": redirect_callback},
+    )
+
 
 def create_rating_redirect_handler(req, results, data):
     """
@@ -91,5 +103,5 @@ def create_rating_redirect_handler(req, results, data):
         None, this function instead calls a callback.
 
     """
-    if data['_redirect_callback'] is not None:
-        data['_redirect_callback'](get_redirect_from_json(results, 'rating'))
+    if data["_redirect_callback"] is not None:
+        data["_redirect_callback"](get_redirect_from_json(results, "rating"))

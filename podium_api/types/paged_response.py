@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from podium_api.types.event import get_event_from_json
-from podium_api.types.friendship import get_friendship_from_json
-from podium_api.types.user import get_user_from_json
-from podium_api.types.eventdevice import get_eventdevice_from_json
-from podium_api.types.device import get_device_from_json
-from podium_api.types.lap import get_lap_from_json
-from podium_api.types.venue import get_venue_from_json
 from podium_api.types.alertmessage import get_alertmessage_from_json
+from podium_api.types.device import get_device_from_json
+from podium_api.types.event import get_event_from_json
+from podium_api.types.eventdevice import get_eventdevice_from_json
+from podium_api.types.friendship import get_friendship_from_json
+from podium_api.types.lap import get_lap_from_json
 from podium_api.types.preset import get_preset_from_json
+from podium_api.types.user import get_user_from_json
+from podium_api.types.venue import get_venue_from_json
+
 
 class PodiumPagedResponse(object):
     """
@@ -43,15 +44,15 @@ class PodiumPagedResponse(object):
 
 
 PAYLOAD_NAME_TO_OBJECT = {
-    'events': get_event_from_json,
-    'friendships': get_friendship_from_json,
-    'users': get_user_from_json,
-    'eventdevices': get_eventdevice_from_json,
-    'devices': get_device_from_json,
-    'laps': get_lap_from_json,
-    'venues': get_venue_from_json,
-    'alertmessages': get_alertmessage_from_json,
-    'presets': get_preset_from_json,
+    "events": get_event_from_json,
+    "friendships": get_friendship_from_json,
+    "users": get_user_from_json,
+    "eventdevices": get_eventdevice_from_json,
+    "devices": get_device_from_json,
+    "laps": get_lap_from_json,
+    "venues": get_venue_from_json,
+    "alertmessages": get_alertmessage_from_json,
+    "presets": get_preset_from_json,
 }
 
 
@@ -72,6 +73,6 @@ def get_paged_response_from_json(json, payload_name):
     """
     conversion_func = PAYLOAD_NAME_TO_OBJECT[payload_name]
     data = [conversion_func(x) for x in json[payload_name]]
-    return PodiumPagedResponse(data, json['total'], json.get('nextURI', None),
-                               json.get('prevURI', None),
-                               payload_name=payload_name)
+    return PodiumPagedResponse(
+        data, json["total"], json.get("nextURI", None), json.get("prevURI", None), payload_name=payload_name
+    )

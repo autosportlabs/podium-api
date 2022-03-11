@@ -27,11 +27,23 @@ class PodiumEventDevice(object):
 
     """
 
-    def __init__(self, eventdevice_id, uri, channels, name, comp_number,
-                 device_uri,
-                 laps_uri, user_uri, event_uri, avatar_url,
-                 user_avatar_url, event_title,
-                 device_id, event_id):
+    def __init__(
+        self,
+        eventdevice_id,
+        uri,
+        channels,
+        name,
+        comp_number,
+        device_uri,
+        laps_uri,
+        user_uri,
+        event_uri,
+        avatar_url,
+        user_avatar_url,
+        event_title,
+        device_id,
+        event_id,
+    ):
         self.eventdevice_id = eventdevice_id
         self.uri = uri
         self.channels = channels
@@ -59,16 +71,19 @@ def get_eventdevice_from_json(json):
     Return:
         PodiumEvent: The PodiumEvent object for this data.
     """
-    return PodiumEventDevice(json['id'], json['URI'],
-                             json.get('channels', []),
-                             json.get('name', None),
-                             json.get('comp_number', None),
-                             json.get('device_uri', None),
-                             json.get('laps_uri', None),
-                             json.get('user_uri', None),
-                             json.get('event_uri', None),
-                             json.get('avatar_url', None),
-                             json.get('user_avatar_url', None),
-                             json.get('event_title', None),
-                             json.get('device_id', None),
-                             json.get('event_id', None))
+    return PodiumEventDevice(
+        json["id"],
+        json["URI"],
+        json.get("channels", []),
+        json.get("name", None),
+        json.get("comp_number", None),
+        json.get("device_uri", None),
+        json.get("laps_uri", None),
+        json.get("user_uri", None),
+        json.get("event_uri", None),
+        json.get("avatar_url", None),
+        json.get("user_avatar_url", None),
+        json.get("event_title", None),
+        json.get("device_id", None),
+        json.get("event_id", None),
+    )

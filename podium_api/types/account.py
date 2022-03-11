@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+
 class PodiumAccount(object):
     """
     Object that represents a particular User.
@@ -25,8 +26,7 @@ class PodiumAccount(object):
         **exports_uri** (str): URI to account's telemetry exports
     """
 
-    def __init__(self, account_id, username, email, devices_uri, exports_uri,
-                 streams_uri, user_uri, events_uri):
+    def __init__(self, account_id, username, email, devices_uri, exports_uri, streams_uri, user_uri, events_uri):
         self.account_id = account_id
         self.username = username
         self.email = email
@@ -47,7 +47,13 @@ def get_account_from_json(json):
     Return:
         PodiumUser: The PodiumAccount object for the data.
     """
-    return PodiumAccount(json['id'], json['username'],
-                         json['email'], json['devices_uri'],
-                         json['exports_uri'], json['streams_uri'],
-                         json['user_uri'], json['events_uri'])
+    return PodiumAccount(
+        json["id"],
+        json["username"],
+        json["email"],
+        json["devices_uri"],
+        json["exports_uri"],
+        json["streams_uri"],
+        json["user_uri"],
+        json["events_uri"],
+    )

@@ -17,8 +17,8 @@ class PodiumFriendship(object):
         **friend_uri** (str): URI to user being followed.
 
     """
-    def __init__(self, friendship_id, user_id, user_uri, friend_id,
-                 friend_uri):
+
+    def __init__(self, friendship_id, user_id, user_uri, friend_id, friend_uri):
         self.friendship_id = friendship_id
         self.user_id = user_id
         self.user_uri = user_uri
@@ -38,6 +38,4 @@ def get_friendship_from_json(json):
         PodiumFriendship: The PodiumFriendship object for the data.
 
     """
-    return PodiumFriendship(json['id'], json['user_id'],
-                            json['user_uri'], json['friend_id'],
-                            json['friend_uri'])
+    return PodiumFriendship(json["id"], json["user_id"], json["user_uri"], json["friend_id"], json["friend_uri"])

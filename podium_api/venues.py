@@ -1,15 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from podium_api.asyncreq import make_request_custom_success, get_json_header_token
+from podium_api.asyncreq import get_json_header_token, make_request_custom_success
 from podium_api.types.paged_response import get_paged_response_from_json
 from podium_api.types.venue import get_venue_from_json
 
 
-def make_venue_get(token, endpoint,
-                 expand=False,
-                 quiet=None, success_callback=None,
-                 redirect_callback=None,
-                 failure_callback=None, progress_callback=None):
+def make_venue_get(
+    token,
+    endpoint,
+    expand=False,
+    quiet=None,
+    success_callback=None,
+    redirect_callback=None,
+    failure_callback=None,
+    progress_callback=None,
+):
 
     """
     Request that returns a PodiumVenue that represents a specific
@@ -52,25 +57,35 @@ def make_venue_get(token, endpoint,
     """
     params = {}
     if expand is not None:
-        params['expand'] = expand
+        params["expand"] = expand
     if quiet is not None:
-        params['quiet'] = quiet
+        params["quiet"] = quiet
     header = get_json_header_token(token)
-    return make_request_custom_success(endpoint, venue_success_handler,
-                                       method="GET",
-                                       success_callback=success_callback,
-                                       failure_callback=failure_callback,
-                                       progress_callback=progress_callback,
-                                       redirect_callback=redirect_callback,
-                                       params=params, header=header)
+    return make_request_custom_success(
+        endpoint,
+        venue_success_handler,
+        method="GET",
+        success_callback=success_callback,
+        failure_callback=failure_callback,
+        progress_callback=progress_callback,
+        redirect_callback=redirect_callback,
+        params=params,
+        header=header,
+    )
 
 
-def make_venues_get(token, endpoint,
-                  start=None, per_page=None,
-                  expand=False,
-                  quiet=None, success_callback=None,
-                  redirect_callback=None,
-                  failure_callback=None, progress_callback=None):
+def make_venues_get(
+    token,
+    endpoint,
+    start=None,
+    per_page=None,
+    expand=False,
+    quiet=None,
+    success_callback=None,
+    redirect_callback=None,
+    failure_callback=None,
+    progress_callback=None,
+):
     """
     Request that returns a PodiumPagedRequest of venues.
 
@@ -115,23 +130,27 @@ def make_venues_get(token, endpoint,
     """
     params = {}
     if expand is not None:
-        params['expand'] = expand
+        params["expand"] = expand
     if quiet is not None:
-        params['quiet'] = quiet
+        params["quiet"] = quiet
     if start is not None:
-        params['start'] = start
+        params["start"] = start
     if per_page is not None:
         per_page = min(per_page, 100)
-        params['per_page'] = per_page
+        params["per_page"] = per_page
 
     header = get_json_header_token(token)
-    return make_request_custom_success(endpoint, venues_success_handler,
-                                       method="GET",
-                                       success_callback=success_callback,
-                                       failure_callback=failure_callback,
-                                       progress_callback=progress_callback,
-                                       redirect_callback=redirect_callback,
-                                       params=params, header=header)
+    return make_request_custom_success(
+        endpoint,
+        venues_success_handler,
+        method="GET",
+        success_callback=success_callback,
+        failure_callback=failure_callback,
+        progress_callback=progress_callback,
+        redirect_callback=redirect_callback,
+        params=params,
+        header=header,
+    )
 
 
 def venues_success_handler(req, results, data):
@@ -154,8 +173,8 @@ def venues_success_handler(req, results, data):
         None, this function instead calls a callback.
 
     """
-    if data['success_callback'] is not None:
-        data['success_callback'](get_paged_response_from_json(results, "venues"))
+    if data["success_callback"] is not None:
+        data["success_callback"](get_paged_response_from_json(results, "venues"))
 
 
 def venue_success_handler(req, results, data):
@@ -176,7 +195,5 @@ def venue_success_handler(req, results, data):
         None, this function instead calls a callback.
 
     """
-    if data['success_callback'] is not None:
-        data['success_callback'](get_venue_from_json(results['venue'])
-            )
-
+    if data["success_callback"] is not None:
+        data["success_callback"](get_venue_from_json(results["venue"]))

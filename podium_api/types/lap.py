@@ -19,8 +19,7 @@ class PodiumLap(object):
 
     """
 
-    def __init__(self, uri, raw_data_uri, lap_number, end_time,
-                 aggregates, lap_time):
+    def __init__(self, uri, raw_data_uri, lap_number, end_time, aggregates, lap_time):
         self.uri = uri
         self.raw_data_uri = raw_data_uri
         self.lap_number = lap_number
@@ -39,6 +38,11 @@ def get_lap_from_json(json):
     Return:
         PodiumEvent: The PodiumEvent object for this data.
     """
-    return PodiumLap(json["URI"], json["raw_data_uri"], json['lap_number'],
-                     json['end_time'], json.get('aggregates', None),
-                     json['lap_time'])
+    return PodiumLap(
+        json["URI"],
+        json["raw_data_uri"],
+        json["lap_number"],
+        json["end_time"],
+        json.get("aggregates", None),
+        json["lap_time"],
+    )

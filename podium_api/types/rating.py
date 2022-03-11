@@ -27,6 +27,7 @@ class PodiumRating(object):
     def __init__(self, user_id, rating):
         self.rating = rating
 
+
 def get_rating_from_json(json):
     """
     Returns a PodiumEvent object from the json dict received from podium api.
@@ -37,4 +38,4 @@ def get_rating_from_json(json):
     Return:
         PodiumEvent: The PodiumEvent object for this data.
     """
-    return PodiumRating(json['rating'])
+    return PodiumRating(json["rating"])

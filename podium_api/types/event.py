@@ -9,7 +9,7 @@ class PodiumEvent(object):
 
         **uri** (str): Endpoint for accessing full event information.
 
-        **devices_uri** (str): Endpoint for accessing devices that 
+        **devices_uri** (str): Endpoint for accessing devices that
         attended the event.
 
         **title** (str): Title of Event
@@ -21,14 +21,26 @@ class PodiumEvent(object):
         **venue_uri** (str): Endpoint for accessing venue information.
 
         **private** (bool): Is the event only viewable to creator?
-        
+
         **user_uri** (str): Endpoint for accessing user information
-        
+
         **user_avatar_url** (str): URL for user avatar
     """
 
-    def __init__(self, event_id, uri, devices_uri, title, start_time,
-                 end_time, venue_uri, venue_id, private, user_uri, user_avatar_url):
+    def __init__(
+        self,
+        event_id,
+        uri,
+        devices_uri,
+        title,
+        start_time,
+        end_time,
+        venue_uri,
+        venue_id,
+        private,
+        user_uri,
+        user_avatar_url,
+    ):
         self.event_id = event_id
         self.uri = uri
         self.devices_uri = devices_uri
@@ -52,9 +64,16 @@ def get_event_from_json(json):
     Return:
         PodiumEvent: The PodiumEvent object for this data.
     """
-    return PodiumEvent(json['id'], json['URI'], json.get('devices_uri', None),
-                       json.get('title', None), json.get('start_time', None),
-                       json.get('end_time', None),
-                       json.get('venue_uri', None), json.get('venue_id', None),
-                       json.get('private', None),
-                       json.get('user_uri', None), json.get('user_avatar_url', None))
+    return PodiumEvent(
+        json["id"],
+        json["URI"],
+        json.get("devices_uri", None),
+        json.get("title", None),
+        json.get("start_time", None),
+        json.get("end_time", None),
+        json.get("venue_uri", None),
+        json.get("venue_id", None),
+        json.get("private", None),
+        json.get("user_uri", None),
+        json.get("user_avatar_url", None),
+    )

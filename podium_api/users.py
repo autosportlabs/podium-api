@@ -1,13 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from podium_api.asyncreq import make_request_custom_success, get_json_header_token
+from podium_api.asyncreq import get_json_header_token, make_request_custom_success
 from podium_api.types.user import get_user_from_json
 
 
-def make_user_get(token, endpoint,
-                   expand=False, quiet=None, success_callback=None,
-                   failure_callback=None, progress_callback=None,
-                   redirect_callback=None):
+def make_user_get(
+    token,
+    endpoint,
+    expand=False,
+    quiet=None,
+    success_callback=None,
+    failure_callback=None,
+    progress_callback=None,
+    redirect_callback=None,
+):
     """
     Returns a PodiumUser object found at the uri provided in the endpoint
     arg.
@@ -46,17 +52,21 @@ def make_user_get(token, endpoint,
     """
     params = {}
     if expand is not None:
-        params['expand'] = expand
+        params["expand"] = expand
     if quiet is not None:
-        params['quiet'] = quiet
+        params["quiet"] = quiet
     header = get_json_header_token(token)
-    return make_request_custom_success(endpoint, users_success_handler,
-                                       method="GET",
-                                       success_callback=success_callback,
-                                       failure_callback=failure_callback,
-                                       progress_callback=progress_callback,
-                                       redirect_callback=redirect_callback,
-                                       params=params, header=header)
+    return make_request_custom_success(
+        endpoint,
+        users_success_handler,
+        method="GET",
+        success_callback=success_callback,
+        failure_callback=failure_callback,
+        progress_callback=progress_callback,
+        redirect_callback=redirect_callback,
+        params=params,
+        header=header,
+    )
 
 
 def users_success_handler(req, results, data):
@@ -71,12 +81,12 @@ def users_success_handler(req, results, data):
         results (dict): Dict returned by the request.
 
         data (dict): Wildcard dict for containing data that needs to be passed
-        to the various callbacks of a request. Will contain at least a 
+        to the various callbacks of a request. Will contain at least a
         'success_callback' key.
 
     Return:
         None, this function instead calls a callback.
 
     """
-    if data['success_callback'] is not None:
-        data['success_callback'](get_user_from_json(results['user']))
+    if data["success_callback"] is not None:
+        data["success_callback"](get_user_from_json(results["user"]))

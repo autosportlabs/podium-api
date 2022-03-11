@@ -9,6 +9,7 @@ class PodiumRedirect(object):
 
         **type** (str): Type of object. Can be 'event', 'device', 'eventdevice'
     """
+
     def __init__(self, location, object_type):
         self.location = location
         self.object_type = object_type
@@ -30,7 +31,7 @@ def get_redirect_from_json(json, object_type):
     # between development and production Location may be lower case location.
     # So, account for both
     try:
-        location = json['location']
+        location = json["location"]
     except KeyError:
-        location = json['Location']
+        location = json["Location"]
     return PodiumRedirect(location, object_type)
