@@ -174,7 +174,7 @@ def make_livestreams_get(token,
                                        params=params, header=header)
 
 
-def make_eventdevice_update(token, eventdevice_uri, name=None,
+def make_eventdevice_update(token, eventdevice_uri, device_id=None, name=None,
                             comp_number=None,
                             success_callback=None, failure_callback=None,
                             progress_callback=None, redirect_callback=None):
@@ -187,6 +187,7 @@ def make_eventdevice_update(token, eventdevice_uri, name=None,
         eventdevice_uri (str): URI for the eventdevice you are updating.
 
     Kwargs:
+        device_id (int): Id of device to update
         name (str): Name of the device for this particular event, allows for
         car number/name to change between events. If blank/missing, will
         default to device name.
@@ -216,6 +217,8 @@ def make_eventdevice_update(token, eventdevice_uri, name=None,
 
     """
     body = {}
+    if device_id is not None:
+        body['eventdevice[device_id]'] = device_id
     if name is not None:
         body['eventdevice[name]'] = name
     if comp_number is not None:

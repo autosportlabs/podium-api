@@ -310,7 +310,7 @@ class TestEventDeviceDelete(unittest.TestCase):
         self.result = result
 
     @patch('podium_api.asyncreq.UrlRequest.run')
-    def test_event_delete(self, mock_request):
+    def test_eventdevice_delete(self, mock_request):
         req = make_eventdevice_delete(
             self.token,
             'https://podium.live/api/v1/events/test_event/devices/test_device',
@@ -555,13 +555,14 @@ class TestEventDeviceUpdate(unittest.TestCase):
         req = make_eventdevice_update(
             self.token,
             'https://podium.live/api/v1/events/test_event/devices/test_device',
+            device_id=123456,
             name='new_name',
             comp_number="1234abc",
             success_callback=self.success_cb
         )
         self.assertEqual(req._method, 'PUT')
         self.assertEqual(req.req_body,
-                         urlencode({'eventdevice[name]': 'new_name','eventdevice[comp_number]': '1234abc'}))
+                         urlencode({'eventdevice[device_id]': 123456, 'eventdevice[name]': 'new_name','eventdevice[comp_number]': '1234abc'}))
 
         self.assertEqual(req.url,
                          'https://podium.live/api/v1/events/'
