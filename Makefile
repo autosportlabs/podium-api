@@ -45,5 +45,12 @@ test: check-env ## Run fitness functions and automated tests
 	. ${PYENV_VIRTUAL_ENV}/bin/activate
 	python runtests.py
 
+.PHONY: dist
+dist: check-env test ## Deploy to pip repository via twine
+	. ${PYENV_VIRTUAL_ENV}/bin/activate
+	rm dist/*
+	python setup.py sdist
+	twine upload dist/*
+	
 .PHONY: tidy
 tidy: black isort ## Tidy code

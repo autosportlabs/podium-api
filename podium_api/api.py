@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Any, Callable
 
 from kivy.logger import Logger
 
@@ -141,6 +141,16 @@ class PodiumAPI(object):
 
         self.users.get(account.user_uri, success_callback=success, failure_callback=failure)
 
+    @classmethod
+    def extract_api_error(cls, results: Any) -> str:
+        if type(results) == ConnectionRefusedError:
+            return "Connection Refused"
+        errors = results.get("errors", {}).get("base")
+        if errors and len(errors):
+            return errors[0]
+        message = errors.get("message")
+        return message if message else "Unknown error"
+        
 
 class PodiumLapsAPI(object):
     """

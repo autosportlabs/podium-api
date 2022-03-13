@@ -12,14 +12,6 @@ git tag 0.0.5 -m"message"
 
 git push --tags origin master
 
-* Remove items from dist/
+* Deploy to pypi via Twine (requires twine account)
+make dist
 
-rm dist/*
-
-* Build source distribution
-
-python setup.py sdist
-
-* Push to pypi
-
- twine upload dist/*
