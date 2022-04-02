@@ -23,6 +23,8 @@ class TestAccountRequest(unittest.TestCase):
             "id": "test",
             "username": "test_user",
             "email": "test@test.test",
+            "account_type": "pro",
+            "features": "{}",
             "devices_uri": "test/devices",
             "exports_uri": "test/exports",
             "streams_uri": "test/streams",

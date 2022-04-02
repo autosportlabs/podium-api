@@ -26,10 +26,12 @@ class PodiumAccount(object):
         **exports_uri** (str): URI to account's telemetry exports
     """
 
-    def __init__(self, account_id, username, email, devices_uri, exports_uri, streams_uri, user_uri, events_uri):
+    def __init__(self, account_id, username, email, account_type, features, devices_uri, exports_uri, streams_uri, user_uri, events_uri):
         self.account_id = account_id
         self.username = username
         self.email = email
+        self.account_type = account_type
+        self.features = features
         self.devices_uri = devices_uri
         self.exports_uri = exports_uri
         self.streams_uri = streams_uri
@@ -51,6 +53,8 @@ def get_account_from_json(json):
         json["id"],
         json["username"],
         json["email"],
+        json["account_type"],
+        json["features"],
         json["devices_uri"],
         json["exports_uri"],
         json["streams_uri"],
