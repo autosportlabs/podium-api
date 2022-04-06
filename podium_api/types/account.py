@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+import json
 
 class PodiumAccount(object):
     """
@@ -32,12 +32,19 @@ class PodiumAccount(object):
         self.email = email
         self.account_type = account_type
         self.features = features
+        try:
+            self._features_dict = json.loads(features)
+        except:
+            self._features_dict = {}
         self.devices_uri = devices_uri
         self.exports_uri = exports_uri
         self.streams_uri = streams_uri
         self.user_uri = user_uri
         self.events_uri = events_uri
 
+    def has_feature(self, feature: str) -> str:
+        return self._features_dict.get(feature)
+    
 
 def get_account_from_json(json):
     """
