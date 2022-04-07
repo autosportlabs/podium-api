@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from typing import Any
 import json
 
 class PodiumAccount(object):
@@ -42,9 +43,9 @@ class PodiumAccount(object):
         self.user_uri = user_uri
         self.events_uri = events_uri
 
-    def has_feature(self, feature: str) -> str:
-        return self._features_dict.get(feature)
-    
+    def has_feature(self, feature_key: str, expected_value: Any) -> str:
+        feature = self._features_dict.get(feature_key)
+        return feature and feature == expected_value 
 
 def get_account_from_json(json):
     """
