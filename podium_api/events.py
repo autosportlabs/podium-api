@@ -72,6 +72,8 @@ def make_event_update(
         body["event[end_time]"] = end_time
     if venue_id is not None:
         body["event[venue_id]"] = venue_id
+    else:
+        body["event[venue_id]"] = ""
     if private is not None:
         body["event[private]"] = str(private).lower()
     header = get_json_header_token(token)
