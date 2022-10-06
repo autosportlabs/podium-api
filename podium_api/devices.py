@@ -65,9 +65,8 @@ def make_device_update(
         body["device[name]"] = name
     if private is not None:
         body["device[private]"] = int(private)
-    if avatar_name is not None:
+    if avatar_name and avatar_data:
         body["device[avatar_name]"] = avatar_name
-    if avatar_data is not None:
         body["device[avatar_data]"] = avatar_data
 
     header = get_json_header_token(token)
@@ -168,8 +167,8 @@ def make_device_create(
     token,
     name,
     private,
-    avatar_name,
-    avatar_data,
+    avatar_name=None,
+    avatar_data=None,
     success_callback=None,
     failure_callback=None,
     progress_callback=None,
@@ -221,9 +220,10 @@ def make_device_create(
     body = {
         "device[name]": name,
         "device[private]": int(private),
-        "device[avatar_name]": avatar_name,
-        "device[avatar_data]": avatar_data,
     }
+    if avatar_name and avatar_data:
+        body["device[avatar_name]"] = avatar_name
+        body["device[avatar_data]"] = avatar_data
     header = get_json_header_token(token)
     return make_request_custom_success(
         endpoint,
