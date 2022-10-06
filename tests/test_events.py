@@ -427,7 +427,7 @@ class TestEventGet(unittest.TestCase):
             "title": "test title",
             "start_time": "test_time",
             "end_time": "test_end",
-            "venue_uri": "test/venue",
+            "venue_uri": "test_venue",
             "private": False,
         }
         self.field_names = {"id": "event_id", "URI": "uri"}
@@ -544,7 +544,7 @@ class TestEventUpdate(unittest.TestCase):
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_no_params(self, mock_request):
         req = make_event_update(self.token, "https://podium.live/api/v1/events/test")
-        self.assertEqual(req.req_body, urlencode({}))
+        self.assertEqual(req.req_body, urlencode({"event[venue_id]":""}))
         self.assertEqual(req.url, "https://podium.live/api/v1/events/test")
 
     def success_cb(self, result, uri):
@@ -565,7 +565,7 @@ class TestEventUpdate(unittest.TestCase):
             success_callback=self.success_cb,
         )
         self.assertEqual(req._method, "PUT")
-        self.assertEqual(req.req_body, urlencode({"event[title]": "new_title", "event[private]": "true"}))
+        self.assertEqual(req.req_body, urlencode({"event[title]": "new_title", "event[venue_id]": "", "event[private]": "true"}))
         self.assertEqual(req.url, "https://podium.live/api/v1/events/test")
         self.assertEqual(req.req_headers["Content-Type"], "application/x-www-form-urlencoded")
         self.assertEqual(req.req_headers["Authorization"], "Bearer {}".format(self.token.token))

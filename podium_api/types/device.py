@@ -17,12 +17,13 @@ class PodiumDevice(object):
         **private** (bool): Is the event only viewable to creator?
     """
 
-    def __init__(self, device_id, uri, serial, name, private):
+    def __init__(self, device_id, uri, serial, name, private, avatar_url):
         self.device_id = device_id
         self.uri = uri
         self.serial = serial
         self.name = name
         self.private = private
+        self.avatar_url = avatar_url
 
 
 def get_device_from_json(json):
@@ -36,5 +37,5 @@ def get_device_from_json(json):
         PodiumEvent: The PodiumEvent object for this data.
     """
     return PodiumDevice(
-        json["id"], json["URI"], json.get("serial", None), json.get("name", None), json.get("private", None)
+        json["id"], json["URI"], json.get("serial", None), json.get("name", None), json.get("private", None), json.get("avatar_url", None)
     )

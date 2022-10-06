@@ -46,10 +46,10 @@ class TestDeviceCreate(unittest.TestCase):
 
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_device_create(self, mock_request):
-        req = make_device_create(self.token, "test", redirect_callback=self.success_cb)
+        req = make_device_create(self.token, "test", True, "avatar.jpg", "avatar_data", redirect_callback=self.success_cb)
         self.assertEqual(req._method, "POST")
         self.assertEqual(req.url, "https://podium.live/api/v1/devices")
-        self.assertEqual(req.req_body, urlencode({"device[name]": "test"}))
+        self.assertEqual(req.req_body, urlencode({"device[name]": "test", "device[private]": 1, "device[avatar_name]": "avatar.jpg", "device[avatar_data]": "avatar_data"}))
         self.assertEqual(req.req_headers["Content-Type"], "application/x-www-form-urlencoded")
         self.assertEqual(req.req_headers["Authorization"], "Bearer {}".format(self.token.token))
         self.assertEqual(req.req_headers["Accept"], "application/json")
@@ -62,7 +62,7 @@ class TestDeviceCreate(unittest.TestCase):
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_error_callback(self, mock_request):
         error_cb = Mock()
-        req = make_device_create(self.token, "test", failure_callback=error_cb)
+        req = make_device_create(self.token, "test", True, "avatar.jpg", "avatar_data", failure_callback=error_cb)
         # simulate calling the requests on_error
         req.on_error()(req, {})
         # assert our lambda called the mock correctly
@@ -81,7 +81,7 @@ class TestDeviceCreate(unittest.TestCase):
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
-        req = make_device_create(self.token, "test", failure_callback=error_cb)
+        req = make_device_create(self.token, "test", True, "avatar.jpg", "avatar_data", failure_callback=error_cb)
         # simulate calling the requests on_failure
         req.on_failure()(req, {})
         # assert our lambda called the mock correctly
@@ -100,14 +100,14 @@ class TestDeviceCreate(unittest.TestCase):
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_success_callback(self, mock_request):
         success_cb = Mock()
-        req = make_device_create(self.token, "test", success_callback=success_cb)
+        req = make_device_create(self.token, "test", True, "avatar.jpg", "avatar_data", success_callback=success_cb)
         # simulate calling the requests on_success
         self.assertEqual(req.on_success, None)
 
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
-        req = make_device_create(self.token, "test", progress_callback=progress_cb)
+        req = make_device_create(self.token, "test", True, "avatar.jpg", "avatar_data", progress_callback=progress_cb)
         # simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
         # assert our lambda called the mock correctly
@@ -242,6 +242,7 @@ class TestDeviceGet(unittest.TestCase):
             "serial": "test_serial",
             "private": False,
             "name": "test_device",
+            "avatar_url": "https://avatar_url/image.jpg",
         }
         self.field_names = {"id": "device_id", "URI": "uri"}
 
