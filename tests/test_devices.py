@@ -46,10 +46,22 @@ class TestDeviceCreate(unittest.TestCase):
 
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_device_create(self, mock_request):
-        req = make_device_create(self.token, "test", True, "avatar.jpg", "avatar_data", redirect_callback=self.success_cb)
+        req = make_device_create(
+            self.token, "test", True, "avatar.jpg", "avatar_data", redirect_callback=self.success_cb
+        )
         self.assertEqual(req._method, "POST")
         self.assertEqual(req.url, "https://podium.live/api/v1/devices")
-        self.assertEqual(req.req_body, urlencode({"device[name]": "test", "device[private]": 1, "device[avatar_name]": "avatar.jpg", "device[avatar_data]": "avatar_data"}))
+        self.assertEqual(
+            req.req_body,
+            urlencode(
+                {
+                    "device[name]": "test",
+                    "device[private]": 1,
+                    "device[avatar_name]": "avatar.jpg",
+                    "device[avatar_data]": "avatar_data",
+                }
+            ),
+        )
         self.assertEqual(req.req_headers["Content-Type"], "application/x-www-form-urlencoded")
         self.assertEqual(req.req_headers["Authorization"], "Bearer {}".format(self.token.token))
         self.assertEqual(req.req_headers["Accept"], "application/json")

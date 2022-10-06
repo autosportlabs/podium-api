@@ -37,5 +37,10 @@ def get_device_from_json(json):
         PodiumEvent: The PodiumEvent object for this data.
     """
     return PodiumDevice(
-        json["id"], json["URI"], json.get("serial", None), json.get("name", None), json.get("private", None), json.get("avatar_url", None)
+        json["id"],
+        json["URI"],
+        json.get("serial", None),
+        json.get("name", None),
+        json.get("private", None),
+        json.get("avatar_url", None),
     )

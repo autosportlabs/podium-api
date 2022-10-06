@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from typing import Any
 import json
+from typing import Any
+
 
 class PodiumAccount(object):
     """
@@ -27,7 +28,19 @@ class PodiumAccount(object):
         **exports_uri** (str): URI to account's telemetry exports
     """
 
-    def __init__(self, account_id, username, email, account_type, features, devices_uri, exports_uri, streams_uri, user_uri, events_uri):
+    def __init__(
+        self,
+        account_id,
+        username,
+        email,
+        account_type,
+        features,
+        devices_uri,
+        exports_uri,
+        streams_uri,
+        user_uri,
+        events_uri,
+    ):
         self.account_id = account_id
         self.username = username
         self.email = email
@@ -45,7 +58,8 @@ class PodiumAccount(object):
 
     def has_feature(self, feature_key: str, expected_value: Any) -> str:
         feature = self._features_dict.get(feature_key)
-        return feature and feature == expected_value 
+        return feature and feature == expected_value
+
 
 def get_account_from_json(json):
     """

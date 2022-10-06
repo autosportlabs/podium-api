@@ -29,12 +29,12 @@ def make_device_update(
 
     Kwargs:
         name(str): Name of the device.
-        
+
         private(int): 1 if the device is private to the creating user
-        
+
         avatar_name(str): filename of the avatar image
-        
-        avatar_data(str): Base 64 encoded avatar image data        
+
+        avatar_data(str): Base 64 encoded avatar image data
 
         success_callback (function): Callback for a successful request,
         will have the signature:
@@ -69,7 +69,7 @@ def make_device_update(
         body["device[avatar_name]"] = avatar_name
     if avatar_data is not None:
         body["device[avatar_data]"] = avatar_data
-    
+
     header = get_json_header_token(token)
     return make_request_custom_success(
         device_uri,
@@ -165,7 +165,15 @@ def make_devices_get(
 
 
 def make_device_create(
-    token, name, private, avatar_name, avatar_data, success_callback=None, failure_callback=None, progress_callback=None, redirect_callback=None
+    token,
+    name,
+    private,
+    avatar_name,
+    avatar_data,
+    success_callback=None,
+    failure_callback=None,
+    progress_callback=None,
+    redirect_callback=None,
 ):
     """
     Request that creates a new PodiumDevice.
@@ -177,11 +185,11 @@ def make_device_create(
         token (PodiumToken): The authentication token for this session.
 
         name(str): Name of the device.
-        
+
         private(int): 1 if the device is private to the creating user
-        
+
         avatar_name(str): filename of the avatar image
-        
+
         avatar_data(str): Base 64 encoded avatar image data
 
     Kwargs:
@@ -210,7 +218,12 @@ def make_device_create(
 
     """
     endpoint = "{}/api/v1/devices".format(podium_api.PODIUM_APP.podium_url)
-    body = {"device[name]": name, "device[private]": int(private), "device[avatar_name]": avatar_name, "device[avatar_data]": avatar_data}
+    body = {
+        "device[name]": name,
+        "device[private]": int(private),
+        "device[avatar_name]": avatar_name,
+        "device[avatar_data]": avatar_data,
+    }
     header = get_json_header_token(token)
     return make_request_custom_success(
         endpoint,
