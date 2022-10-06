@@ -145,17 +145,21 @@ class PodiumAPI(object):
     def extract_api_error(cls, results: Any) -> str:
         if type(results) == ConnectionRefusedError:
             return "Connection Refused"
-        errors = results.get("errors", {})
+
+        if isinstance(results, bytes):
+            return results.decode()
 
         error_msg = ""
-        for k, v in errors.items():
-            if len(error_msg):
-                error_msg += "; "
-            error_msg += f"{k}: "
-            if isinstance(v, list) and len(v):
-                error_msg += v[0]
-            else:
-                error_msg += str(v)
+        if isinstance(results, dict):
+            errors = results.get("errors", {})
+            for k, v in errors.items():
+                if len(error_msg):
+                    error_msg += "; "
+                error_msg += f"{k}: "
+                if isinstance(v, list) and len(v):
+                    error_msg += v[0]
+                else:
+                    error_msg += str(v)
 
         return error_msg if error_msg else "Unknown error"
 
