@@ -41,6 +41,6 @@ def get_device_from_json(json):
         json["URI"],
         json.get("serial", None),
         json.get("name", None),
-        json.get("private", None),
+        bool(json.get("private", None)),
         json.get("avatar_url", None),
     )

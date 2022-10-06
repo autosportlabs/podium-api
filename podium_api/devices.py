@@ -30,7 +30,7 @@ def make_device_update(
     Kwargs:
         name(str): Name of the device.
 
-        private(int): 1 if the device is private to the creating user
+        private(bool): True if the device is private to the creating user
 
         avatar_name(str): filename of the avatar image
 
@@ -186,7 +186,7 @@ def make_device_create(
 
         name(str): Name of the device.
 
-        private(int): 1 if the device is private to the creating user
+        private(bool): True if the device is private to the creating user
 
         avatar_name(str): filename of the avatar image
 
