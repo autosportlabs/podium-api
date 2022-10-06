@@ -64,7 +64,7 @@ def make_device_update(
     if name is not None:
         body["device[name]"] = name
     if private is not None:
-        body["device[private]"] = private
+        body["device[private]"] = int(private)
     if avatar_name is not None:
         body["device[avatar_name]"] = avatar_name
     if avatar_data is not None:
