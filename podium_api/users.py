@@ -138,33 +138,33 @@ def make_user_update(
         UrlRequest: The request being made.
 
     """
-    body = {}
+    body = []
 
     if email:
-        body["user[email]"] = email
+        body.append(("user[email]", email))
     if password:
-        body["user[password]"] = password
+        body.append(("user[password]", password))
     if current_password:
-        body["user[current_password]"] = current_password
+        body.append(("user[current_password]", current_password))
     if time_zone:
-        body["user[time_zone]"] = time_zone
-
+        body.append(("user[time_zone]", time_zone))
     if username:
-        body["user[username]"] = username
+        body.append(("user[username]", username))
     if name:
-        body["user[name]"] = name
+        body.append(("user[name]", name))
     if avatar_name and avatar_data:
-        body["user[avatar_name]"] = avatar_name
-        body["user[avatar_data]"] = avatar_data
+        body.append(("user[avatar_name]", avatar_name))
+        body.append(("user[avatar_data]", avatar_data))
     if profile_image_name and profile_image_data:
-        body["user[profile_image_name]"] = profile_image_name
-        body["user[profile_image_data]"] = profile_image_data
+        body.append(("user[profile_image_name]", profile_image_name))
+        body.append(("user[profile_image_data]", profile_image_data))
     if description:
-        body["user[description]"] = description
+        body.append(("user[description]", description))
     if permalink:
-        body["user[permalink]"] = permalink
+        body.append(("user[permalink]", permalink))
     if links:
-        body["user[links]"] = links  # failing
+        for link in links:
+            body.append(("user[links][]", link))
 
     header = get_json_header_token(token)
     return make_request_custom_success(
