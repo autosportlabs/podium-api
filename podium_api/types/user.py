@@ -13,11 +13,15 @@ class PodiumUser(object):
 
         **username** (string): The User's username.
 
+        **name** (string): The User's name.
+
         **description** (string): The User's description.
 
         **avatar_url** (string): User's avatar image url.
 
         **links** (list): 3rd party links for the user.
+
+        **permalink** (list): Public url for user profile.
 
         **friendships_uri** (string): URI to friends list.
 
@@ -38,9 +42,11 @@ class PodiumUser(object):
         user_id,
         uri,
         username,
+        name,
         description,
         avatar_url,
         profile_image_url,
+        permalink,
         links,
         friendships_uri,
         followers_uri,
@@ -51,9 +57,11 @@ class PodiumUser(object):
         self.user_id = user_id
         self.uri = uri
         self.username = username
+        self.name = name
         self.description = description
         self.avatar_url = avatar_url
         self.profile_image_url = profile_image_url
+        self.permalink = permalink
         self.links = links
         self.friendships_uri = friendships_uri
         self.followers_uri = followers_uri
@@ -76,9 +84,11 @@ def get_user_from_json(json):
         json["id"],
         json["URI"],
         json["username"],
+        json["name"],
         json["description"],
         json["avatar_url"],
         json["profile_image_url"],
+        json["permalink"],
         json["links"],
         json["friendships_uri"],
         json["followers_uri"],
