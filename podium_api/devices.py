@@ -88,6 +88,7 @@ def make_devices_get(
     token,
     start=None,
     per_page=None,
+    endpoint=None,
     expand=True,
     quiet=None,
     success_callback=None,
@@ -148,7 +149,8 @@ def make_devices_get(
         per_page = min(per_page, 100)
         params["per_page"] = per_page
 
-    endpoint = "{}/api/v1/devices".format(podium_api.PODIUM_APP.podium_url)
+    if endpoint is None:
+        endpoint = "{}/api/v1/devices".format(podium_api.PODIUM_APP.podium_url)
     header = get_json_header_token(token)
     return make_request_custom_success(
         endpoint,
