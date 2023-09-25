@@ -35,6 +35,8 @@ class PodiumPreset(object):
     MAPPING_TYPE_RACECAPTURE_DASH = "rc_dash"
     MAPPING_TYPE_SCRIPTING = "Script"
     MAPPING_TYPE_ANALOG_GAUGE = "analog_gauge"
+    MAPPING_TYPE_DIGITAL_GAUGE = "digital_gauge"
+    MAPPING_TYPE_LINEAR_GAUGE = "linear_gauge"
 
     def __init__(
         self,
