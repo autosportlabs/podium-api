@@ -44,10 +44,10 @@ class TestLogfileCreate(unittest.TestCase):
 
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_logfile_create(self, mock_request):
-        req = make_logfile_create(self.token, 1, redirect_callback=self.success_cb)
+        req = make_logfile_create(self.token, file_key="12345", eventdevice_id=123, redirect_callback=self.success_cb)
         self.assertEqual(req._method, "POST")
         self.assertEqual(req.url, "https://podium.live/api/v1/logfiles")
-        self.assertEqual(req.req_body, urlencode({"friendship[user_id]": "1"}))
+        self.assertEqual(req.req_body, urlencode({"logfile[file_key]": "12345", "logfile[eventdevice_id]": 123}))
         self.assertEqual(req.req_headers["Content-Type"], "application/x-www-form-urlencoded")
         self.assertEqual(req.req_headers["Authorization"], "Bearer {}".format(self.token.token))
         self.assertEqual(req.req_headers["Accept"], "application/json")
@@ -60,7 +60,7 @@ class TestLogfileCreate(unittest.TestCase):
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_error_callback(self, mock_request):
         error_cb = Mock()
-        req = make_logfile_create(self.token, 1, failure_callback=error_cb)
+        req = make_logfile_create(self.token, file_key="12345", eventdevice_id=123, failure_callback=error_cb)
         # simulate calling the requests on_error
         req.on_error()(req, {})
         # assert our lambda called the mock correctly
@@ -79,7 +79,7 @@ class TestLogfileCreate(unittest.TestCase):
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
-        req = make_logfile_create(self.token, 1, failure_callback=error_cb)
+        req = make_logfile_create(self.token, file_key="12345", eventdevice_id=123, failure_callback=error_cb)
         # simulate calling the requests on_failure
         req.on_failure()(req, {})
         # assert our lambda called the mock correctly
@@ -98,14 +98,14 @@ class TestLogfileCreate(unittest.TestCase):
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_success_callback(self, mock_request):
         success_cb = Mock()
-        req = make_logfile_create(self.token, 1, success_callback=success_cb)
+        req = make_logfile_create(self.token, file_key="12345", eventdevice_id=123, success_callback=success_cb)
         # simulate calling the requests on_success
         self.assertEqual(req.on_success, None)
 
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
-        req = make_logfile_create(self.token, 1, progress_callback=progress_cb)
+        req = make_logfile_create(self.token, file_key="12345", eventdevice_id=123, progress_callback=progress_cb)
         # simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
         # assert our lambda called the mock correctly
@@ -167,7 +167,7 @@ class TestLogfileGet(unittest.TestCase):
             success_callback=self.success_cb,
         )
         self.assertEqual(req._method, "GET")
-        self.assertEqual(req.url, "https://podium.live/api/v1/logfile")
+        self.assertEqual(req.url, "https://podium.live/api/v1/logfile?device_id=1234&event_id=5678")
         self.assertEqual(req.req_headers["Content-Type"], "application/x-www-form-urlencoded")
         self.assertEqual(req.req_headers["Authorization"], "Bearer {}".format(self.token.token))
         self.assertEqual(req.req_headers["Accept"], "application/json")
@@ -198,7 +198,9 @@ class TestLogfileGet(unittest.TestCase):
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
-        req = make_logfile_get(self.token, "https://podium.live/api/v1/logfile", failure_callback=error_cb)
+        req = make_logfile_get(
+            self.token, "https://podium.live/api/v1/logfile", device_id=1234, event_id=5678, failure_callback=error_cb
+        )
         # simulate calling the requests on_failure
         req.on_failure()(req, {})
         # assert our lambda called the mock correctly
@@ -216,7 +218,9 @@ class TestLogfileGet(unittest.TestCase):
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_redirect_callback(self, mock_request):
         redir_cb = Mock()
-        req = make_logfile_get(self.token, "https://podium.live/api/v1/logfile", redirect_callback=redir_cb)
+        req = make_logfile_get(
+            self.token, "https://podium.live/api/v1/logfile", device_id=1234, event_id=5678, redirect_callback=redir_cb
+        )
         # simulate calling the requests on_redirect
         req.on_redirect()(req, {})
         # assert our lambda called the mock correctly
@@ -234,7 +238,13 @@ class TestLogfileGet(unittest.TestCase):
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
-        req = make_logfile_get(self.token, "https://podium.live/api/v1/logfile", progress_callback=progress_cb)
+        req = make_logfile_get(
+            self.token,
+            "https://podium.live/api/v1/logfile",
+            device_id=1234,
+            event_id=5678,
+            progress_callback=progress_cb,
+        )
         # simulate calling the requests on_progress
         req.on_progress()(req, 0, 10)
         # assert our lambda called the mock correctly
