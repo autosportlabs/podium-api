@@ -284,7 +284,7 @@ def create_friendship_redirect_handler(req, results, data):
     """
     Handles the success redirect of a **make_friendship_create** call.
 
-    Returns a PodiumRedirect with a uri for the newly created event to the
+    Returns a PodiumRedirect with a uri for the newly created friendship to the
     _redirect_callback found in data.
 
     Automatically called by **make_friendship_create**, will call the
