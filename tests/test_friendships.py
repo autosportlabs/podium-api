@@ -242,6 +242,7 @@ class TestFriendshipsGet(unittest.TestCase):
             "id": "test",
             "URI": "test/users/test",
             "username": "test_user",
+            "name": "test name",
             "description": None,
             "avatar_url": "test/avatar/img.png",
             "links": None,
@@ -251,6 +252,7 @@ class TestFriendshipsGet(unittest.TestCase):
             "profile_image_url": "test/avatar/img.png",
             "events_uri": "test/events",
             "venues_uri": "test/venues",
+            "permalink": "test/permalink",
         }
         self.paged_event_json = {"total": 1, "users": [self.result_json]}
         self.field_names = {"id": "user_id", "URI": "uri"}
