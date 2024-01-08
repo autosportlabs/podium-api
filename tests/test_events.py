@@ -58,7 +58,7 @@ class TestEventsGet(unittest.TestCase):
             self.result = event
             self.check_results_event()
 
-    def test_get_account_from_json(self):
+    def test_get_event_from_json(self):
         self.result = get_event_from_json(self.result_json)
         self.check_results_event()
 

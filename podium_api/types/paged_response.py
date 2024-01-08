@@ -6,6 +6,7 @@ from podium_api.types.event import get_event_from_json
 from podium_api.types.eventdevice import get_eventdevice_from_json
 from podium_api.types.friendship import get_friendship_from_json
 from podium_api.types.lap import get_lap_from_json
+from podium_api.types.logfile import get_logfile_from_json
 from podium_api.types.preset import get_preset_from_json
 from podium_api.types.user import get_user_from_json
 from podium_api.types.venue import get_venue_from_json
@@ -53,6 +54,7 @@ PAYLOAD_NAME_TO_OBJECT = {
     "venues": get_venue_from_json,
     "alertmessages": get_alertmessage_from_json,
     "presets": get_preset_from_json,
+    "logfiles": get_logfile_from_json,
 }
 
 
