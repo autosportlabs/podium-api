@@ -8,7 +8,7 @@ import podium_api
 from podium_api.logfiles import (
     create_logfile_redirect_handler,
     make_logfile_create,
-    make_logfile_get,
+    make_logfile_new,
 )
 from podium_api.types.logfile import get_logfile_from_json
 from podium_api.types.redirect import get_redirect_from_json
@@ -125,7 +125,7 @@ class TestLogfileCreate(unittest.TestCase):
         podium_api.unregister_podium_application()
 
 
-class TestLogfileGet(unittest.TestCase):
+class TestLogfileNew(unittest.TestCase):
     def setUp(self):
         podium_api.register_podium_application("test_id", "test_secret")
         self.token = PodiumToken("test_token", "test_type", 1)
@@ -158,16 +158,15 @@ class TestLogfileGet(unittest.TestCase):
         self.result = result
 
     @patch("podium_api.asyncreq.UrlRequest.run")
-    def test_logfile_get(self, mock_request):
-        req = make_logfile_get(
+    def test_logfile_new(self, mock_request):
+        req = make_logfile_new(
             self.token,
-            "https://podium.live/api/v1/logfile",
             device_id=1234,
             event_id=5678,
             success_callback=self.success_cb,
         )
         self.assertEqual(req._method, "GET")
-        self.assertEqual(req.url, "https://podium.live/api/v1/logfile?device_id=1234&event_id=5678")
+        self.assertEqual(req.url, "https://podium.live/api/v1/logfiles/new?device_id=1234&event_id=5678")
         self.assertEqual(req.req_headers["Content-Type"], "application/x-www-form-urlencoded")
         self.assertEqual(req.req_headers["Authorization"], "Bearer {}".format(self.token.token))
         self.assertEqual(req.req_headers["Accept"], "application/json")
@@ -178,9 +177,7 @@ class TestLogfileGet(unittest.TestCase):
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_error_callback(self, mock_request):
         error_cb = Mock()
-        req = make_logfile_get(
-            self.token, "https://podium.live/api/v1/logfile", device_id=1234, event_id=5678, failure_callback=error_cb
-        )
+        req = make_logfile_new(self.token, device_id=1234, event_id=5678, failure_callback=error_cb)
         # simulate calling the requests on_error
         req.on_error()(req, {})
         # assert our lambda called the mock correctly
@@ -198,9 +195,7 @@ class TestLogfileGet(unittest.TestCase):
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_failure_callback(self, mock_request):
         error_cb = Mock()
-        req = make_logfile_get(
-            self.token, "https://podium.live/api/v1/logfile", device_id=1234, event_id=5678, failure_callback=error_cb
-        )
+        req = make_logfile_new(self.token, device_id=1234, event_id=5678, failure_callback=error_cb)
         # simulate calling the requests on_failure
         req.on_failure()(req, {})
         # assert our lambda called the mock correctly
@@ -218,9 +213,7 @@ class TestLogfileGet(unittest.TestCase):
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_redirect_callback(self, mock_request):
         redir_cb = Mock()
-        req = make_logfile_get(
-            self.token, "https://podium.live/api/v1/logfile", device_id=1234, event_id=5678, redirect_callback=redir_cb
-        )
+        req = make_logfile_new(self.token, device_id=1234, event_id=5678, redirect_callback=redir_cb)
         # simulate calling the requests on_redirect
         req.on_redirect()(req, {})
         # assert our lambda called the mock correctly
@@ -238,9 +231,8 @@ class TestLogfileGet(unittest.TestCase):
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_progress_callback(self, mock_request):
         progress_cb = Mock()
-        req = make_logfile_get(
+        req = make_logfile_new(
             self.token,
-            "https://podium.live/api/v1/logfile",
             device_id=1234,
             event_id=5678,
             progress_callback=progress_cb,

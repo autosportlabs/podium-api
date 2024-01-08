@@ -37,6 +37,7 @@ from podium_api.friendships import (
     make_friendships_get,
 )
 from podium_api.laps import make_lap_get, make_laps_get
+from podium_api.logfiles import make_logfile_create, make_logfile_new
 from podium_api.presets import (
     make_preset_create,
     make_preset_delete,
@@ -99,6 +100,7 @@ class PodiumAPI(object):
         self.alertmessages = PodiumAlertMessagesAPI(token)
         self.presets = PodiumPresetsAPI(token)
         self.ratings = PodiumRatingsAPI(token)
+        self.logfiles = PodiumLogfilesAPI(token)
 
         self.podium_account = None
         self.podium_user = None
@@ -1774,3 +1776,96 @@ class PodiumRatingsAPI(object):
 
         """
         make_rating_create(self.token, *args, **kwargs)
+
+
+class PodiumLogfilesAPI(object):
+    """
+    Object that handles Logfiles and keeps track of the
+    authentication token necessary to do so. Usually accessed via
+    PodiumAPI object.
+
+    **Attributes:**
+        **token** (PodiumToken): The token for the logged in user.
+
+    """
+
+    def __init__(self, token):
+        self.token = token
+
+    def new(self, *args, **kwargs):
+        """
+        Request that prepares a logfile for upload
+
+        The uri for the newly created rating will be provided to the
+        redirect_callback if one is provided in the form of a PodiumRedirect.
+
+        Args:
+            device_id (int): ID of the device the logfile will be associated with.
+
+            event_id (int): ID of the event the logfile will be associated with.
+
+        Kwargs:
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(result (dict), data (dict))
+            Defaults to None.
+
+            failure_callback (function): Callback for failures and errors.
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
+
+            redirect_callback (function): Callback for redirect,
+            Will have the signature:
+                on_redirect(redirect_object (PodiumRedirect))
+            Defaults to None.
+
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
+
+        Return:
+            UrlRequest: The request being made.
+
+        """
+        make_logfile_new(self.token, *args, **kwargs)
+
+    def create(self, *args, **kwargs):
+        """
+        Request that creates or updates a PodiumLogfile.
+
+        The uri for the newly created rating will be provided to the
+        redirect_callback if one is provided in the form of a PodiumRedirect.
+
+        Args:
+            file_key (string): key representing the file that will be uploaded. Provided by the new method.
+
+            eventdevice_id (int): The eventdevice ID associated with the upload. Provided by the new method.
+
+        Kwargs:
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(result (dict), data (dict))
+            Defaults to None.
+
+            failure_callback (function): Callback for failures and errors.
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
+
+            redirect_callback (function): Callback for redirect,
+            Will have the signature:
+                on_redirect(redirect_object (PodiumRedirect))
+            Defaults to None.
+
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
+
+        Return:
+            UrlRequest: The request being made.
+
+        """
+        make_logfile_create(self.token, *args, **kwargs)

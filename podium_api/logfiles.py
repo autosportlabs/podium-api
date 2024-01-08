@@ -6,9 +6,8 @@ from podium_api.types.logfile import get_logfile_from_json
 from podium_api.types.redirect import get_redirect_from_json
 
 
-def make_logfile_get(
+def make_logfile_new(
     token,
-    endpoint,
     device_id,
     event_id,
     success_callback=None,
@@ -49,6 +48,7 @@ def make_logfile_get(
         UrlRequest: The request being made.
 
     """
+    endpoint = "{}/api/v1/logfiles/new".format(podium_api.PODIUM_APP.podium_url)
     params = {}
     params["device_id"] = device_id
     if event_id is not None:
