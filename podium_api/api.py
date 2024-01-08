@@ -37,7 +37,12 @@ from podium_api.friendships import (
     make_friendships_get,
 )
 from podium_api.laps import make_lap_get, make_laps_get
-from podium_api.logfiles import make_logfile_create, make_logfile_new
+from podium_api.logfiles import (
+    make_logfile_create,
+    make_logfile_get,
+    make_logfile_new,
+    make_logfiles_get,
+)
 from podium_api.presets import (
     make_preset_create,
     make_preset_delete,
@@ -1796,8 +1801,12 @@ class PodiumLogfilesAPI(object):
         """
         Request that prepares a logfile for upload
 
-        The uri for the newly created rating will be provided to the
-        redirect_callback if one is provided in the form of a PodiumRedirect.
+        The response will be a partially populated logfile object with the following fields populated:
+            upload_url (str): the URL used for uploading the file
+
+            eventdevice_id (int): the eventdevice id associated with this logfile upload. Used in the create operation
+
+            file_key (str): the key representing the file that will be uploaded using the upload_url. Used in the create operation
 
         Args:
             device_id (int): ID of the device the logfile will be associated with.
@@ -1869,3 +1878,87 @@ class PodiumLogfilesAPI(object):
 
         """
         make_logfile_create(self.token, *args, **kwargs)
+
+    def list(self, *args, **kwargs):
+        """
+        Request that returns a PodiumPagedRequest of logfiles.
+        By default a get request to
+        'https://podium.live/api/v1/logfiles' will be made.
+
+        Kwargs:
+            expand (bool): Expand all objects in response output.
+            Defaults to True
+
+            quiet (object): If not None HTML layout will not render endpoint
+            description. Defaults to None.
+
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(PodiumPagedResponse)
+            Defaults to None.
+
+            failure_callback (function): Callback for failures and errors.
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
+
+            redirect_callback (function): Callback for redirect,
+            Will have the signature:
+                on_redirect(result (dict), data (dict))
+            Defaults to None.
+
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
+
+            start (int): Starting index for logfiles list. 0 indexed.
+
+            per_page (int): Number per page of results, max of 100.
+
+            endpoint (str): If provided the start, per_page, expand, and quiet
+            params will not be used instead making a request based on the
+            provided endpoint.
+
+        Return:
+            UrlRequest: The request being made.
+
+        """
+        make_logfiles_get(self.token, *args, **kwargs)
+
+    def get(self, *args, **kwargs):
+        """
+        Request that returns a PodiumLogfile for the provided logfile_uri.
+
+        Args:
+            logfile_uri (str): URI for the logfile you want.
+
+        Kwargs:
+            expand (bool): Expand all objects in response output.
+            Defaults to True
+
+            success_callback (function): Callback for a successful request,
+            will have the signature:
+                on_success(PodiumLogfile)
+            Defaults to None.
+
+            failure_callback (function): Callback for failures and errors.
+            Will have the signature:
+                on_failure(failure_type (string), result (dict), data (dict))
+            Values for failure type are: 'error', 'failure'. Defaults to None.
+
+            redirect_callback (function): Callback for redirect,
+            Will have the signature:
+                on_redirect(result (dict), data (dict))
+            Defaults to None.
+
+            progress_callback (function): Callback for progress updates,
+            will have the signature:
+                on_progress(current_size (int), total_size (int), data (dict))
+            Defaults to None.
+
+        Return:
+            UrlRequest: The request being made.
+
+        """
+        make_logfile_get(self.token, *args, **kwargs)

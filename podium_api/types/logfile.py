@@ -20,11 +20,37 @@ class PodiumLogfile(object):
           STATUS_COMPLETED = 3
     """
 
-    def __init__(self, upload_url, file_key, eventdevice_id, status):
-        self.upload_url = upload_url
+    def __init__(
+        self,
+        file_key,
+        eventdevice_id,
+        status,
+        id=None,
+        URI=None,
+        upload_url=None,
+        event_id=None,
+        event_url=None,
+        event_title=None,
+        device_id=None,
+        device_url=None,
+        device_name=None,
+        created=None,
+    ):
         self.file_key = file_key
         self.eventdevice_id = eventdevice_id
         self.status = status
+
+        self.id = id
+        self.URI = URI
+        self.upload_url = upload_url
+
+        self.event_id = event_id
+        self.event_url = event_url
+        self.event_title = event_title
+        self.device_id = device_id
+        self.device_url = device_url
+        self.device_name = device_name
+        self.created = created
 
 
 def get_logfile_from_json(json):
@@ -39,4 +65,18 @@ def get_logfile_from_json(json):
         PodiumFriendship: The PodiumFriendship object for the data.
 
     """
-    return PodiumLogfile(json["upload_url"], json["file_key"], json["eventdevice_id"], json["status"])
+    return PodiumLogfile(
+        json["file_key"],
+        json["eventdevice_id"],
+        json["status"],
+        json.get("id", None),
+        json.get("URI", None),
+        json.get("upload_url", None),
+        json.get("event_id", None),
+        json.get("event_url", None),
+        json.get("event_title", None),
+        json.get("device_id", None),
+        json.get("device_url", None),
+        json.get("device_name", None),
+        json.get("created", None),
+    )
