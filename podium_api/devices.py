@@ -385,7 +385,7 @@ def devices_success_handler(req, results, data):
     Creates and returns a PodiumPagedResponse with PodiumEvent as the payload
     to the success_callback found in data if there is one.
 
-    Called automatically by **make_events_get**.
+    Called automatically by **make_devices_get**.
 
     Args:
         req (UrlRequest): Instance of the request that was made.

@@ -77,12 +77,13 @@ class TestEventsGet(unittest.TestCase):
 
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_events_get(self, mock_request):
-        req = make_events_get(self.token, start=0, per_page=100, success_callback=self.success_cb)
+        req = make_events_get(self.token, start=0, per_page=100, success_callback=self.success_cb, title="foo")
         self.assertEqual(req._method, "GET")
         self.assertTrue("https://podium.live/api/v1/events?" in req.url)
         self.assertTrue("per_page=100" in req.url)
         self.assertTrue("start=0" in req.url)
         self.assertTrue("expand=True" in req.url)
+        self.assertTrue("title=foo" in req.url)
         self.assertEqual(req.req_headers["Content-Type"], "application/x-www-form-urlencoded")
         self.assertEqual(req.req_headers["Authorization"], "Bearer {}".format(self.token.token))
         self.assertEqual(req.req_headers["Accept"], "application/json")
