@@ -296,6 +296,7 @@ def make_events_get(
     redirect_callback=None,
     failure_callback=None,
     progress_callback=None,
+    title=None,
 ):
     """
     Request that returns a PodiumPagedRequest of events.
@@ -338,6 +339,9 @@ def make_events_get(
         endpoint (str): If provided this endpoint will be used instead of
         the default: 'https://podium.live/api/v1/events'
 
+        title (str): If provided, acts as a search term against the
+        title of the event.
+
     Return:
         UrlRequest: The request being made.
 
@@ -354,6 +358,8 @@ def make_events_get(
     if per_page is not None:
         per_page = min(per_page, 100)
         params["per_page"] = per_page
+    if title is not None:
+        params["title"] = title
 
     header = get_json_header_token(token)
     return make_request_custom_success(

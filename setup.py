@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
     name="podium_api",
     packages=["podium_api", "podium_api.types"],
-    version="0.1.0",
+    version="0.2.0",
     description="API for Podium Motorsports Platform http://podium.live",
     author="Autosport Labs",
     author_email="sales@autosportlabs.com",

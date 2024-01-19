@@ -1,6 +1,7 @@
 * Update setup.py to reflect new version numbers
 
 nano setup.py
+* Update version number
 
 * Commit updates
 
@@ -12,6 +13,5 @@ git tag 0.0.5 -m"message"
 
 git push --tags origin master
 
-* Deploy to pypi via Twine (requires twine account)
-make dist
+* Launch github action for deployment
 
