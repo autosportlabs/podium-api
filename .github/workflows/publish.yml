@@ -14,7 +14,8 @@ jobs:
 
       - name: build release distributions
         run: |
-          make dist
+          pip install -r requirements.txt
+          python setup.py sdist
 
       - name: upload dist
         uses: actions/upload-artifact@v3
