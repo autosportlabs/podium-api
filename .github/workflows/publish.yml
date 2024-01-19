@@ -1,3 +1,6 @@
+name: Build Linux release
+on:
+  workflow_dispatch:
 jobs:
   release-build:
     runs-on: ubuntu-latest
