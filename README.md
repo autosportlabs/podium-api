@@ -24,3 +24,26 @@ After making changes and updating unit tests, run tests:
 ```
 python ./runtests.py
 ```
+
+# How to deploy
+
+* Determine the next version. Use Semantic Versioning https://semver.org/
+
+* Update setup.py to reflect new version numbers. 
+
+* Commit updates and push
+
+* Tag repository
+
+```
+git tag x.y.z -m"message"
+```
+
+* Push tags
+
+```
+git push --tags origin master
+```
+
+* Launch github Publish action to deploy to pypi
+
