@@ -63,26 +63,26 @@ class PodiumLivestream:
     def set_alertmessage_ack_listener(self, listener):
         self._alertmessage_ack_listener = listener
 
-    def on_telemetry_stream_started(self, body):
+    def _on_telemetry_stream_started(self, body):
         eventdevice_id = body.get("eventDeviceId")
         device_id = body.get("deviceId")
         logger.info("PodiumLivestream: Telemetry stream started: {} {}".format(eventdevice_id, device_id))
         if listener := self._telemetry_stream_started_listener:
             listener(device_id, eventdevice_id)
 
-    def on_telemetry_stream_ended(self, body):
+    def _on_telemetry_stream_ended(self, body):
         eventdevice_id = body.get("eventDeviceId")
         device_id = body.get("deviceId")
         logger.info("PodiumLivestream: telemetry stream ended: {} {}".format(eventdevice_id, device_id))
         if listener := self._telemetry_stream_ended_listener:
             listener(device_id, eventdevice_id)
 
-    def on_list_telemetry_sessions(self, body):
+    def _on_list_telemetry_sessions(self, body):
         logger.debug("PodiumLivestream: ws_list_telemetry_sessions: {}".format(body))
         if listener := self._list_telemetry_sessions_listener:
             listener(body)
 
-    def on_sensor_data(self, body):
+    def _on_sensor_data(self, body):
         logger.debug("on sensordata %s", body)
         if listener := self._sensor_data_listener:
             listener(body)
@@ -110,7 +110,7 @@ class PodiumLivestream:
         if listener := self._connection_open_listener:
             listener()
 
-    def on_alertmessage(self, body):
+    def _on_alertmessage(self, body):
         logger.info("on alertmessage %s", body)
         if listener := self._alertmessage_listener:
             listener(body)
@@ -193,19 +193,19 @@ class PodiumLivestream:
 
     def dispatch_msg(self, ws, address, body):
         if address.startswith("sensorData"):
-            self.on_sensor_data(body)
+            self._on_sensor_data(body)
         elif address.startswith("event"):
             self.on_ws_event(body)
         elif address == "telemetryStreamStarted":
-            self.on_telemetry_stream_started(body)
+            self._on_telemetry_stream_started(body)
         elif address == "telemetryStreamEnded":
-            self.on_telemetry_stream_ended(body)
+            self._on_telemetry_stream_ended(body)
         elif address == self.reply_uuid:
-            self.on_list_telemetry_sessions(body)
+            self._on_list_telemetry_sessions(body)
         elif address.startswith("alertmessage"):
-            self.on_alertmessage(body)
+            self._on_alertmessage(body)
         elif address.startswith("alertmsgAck"):
-            self.on_alertmessage_ack(body)
+            self._on_alertmessage_ack(body)
 
     def _on_ws_message(self, ws, message):
         logger.debug("PodiumLivestream: %s", message)
