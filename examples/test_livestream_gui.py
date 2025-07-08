@@ -1,8 +1,13 @@
 import argparse
 from time import sleep
 
+from kivy.app import App
+from kivy.lang import Builder
+from kivy.network.urlrequest import UrlRequest as KivyUrlRequest
+from kivy.uix.boxlayout import BoxLayout
+
 from podium_api import register_podium_application
-from podium_api.asyncreq import get_json_header_token
+from podium_api.asyncreq import get_json_header_token, set_urlrequest_class
 from podium_api.livestream import PodiumLivestream
 from podium_api.login import make_login_post
 
@@ -19,14 +24,37 @@ def parse_args():
 
 args = parse_args()
 
+KV = """
+<MyWidget>:
+    orientation: 'vertical'
+    spacing: 10
+    padding: 10
 
-class LivestreamTester:
-    def __init__(self):
-        self._livestream = None
+    TextInput:
+        id: text_box
+        text: ""
+        multiline: True
+        size_hint_y: 0.9
+
+    Button:
+        text: "Start"
+        size_hint_y: 0.1
+        on_press: app.on_button_click()
+"""
+
+
+class MyWidget(BoxLayout):
+    pass
+
+
+class MyApp(App):
+    def build(self):
+        Builder.load_string(KV)
+        return MyWidget()
 
     def on_connection_open(self):
         print("connection opened")
-        self.request_current_livestreams()
+        self._livestream.list_telemetry_sessions()
 
     def on_connection_close(self):
         print("connection closed")
@@ -51,20 +79,17 @@ class LivestreamTester:
         print(f"login failed! error_type: {error_type}; results: {results}; data: {data}")
 
     def login(self):
+        # needed for Kivy's eventing model when handling UrlRequests
+        set_urlrequest_class(KivyUrlRequest)
         register_podium_application(args.app_id, "", args.api_uri)
 
         make_login_post(
             args.username, args.password, success_callback=self.login_success, failure_callback=self.login_failure
         )
 
-    def request_current_livestreams(self):
-        if self._livestream:
-            self._livestream.list_telemetry_sessions()
+    def on_button_click(self):
+        self.login()
 
 
 if __name__ == "__main__":
-    tester = LivestreamTester()
-    tester.login()
-    while True:
-        tester.request_current_livestreams()
-        sleep(1)
+    MyApp().run()
