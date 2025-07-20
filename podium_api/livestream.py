@@ -43,7 +43,7 @@ class PodiumLivestream:
         self._list_telemetry_sessions_listener = listener
 
     def set_sensor_data_listener(self, listener):
-        self._list_telemetry_sessions_listener = listener
+        self._sensor_data_listener = listener
 
     def set_connection_open_listener(self, listener):
         self._connection_open_listener = listener
