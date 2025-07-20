@@ -14,8 +14,8 @@
 # print out live sensor data for each eventdevice
 #
 # To test:
-# * Ensure your device is not currently broadcast real-time data (to prevent it from auto-creating an ad-hoc event)
-# * Create an event with a specified name - e.g. "my_event", with a date range that encompasses the current date (now)
+# * Ensure your device is not currently broadcasting real-time data (to prevent it from auto-creating an ad-hoc event)
+# * Create an event with a specified name - e.g. "my_event", with a date range that encompasses the current date
 # * Add your device to this event
 # * Enable your device to broadcast real-time data
 # * Launch this script with the appropriate parameters
