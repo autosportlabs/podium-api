@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from kivy.network.urlrequest import UrlRequest
-
 import podium_api
 
 try:
@@ -9,7 +7,23 @@ try:
 except:
     from urllib import urlencode
 
+from podium_api.standard_request import StandardUrlRequest
 from podium_api.types.exceptions import PodiumApplicationNotRegistered
+
+_urlrequest_cls = None
+
+
+def set_urlrequest_class(cls):
+    global _urlrequest_cls
+    _urlrequest_cls = cls
+
+
+def get_urlrequest_class():
+    global _urlrequest_cls
+    if _urlrequest_cls is not None:
+        return _urlrequest_cls
+    else:
+        return StandardUrlRequest
 
 
 def get_json_header_token(token):
@@ -119,7 +133,8 @@ def make_request(
             endpoint = "{}&{}".format(endpoint, params)
         else:
             endpoint = "{}?{}".format(endpoint, params)
-    return UrlRequest(
+    ReqClass = get_urlrequest_class()
+    return ReqClass(
         endpoint,
         method=method,
         req_body=body,

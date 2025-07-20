@@ -1,6 +1,5 @@
+import logging
 from typing import Any, Callable
-
-from kivy.logger import Logger
 
 import podium_api
 from podium_api.account import make_account_get
@@ -110,6 +109,9 @@ class PodiumAPI(object):
         self.podium_account = None
         self.podium_user = None
 
+        self._logger = logger = logging.getLogger("PodiumAPI")
+        logger.setLevel(logging.INFO)
+
     def init_connection(
         self,
         success_callback: Callable[[PodiumAccount, PodiumUser], None],
@@ -121,12 +123,12 @@ class PodiumAPI(object):
         self, success_callback: Callable[[PodiumAccount], None], failure_callback: Callable[[str, str, str], None]
     ) -> None:
         def success(account: PodiumAccount):
-            Logger.info("PodiumAPI: Loaded Account %s", account.username)
+            self._logger.info("PodiumAPI: Loaded Account %s", account.username)
             self.podium_account = account
             self._load_user(account, success_callback, failure_callback)
 
         def failure(error_type: str, results: str, data: str) -> None:
-            Logger.error("PodiumAPI: Failed to load account: %s: %s", error_type, results)
+            self._logger.error("PodiumAPI: Failed to load account: %s: %s", error_type, results)
             failure_callback(error_type, results, data)
 
         self.account.get(success_callback=success, failure_callback=failure)
@@ -138,12 +140,12 @@ class PodiumAPI(object):
         failure_callback: Callable[[str, str, str], None],
     ) -> None:
         def success(user):
-            Logger.info("PodiumAPI: Loaded User %s", user.username)
+            self._logger.info("PodiumAPI: Loaded User %s", user.username)
             self.podium_user = user
             success_callback(account, user)
 
         def failure(error_type: str, results: str, data: str):
-            Logger.error("PodiumAPI: Failed to load user: %s: %s", error_type, results)
+            self._logger.error("PodiumAPI: Failed to load user: %s: %s", error_type, results)
             failure_callback(error_type, results, data)
 
         self.users.get(account.user_uri, success_callback=success, failure_callback=failure)

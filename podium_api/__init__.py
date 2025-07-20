@@ -3,9 +3,6 @@
 from podium_api.types.application import PodiumApplication
 
 """
-The podium_api module allows you to asynchronously interact with the Podium
-API. It is built on top of Kivy's UrlRequest. 
-
 **Module Attributes:**
 """
 
