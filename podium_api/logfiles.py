@@ -249,7 +249,7 @@ def make_logfile_create(
         UrlRequest: The request being made.
 
     """
-        endpoint = "{}/api/v1/logfiles".format(podium_api.PODIUM_APP.podium_url)
+    endpoint = "{}/api/v1/logfiles".format(podium_api.PODIUM_APP.podium_url)
     body = {"logfile[file_key]": file_key, "logfile[eventdevice_id]": eventdevice_id}
     if source is not None:
         body["logfile[source]"] = source
