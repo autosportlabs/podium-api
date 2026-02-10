@@ -44,7 +44,7 @@ class TestLogfileCreate(unittest.TestCase):
     def success_cb(self, result):
         self.result = result
 
-    @patch("podium_api.asyncreq.UrlRequest.run")
+        @patch("podium_api.asyncreq.UrlRequest.run")
     def test_logfile_create(self, mock_request):
         req = make_logfile_create(self.token, file_key="12345", eventdevice_id=123, redirect_callback=self.success_cb)
         self.assertEqual(req._method, "POST")
@@ -58,6 +58,21 @@ class TestLogfileCreate(unittest.TestCase):
         # simulate successful request
         req.on_redirect()(req, {})
         self.check_results()
+
+    @patch("podium_api.asyncreq.UrlRequest.run")
+    def test_logfile_create_with_source_fields(self, mock_request):
+        req = make_logfile_create(self.token, file_key="12345", eventdevice_id=123, source="rcp", source_ver="3.4.5", redirect_callback=self.success_cb)
+        self.assertEqual(req._method, "POST")
+        self.assertEqual(req.url, "https://podium.live/api/v1/logfiles")
+        expected = {"logfile[file_key]": "12345", "logfile[eventdevice_id]": 123, "logfile[source]": "rcp", "logfile[source_ver]": "3.4.5"}
+        self.assertEqual(req.req_body, urlencode(expected))
+        self.assertEqual(req.req_headers["Content-Type"], "application/x-www-form-urlencoded")
+        self.assertEqual(req.req_headers["Authorization"], "Bearer {}".format(self.token.token))
+        self.assertEqual(req.req_headers["Accept"], "application/json")
+        req._resp_headers = self.result_json
+        req.on_redirect()(req, {})
+        self.check_results()
+
 
     @patch("podium_api.asyncreq.UrlRequest.run")
     def test_error_callback(self, mock_request):
