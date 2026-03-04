@@ -213,6 +213,8 @@ def make_logfile_create(
     token,
     file_key,
     eventdevice_id,
+    source,
+    source_ver,
     success_callback=None,
     failure_callback=None,
     progress_callback=None,
@@ -248,7 +250,12 @@ def make_logfile_create(
 
     """
     endpoint = "{}/api/v1/logfiles".format(podium_api.PODIUM_APP.podium_url)
-    body = {"logfile[file_key]": file_key, "logfile[eventdevice_id]": eventdevice_id}
+    body = {
+        "logfile[file_key]": file_key,
+        "logfile[eventdevice_id]": eventdevice_id,
+        "logfile[source]": source,
+        "logfile[source_ver]": source_ver,
+    }
     header = get_json_header_token(token)
     return make_request_custom_success(
         endpoint,
