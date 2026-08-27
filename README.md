@@ -1,3 +1,5 @@
+This repository is archived due to the retirement of the legacy Podium platform, being replaced by the next gen system.
+
 # podium_api
 Oauth2 API for the motorsports live streaming platform Podium http://podium.live
 
